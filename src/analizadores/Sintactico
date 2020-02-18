@@ -1,0 +1,93 @@
+package analizadores; 
+
+import java.util.LinkedList;
+import java_cup.runtime.*;
+import arbol.Arbol;
+import arbol.Instruccion;
+import arbol.Operacion;
+import arbol.Operacion.tipo_operacion;
+import arbol.Print;
+
+parser code 
+{: 
+    
+    public Arbol AST;
+
+    public Arbol getAST() {
+        return AST;
+    }
+
+    public void syntax_error(Symbol s){ 
+            System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+    
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+    }    
+:} 
+
+terminal String CADENA, RNULL, RLIST, RMATRIX, RTRUE, RFALSE, RIF, RELSE;
+terminal String RSWITCH, RCASE, RBREAK, RWHILE, RDO, RFOR, RIN, RCONTINUE;
+terminal String RRETURN, RFUNCTION, RDEFAULT, RPRINT, RC, RTYPEOF;
+terminal String RLENGTH, RNCOL, RNROW, RSTRINGLENGTH, RREMOVE;
+terminal String RTOLOWERCASE, RTOUPPERCASE, RTRUNK, RROUND, RMEAN;
+terminal String RMEDIAN, RMODE, RARRAY, RPIE, RBARPLOT, RPLOT, RHIST;
+terminal String LLIZQ, LLDER, PIZQ, PDER, CIZQ, CDER, ASIG, PUNTOCOMA;
+terminal String MAS, MENOS, MULTIPLICACION, DIVISION, POTENCIA, MODULO;
+terminal String IGUALQUE, DISTINTOQUE, MENORQUE, MAYORQUE, MAYORIGUALQUE;
+terminal String MENORIGUALQUE, AND, OR, NOT, TERNARIO, DOSPUNTOS, COMA;
+terminal String ASGFUNCTION, IDENTIFICADOR, ENTERO, DECIMAL;
+terminal String UMENOS;
+
+non terminal inicio;
+non terminal LinkedList<Instruccion> instrucciones;
+non terminal Instruccion instruccion;
+non terminal Instruccion expresion;
+
+precedence left  OR;
+precedence left  AND;
+precedence right NOT;
+precedence left  MENORQUE,MAYORQUE,MENORIGUALQUE,MAYORIGUALQUE,DISTINTOQUE,IGUALQUE;
+
+precedence left  MAS,MENOS;
+precedence left  MULTIPLICACION,DIVISION,MODULO;
+precedence left  POTENCIA;
+precedence right UMENOS; 
+
+start with inicio; 
+
+inicio ::= instrucciones:ins                                                    {: parser.AST = new Arbol(ins); :}
+;
+
+instrucciones ::= instrucciones:inss instruccion:ins                            {: RESULT = inss; RESULT.add(ins); :}
+            | instruccion:ins                                                   {: RESULT = new LinkedList<>(); RESULT.add(ins); :}
+;
+
+instruccion ::= RPRINT PIZQ expresion:exp PDER PUNTOCOMA                        {: RESULT = new Print(exp,expleft,expright); :}
+            | RPRINT PIZQ expresion:exp PDER                                    {: RESULT = new Print(exp,expleft,expright); :}
+;
+
+expresion ::= 
+              MENOS expresion:exp                                               {: RESULT = new Operacion(tipo_operacion.MENOS_UNARIO, exp, expleft, expright); :}%prec UMENOS     
+            | NOT expresion:exp                                                 {: RESULT = new Operacion(tipo_operacion.NOT, exp, expleft, expright); :}%prec UMENOS     
+            | expresion:izq MAS expresion:der                                   {: RESULT = new Operacion(tipo_operacion.SUMA,izq,der,izqleft,izqright); :}
+            | expresion:izq MENOS expresion:der                                 {: RESULT = new Operacion(tipo_operacion.RESTA,izq,der,izqleft,izqright); :}
+            | expresion:izq MULTIPLICACION expresion:der                        {: RESULT = new Operacion(tipo_operacion.MULTIPLICACION,izq,der,izqleft,izqright); :}
+            | expresion:izq DIVISION expresion:der                              {: RESULT = new Operacion(tipo_operacion.DIVISION,izq,der,izqleft,izqright); :}
+            | expresion:izq POTENCIA expresion:der                              {: RESULT = new Operacion(tipo_operacion.POTENCIA,izq,der,izqleft,izqright); :}
+            | expresion:izq MODULO expresion:der                                {: RESULT = new Operacion(tipo_operacion.MODULO,izq,der,izqleft,izqright); :}
+            | expresion:izq MENORQUE expresion:der                              {: RESULT = new Operacion(tipo_operacion.MENOR_QUE,izq,der,izqleft,izqright); :}
+            | expresion:izq MAYORQUE expresion:der                              {: RESULT = new Operacion(tipo_operacion.MAYOR_QUE,izq,der,izqleft,izqright); :}
+            | expresion:izq MENORIGUALQUE expresion:der                         {: RESULT = new Operacion(tipo_operacion.MENOR_IGUAL_QUE,izq,der,izqleft,izqright); :}
+            | expresion:izq MAYORIGUALQUE expresion:der                         {: RESULT = new Operacion(tipo_operacion.MAYOR_IGUAL_QUE,izq,der,izqleft,izqright); :}
+            | expresion:izq IGUALQUE expresion:der                              {: RESULT = new Operacion(tipo_operacion.IGUAL_QUE,izq,der,izqleft,izqright); :}
+            | expresion:izq DISTINTOQUE expresion:der                           {: RESULT = new Operacion(tipo_operacion.DISTINTO_QUE,izq,der,izqleft,izqright); :}           
+            | expresion:izq OR expresion:der                                    {: RESULT = new Operacion(tipo_operacion.OR,izq,der,izqleft,izqright); :}           
+            | expresion:izq AND expresion:der                                   {: RESULT = new Operacion(tipo_operacion.AND,izq,der,izqleft,izqright); :}           
+            | ENTERO:exp                                                        {: RESULT = new Operacion(Integer.parseInt(exp),expleft,expright); :}
+            | DECIMAL:exp                                                       {: RESULT = new Operacion(new Double(exp),expleft,expright); :}
+            | CADENA:exp                                                        {: RESULT = new Operacion(exp,expleft,expright); :}
+            | RTRUE:exp                                                         {: RESULT = new Operacion(true,expleft,expright); :}
+            | RFALSE:exp                                                        {: RESULT = new Operacion(false, expleft, expright); :}
+            | PIZQ expresion:exp PDER                                           {: RESULT = exp; :}
+;
