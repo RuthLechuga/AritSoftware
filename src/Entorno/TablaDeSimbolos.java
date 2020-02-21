@@ -1,6 +1,5 @@
 package Entorno;
 
-import Utilidades.Mensaje;
 import java.util.LinkedList;
 
 public class TablaDeSimbolos{
@@ -46,19 +45,17 @@ public class TablaDeSimbolos{
         return false;
     }
     
-    public void addSymbol(Simbolo nuevo, LinkedList<Mensaje> mensajes){
-        
-        if(!existLocalSymbol(nuevo.getIdentificador()))
-            this.local.add(nuevo);
-        else{
-            
-            for(Simbolo s: this.local)
-                if(s.getIdentificador().compareTo(nuevo.getIdentificador()) == 0)
-                {
-                    this.local.remove(s);
-                    this.local.add(s);
-                }    
+    public void addSymbol(Simbolo nuevo){
+        for(Simbolo s: this.local){
+         if(s.getIdentificador().compareTo(nuevo.getIdentificador()) == 0)
+            {
+                this.local.remove(s);
+                this.local.add(nuevo);
+                return;
+            }    
         }
+        
+        this.local.add(nuevo);
     }
     
     public LinkedList<Simbolo> getLocal() {

@@ -2,10 +2,14 @@ package Entorno;
 import static Entorno.Tipo.tipo_primitivo.*;
 
 public class Simbolo {
-    
+
     private Tipo tipo;
     private String identificador;
     private Object valor;
+    private int dimensionX;
+    private int dimensionY;
+    private int linea;
+    private int columna;
     
     public Simbolo(Tipo tipo, String identificador){
         this.tipo = tipo;
@@ -66,4 +70,29 @@ public class Simbolo {
     public void setValor(Object valor) {
         this.valor = valor;
     }   
+    public int getDimensionX() {
+        return dimensionX;
+    }
+    public void setDimensionX(int dimensionX) {
+        this.dimensionX = dimensionX;
+    }
+    public int getDimensionY() {
+        return dimensionY;
+    }
+    public void setDimensionY(int dimensionY) {
+        this.dimensionY = dimensionY;
+    }
+    public int getLinea() {
+        return linea;
+    }
+    public void setLinea(int linea) {
+        this.linea = linea;
+    }
+    public int getColumna() {
+        return columna;
+    }
+    public void setColumna(int columna) {
+        this.columna = columna;
+    }
+ 
 }

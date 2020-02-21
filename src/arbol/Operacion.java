@@ -59,6 +59,13 @@ public class Operacion implements Instruccion {
         this.columna = columna;
     }
     
+    public Operacion(tipo_operacion tipo, String identificador, int linea, int columna){
+        this.tipo = tipo;
+        this.valor = identificador;
+        this.linea = linea;
+        this.columna = columna;
+    }
+    
     //Constructor para operador ternario
     public Operacion(Instruccion resultado_true, Instruccion resultado_false, Instruccion condicion, int linea, int columna){
         this.tipo = TERNARIO;
@@ -79,6 +86,9 @@ public class Operacion implements Instruccion {
         
         if(tipo == ENTERO || tipo == DECIMAL || tipo == CADENA || tipo == BOOLEAN)
             return valor;
+        
+        if(tipo == IDENTIFICADOR)
+            return ts.getSymbol(valor.toString()).getValor();
         
         if(tipo == SUMA){
             if(a instanceof Integer && b instanceof Integer)
@@ -324,7 +334,8 @@ public class Operacion implements Instruccion {
         AND,            //si
         OR,             //si
         NOT,            //si
-        TERNARIO        //
+        IDENTIFICADOR,  //si
+        TERNARIO        //Por implementar y definir si es mejor como metodo o clase
     }
     
     public tipo_operacion getTipo() {

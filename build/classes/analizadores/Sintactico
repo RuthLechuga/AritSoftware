@@ -3,10 +3,20 @@ package analizadores;
 import java.util.LinkedList;
 import java_cup.runtime.*;
 import arbol.Arbol;
+import arbol.Break;
+import arbol.Case;
+import arbol.Continue;
+import arbol.Declaracion;
+import arbol.DoWhile;
+import arbol.Elseif;
+import arbol.For;
+import arbol.If;
 import arbol.Instruccion;
 import arbol.Operacion;
 import arbol.Operacion.tipo_operacion;
 import arbol.Print;
+import arbol.Switch;
+import arbol.While;
 
 parser code 
 {: 
@@ -42,7 +52,21 @@ terminal String UMENOS;
 non terminal inicio;
 non terminal LinkedList<Instruccion> instrucciones;
 non terminal Instruccion instruccion;
+non terminal LinkedList<Instruccion> instrucciones_locales;
+non terminal Instruccion instruccion_local;
 non terminal Instruccion expresion;
+non terminal Instruccion print;
+non terminal Instruccion declaracion;
+non terminal Instruccion ntwhile;
+non terminal Instruccion ntbreak;
+non terminal Instruccion ntcontinue;
+non terminal Instruccion ntdowhile;
+non terminal Instruccion ntfor;
+non terminal Instruccion ntif;
+non terminal Instruccion ntswitch;
+non terminal LinkedList<Case> ntcases;
+non terminal Case ntcase;
+non terminal Case ntdefault;
 
 precedence left  OR;
 precedence left  AND;
@@ -54,19 +78,119 @@ precedence left  MULTIPLICACION,DIVISION,MODULO;
 precedence left  POTENCIA;
 precedence right UMENOS; 
 
+precedence right RELSE;
+
 start with inicio; 
 
 inicio ::= instrucciones:ins                                                    {: parser.AST = new Arbol(ins); :}
 ;
 
+//-------------------------------------------Instrucciones globales--------------------------------------------------------//
 instrucciones ::= instrucciones:inss instruccion:ins                            {: RESULT = inss; RESULT.add(ins); :}
             | instruccion:ins                                                   {: RESULT = new LinkedList<>(); RESULT.add(ins); :}
 ;
 
-instruccion ::= RPRINT PIZQ expresion:exp PDER PUNTOCOMA                        {: RESULT = new Print(exp,expleft,expright); :}
-            | RPRINT PIZQ expresion:exp PDER                                    {: RESULT = new Print(exp,expleft,expright); :}
+instruccion ::= print:ins                                                       {: RESULT = ins; :} 
+            | declaracion:ins                                                   {: RESULT = ins; :}
+            | ntwhile:ins                                                       {: RESULT = ins; :}
+            | ntdowhile:ins                                                     {: RESULT = ins; :}
+            | ntfor:ins                                                         {: RESULT = ins; :}
+            | ntif:ins                                                          {: RESULT = ins; :}
+            | ntswitch:ins                                                      {: RESULT = ins; :}
 ;
 
+//---------------------------Instrucciones que solo pueden ir en una instruccion de control---------------------------------//
+instrucciones_locales ::= instrucciones_locales:inss instruccion_local:ins      {: RESULT = inss; RESULT.add(ins); :}
+            | instruccion_local:ins                                             {: RESULT = new LinkedList<>(); RESULT.add(ins); :}
+;
+
+instruccion_local ::= print:ins                                                 {: RESULT = ins; :} 
+            | declaracion:ins                                                   {: RESULT = ins; :}
+            | ntwhile:ins                                                       {: RESULT = ins; :}
+            | ntbreak:ins                                                       {: RESULT = ins; :}
+            | ntcontinue:ins                                                    {: RESULT = ins; :}
+            | ntdowhile:ins                                                     {: RESULT = ins; :}
+            | ntfor:ins                                                         {: RESULT = ins; :}
+            | ntif:ins                                                          {: RESULT = ins; :}
+            | ntswitch:ins                                                      {: RESULT = ins; :}
+;
+
+//---------------------------------------------------Instrucciones-----------------------------------------------------------//
+print ::= RPRINT PIZQ expresion:exp PDER PUNTOCOMA                              {: RESULT = new Print(exp,expleft,expright); :}
+        | RPRINT PIZQ expresion:exp PDER                                        {: RESULT = new Print(exp,expleft,expright); :}
+;
+
+declaracion ::= IDENTIFICADOR:id ASIG expresion:exp                             {: RESULT = new Declaracion(id,exp,idleft,idright); :}
+            | IDENTIFICADOR:id ASIG expresion:exp PUNTOCOMA                     {: RESULT = new Declaracion(id,exp,idleft,idright); :}
+;
+
+ntwhile ::= RWHILE PIZQ expresion:cond PDER LLIZQ instrucciones_locales:ins LLDER
+                                                                                {: RESULT = new While(cond,ins,condleft,condright); :}
+;
+
+ntbreak ::= RBREAK PUNTOCOMA                                                    {: RESULT = new Break(); :}
+           | RBREAK                                                             {: RESULT = new Break(); :}
+;
+
+ntcontinue ::= RCONTINUE PUNTOCOMA                                              {: RESULT = new Continue(); :}
+            | RCONTINUE                                                         {: RESULT = new Continue(); :}
+;
+
+ntdowhile ::= RDO LLIZQ instrucciones_locales:ins LLDER RWHILE PIZQ expresion:cond PDER PUNTOCOMA
+                                                                                {: RESULT = new DoWhile(cond,ins,condleft,condright); :}
+            | RDO LLIZQ instrucciones_locales:ins LLDER RWHILE PIZQ expresion:cond PDER
+                                                                                {: RESULT = new DoWhile(cond,ins,condleft,condright); :}
+;
+
+ntfor ::= RFOR PIZQ IDENTIFICADOR:var RIN expresion:exp LLIZQ instrucciones_locales:ins LLDER
+                                                                                {: RESULT = new For(var,exp,ins,varleft,varright); :}
+;
+
+ntif ::= RIF PIZQ expresion:cond PDER LLIZQ instrucciones_locales:ins LLDER
+                                                                                {:
+                                                                                    Elseif temporal = new Elseif(cond,ins,condleft,condright);
+                                                                                    LinkedList lista = new LinkedList<Elseif>();
+                                                                                    lista.add(temporal);
+                                                                                    RESULT = new If(lista);
+                                                                                :}
+
+    | RIF PIZQ expresion:cond PDER LLIZQ instrucciones_locales:inst LLDER RELSE LLIZQ instrucciones_locales:insf LLDER
+                                                                                {:
+                                                                                    Elseif temporal1 = new Elseif(cond,inst,condleft,condright);
+                                                                                    Elseif temporal2 = new Elseif(insf,insfleft,insfright);
+                                                                                    LinkedList lista = new LinkedList<Elseif>();
+                                                                                    lista.add(temporal1);
+                                                                                    lista.add(temporal2);
+                                                                                    RESULT = new If(lista);
+                                                                                :}
+    | RIF PIZQ expresion:cond PDER LLIZQ instrucciones_locales:ins LLDER RELSE ntif:tif
+                                                                                {:
+                                                                                    Elseif temporal1 = new Elseif(cond,ins,condleft,condright);
+                                                                                    ((If)tif).getLista_elseif().addFirst(temporal1);
+                                                                                    RESULT = tif;
+                                                                                :}
+;
+
+ntswitch ::= RSWITCH PIZQ expresion:exp PDER LLIZQ ntcases:cases LLDER          
+                                                                                {: RESULT = new Switch(exp,cases,expleft,expright); :}
+            | RSWITCH PIZQ expresion:exp PDER LLIZQ ntcases:cases ntdefault:def LLDER          
+                                                                                {:
+                                                                                    cases.add(def);
+                                                                                    RESULT = new Switch(exp,cases,expleft,expright); 
+                                                                                :}           
+;     
+
+ntcases::= ntcases:tcases ntcase:tcase                                          {: RESULT = tcases; RESULT.add(tcase); :}
+    | ntcase:tcase                                                              {: RESULT = new LinkedList<Case>(); RESULT.add(tcase); :}
+;
+
+ntcase ::= RCASE expresion:exp DOSPUNTOS instrucciones_locales:ins              {: RESULT = new Case(exp,ins,expleft,expright); :}
+;
+
+ntdefault ::= RDEFAULT DOSPUNTOS instrucciones_locales:ins                      {: RESULT = new Case(ins,insleft,insright); :}
+;
+
+//----------------------------------------------------Expresiones------------------------------------------------------------//
 expresion ::= 
               MENOS expresion:exp                                               {: RESULT = new Operacion(tipo_operacion.MENOS_UNARIO, exp, expleft, expright); :}%prec UMENOS     
             | NOT expresion:exp                                                 {: RESULT = new Operacion(tipo_operacion.NOT, exp, expleft, expright); :}%prec UMENOS     
@@ -89,5 +213,6 @@ expresion ::=
             | CADENA:exp                                                        {: RESULT = new Operacion(exp,expleft,expright); :}
             | RTRUE:exp                                                         {: RESULT = new Operacion(true,expleft,expright); :}
             | RFALSE:exp                                                        {: RESULT = new Operacion(false, expleft, expright); :}
+            | IDENTIFICADOR:exp                                                 {: RESULT = new Operacion(tipo_operacion.IDENTIFICADOR,exp, expleft, expright); :}
             | PIZQ expresion:exp PDER                                           {: RESULT = exp; :}
 ;
