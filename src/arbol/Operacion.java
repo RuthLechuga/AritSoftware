@@ -84,6 +84,12 @@ public class Operacion implements Instruccion {
         if(a instanceof Error || b instanceof Error)
             return new Error();
         
+        if(a instanceof LlamadaFunction)
+            return ((LlamadaFunction) a).ejecutar(ts, mensajes);
+        
+        if(b instanceof LlamadaFunction)
+            return ((LlamadaFunction) b).ejecutar(ts, mensajes);
+        
         if(tipo == ENTERO || tipo == DECIMAL || tipo == CADENA || tipo == BOOLEAN)
             return valor;
         

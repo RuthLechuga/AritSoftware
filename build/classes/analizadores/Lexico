@@ -29,8 +29,6 @@ COMENTARIO_MULTIPLE = "#*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*#"
 {CADENA}                        { return new Symbol(sym.CADENA,yyline,yychar, (yytext()).substring(1,yytext().length()-1)); } 
 
 "null"              {return new Symbol(sym.RNULL,yyline,yychar, yytext());} 
-"list"              {return new Symbol(sym.RLIST,yyline,yychar, yytext());} 
-"matrix"            {return new Symbol(sym.RMATRIX,yyline,yychar, yytext());} 
 "true"              {return new Symbol(sym.RTRUE,yyline,yychar, yytext());} 
 "false"             {return new Symbol(sym.RFALSE,yyline,yychar, yytext());} 
 "if"                {return new Symbol(sym.RIF,yyline,yychar, yytext());} 
@@ -48,20 +46,6 @@ COMENTARIO_MULTIPLE = "#*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*#"
 "default"           {return new Symbol(sym.RDEFAULT,yyline,yychar, yytext());} 
 "print"             {return new Symbol(sym.RPRINT,yyline,yychar, yytext());} 
 "c"                 {return new Symbol(sym.RC,yyline,yychar, yytext());} 
-"typeof"            {return new Symbol(sym.RTYPEOF,yyline,yychar, yytext());} 
-"length"            {return new Symbol(sym.RLENGTH,yyline,yychar, yytext());} 
-"ncol"              {return new Symbol(sym.RNCOL,yyline,yychar, yytext());} 
-"nrow"              {return new Symbol(sym.RNROW,yyline,yychar, yytext());} 
-"stringlength"      {return new Symbol(sym.RSTRINGLENGTH,yyline,yychar, yytext());} 
-"remove"            {return new Symbol(sym.RREMOVE,yyline,yychar, yytext());} 
-"tolowercase"       {return new Symbol(sym.RTOLOWERCASE,yyline,yychar, yytext());} 
-"touppercase"       {return new Symbol(sym.RTOUPPERCASE,yyline,yychar, yytext());} 
-"trunk"             {return new Symbol(sym.RTRUNK,yyline,yychar, yytext());} 
-"round"             {return new Symbol(sym.RROUND,yyline,yychar, yytext());} 
-"mean"              {return new Symbol(sym.RMEAN,yyline,yychar, yytext());} 
-"median"            {return new Symbol(sym.RMEDIAN,yyline,yychar, yytext());} 
-"mode"              {return new Symbol(sym.RMODE,yyline,yychar, yytext());} 
-"array"             {return new Symbol(sym.RARRAY,yyline,yychar, yytext());} 
 "pie"               {return new Symbol(sym.RPIE,yyline,yychar, yytext());} 
 "barplot"           {return new Symbol(sym.RBARPLOT,yyline,yychar, yytext());} 
 "plot"              {return new Symbol(sym.RPLOT,yyline,yychar, yytext());} 

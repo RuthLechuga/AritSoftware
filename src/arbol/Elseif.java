@@ -42,6 +42,9 @@ public class Elseif implements Instruccion {
             Object result = null;
             for(Instruccion ins: bloque_instrucciones){
                 result = ins.ejecutar(ts, mensajes);
+                
+                if(ins instanceof Return)
+                    return result;
             }
         }
         

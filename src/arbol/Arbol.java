@@ -1,5 +1,6 @@
 package arbol;
 
+import Entorno.Funciones;
 import Entorno.TablaDeSimbolos;
 import Utilidades.Mensaje;
 import java.util.LinkedList;
@@ -14,13 +15,14 @@ public class Arbol{
         this.instrucciones = instrucciones;
         this.tsglobal = new TablaDeSimbolos(null);
         this.mensajes = new LinkedList<>();
+        Funciones instancia = Funciones.getSingletonInstance();
     }
 
     public void ejecutar(){
         for(Instruccion ins:instrucciones){
             ins.ejecutar(tsglobal, mensajes);
         }
-        
+            
         for(Mensaje mensaje: mensajes)
             System.out.println(mensaje.getDescripcion());
     }

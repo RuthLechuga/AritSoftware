@@ -10,11 +10,14 @@ import arbol.Declaracion;
 import arbol.DoWhile;
 import arbol.Elseif;
 import arbol.For;
+import arbol.Function;
 import arbol.If;
 import arbol.Instruccion;
+import arbol.LlamadaFunction;
 import arbol.Operacion;
 import arbol.Operacion.tipo_operacion;
 import arbol.Print;
+import arbol.Return;
 import arbol.Switch;
 import arbol.While;
 
@@ -36,12 +39,11 @@ parser code
     }    
 :} 
 
-terminal String CADENA, RNULL, RLIST, RMATRIX, RTRUE, RFALSE, RIF, RELSE;
+terminal String CADENA, RNULL, RTRUE, RFALSE, RIF, RELSE;
 terminal String RSWITCH, RCASE, RBREAK, RWHILE, RDO, RFOR, RIN, RCONTINUE;
-terminal String RRETURN, RFUNCTION, RDEFAULT, RPRINT, RC, RTYPEOF;
+terminal String RRETURN, RFUNCTION, RDEFAULT, RPRINT, RC;
 terminal String RLENGTH, RNCOL, RNROW, RSTRINGLENGTH, RREMOVE;
-terminal String RTOLOWERCASE, RTOUPPERCASE, RTRUNK, RROUND, RMEAN;
-terminal String RMEDIAN, RMODE, RARRAY, RPIE, RBARPLOT, RPLOT, RHIST;
+terminal String RPIE, RBARPLOT, RPLOT, RHIST;
 terminal String LLIZQ, LLDER, PIZQ, PDER, CIZQ, CDER, ASIG, PUNTOCOMA;
 terminal String MAS, MENOS, MULTIPLICACION, DIVISION, POTENCIA, MODULO;
 terminal String IGUALQUE, DISTINTOQUE, MENORQUE, MAYORQUE, MAYORIGUALQUE;
@@ -67,6 +69,12 @@ non terminal Instruccion ntswitch;
 non terminal LinkedList<Case> ntcases;
 non terminal Case ntcase;
 non terminal Case ntdefault;
+non terminal Instruccion ntfunction;
+non terminal Instruccion ntreturn;
+non terminal LinkedList<Declaracion> lista_parametros;
+non terminal Declaracion parametro;
+non terminal Instruccion llfunction;
+non terminal LinkedList<Instruccion> lista_valores;
 
 precedence left  OR;
 precedence left  AND;
@@ -79,6 +87,7 @@ precedence left  POTENCIA;
 precedence right UMENOS; 
 
 precedence right RELSE;
+//precedence left  RRETURN;
 
 start with inicio; 
 
@@ -97,6 +106,8 @@ instruccion ::= print:ins                                                       
             | ntfor:ins                                                         {: RESULT = ins; :}
             | ntif:ins                                                          {: RESULT = ins; :}
             | ntswitch:ins                                                      {: RESULT = ins; :}
+            | ntfunction:ins                                                    {: RESULT = ins; :}
+            | llfunction:ins                                                    {: RESULT = ins; :}
 ;
 
 //---------------------------Instrucciones que solo pueden ir en una instruccion de control---------------------------------//
@@ -113,6 +124,8 @@ instruccion_local ::= print:ins                                                 
             | ntfor:ins                                                         {: RESULT = ins; :}
             | ntif:ins                                                          {: RESULT = ins; :}
             | ntswitch:ins                                                      {: RESULT = ins; :}
+            | ntreturn:ins                                                      {: RESULT = ins; :}
+            | llfunction:ins                                                    {: RESULT = ins; :}
 ;
 
 //---------------------------------------------------Instrucciones-----------------------------------------------------------//
@@ -190,6 +203,39 @@ ntcase ::= RCASE expresion:exp DOSPUNTOS instrucciones_locales:ins              
 ntdefault ::= RDEFAULT DOSPUNTOS instrucciones_locales:ins                      {: RESULT = new Case(ins,insleft,insright); :}
 ;
 
+//----------------------------------------------------Funciones------------------------------------------------------------//
+ntfunction ::= IDENTIFICADOR:id ASIG RFUNCTION PIZQ lista_parametros:lp PDER LLIZQ instrucciones_locales:ins LLDER 
+                                                                                {:
+                                                                                    RESULT = new Function(id,lp,ins,idleft,idright);
+                                                                                :}
+/*            | IDENTIFICADOR:id ASIG PIZQ lista_parametros:lp PDER ASGFUNCTION LLIZQ instrucciones_locales:ins LLDER
+                                                                                {:
+                                                                                    RESULT = new Function(id,lp,ins,idleft,idright);
+                                                                                :}
+*/
+;
+
+lista_parametros ::= lista_parametros:lp COMA parametro:p                       {: RESULT = lp; RESULT.add(p); :}
+            | parametro:p                                                       {: RESULT = new LinkedList<Declaracion>(); RESULT.add(p); :}
+;
+
+parametro ::= IDENTIFICADOR:id                                                  {: RESULT = new Declaracion(id,idleft,idright); :}
+            | declaracion:decl                                                  {: RESULT = (Declaracion)decl; :}
+;
+
+ntreturn ::= RRETURN:r PUNTOCOMA                                                {: RESULT = new Return(rleft,rright); :}
+            | RRETURN expresion:exp PUNTOCOMA                                   {: RESULT = new Return(exp,expleft,expright); :}
+            | RRETURN expresion:exp                                             {: RESULT = new Return(exp,expleft,expright); :}
+;
+
+llfunction ::= IDENTIFICADOR:id PIZQ lista_valores:lv PDER PUNTOCOMA            {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
+            | IDENTIFICADOR:id PIZQ lista_valores:lv PDER                       {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
+;
+
+lista_valores ::= lista_valores:lv COMA expresion:exp                           {: RESULT = lv; RESULT.add(exp); :}
+            | expresion:exp                                                     {: RESULT = new LinkedList<Instruccion>(); RESULT.add(exp); :}
+;
+
 //----------------------------------------------------Expresiones------------------------------------------------------------//
 expresion ::= 
               MENOS expresion:exp                                               {: RESULT = new Operacion(tipo_operacion.MENOS_UNARIO, exp, expleft, expright); :}%prec UMENOS     
@@ -215,4 +261,5 @@ expresion ::=
             | RFALSE:exp                                                        {: RESULT = new Operacion(false, expleft, expright); :}
             | IDENTIFICADOR:exp                                                 {: RESULT = new Operacion(tipo_operacion.IDENTIFICADOR,exp, expleft, expright); :}
             | PIZQ expresion:exp PDER                                           {: RESULT = exp; :}
+            | IDENTIFICADOR:id PIZQ lista_valores:lv PDER                       {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
 ;

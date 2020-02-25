@@ -52,6 +52,11 @@ public class Simbolo {
             this.tipo = new Tipo(BOOLEAN);
     }
     
+    public Simbolo(String identificador){
+        this.identificador = identificador;
+        this.valor = null;
+    }
+    
     public Tipo getTipo() {
         return tipo;
     }

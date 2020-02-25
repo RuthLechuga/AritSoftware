@@ -2,43 +2,44 @@ package arbol;
 
 import Entorno.TablaDeSimbolos;
 import Utilidades.Mensaje;
-import static Utilidades.Mensaje.tipo_mensaje.*;
 import java.util.LinkedList;
 
-public class Print implements Instruccion {
-   
-    private Instruccion mensaje;
+public class Return implements Instruccion{
+
+    private Instruccion expresion;
     private int linea;
     private int columna;
     
-    public Print(Instruccion mensaje, int linea, int columna){
-        this.mensaje = mensaje;
+    public Return(Instruccion expresion, int linea, int columna){
+        this.expresion = expresion;
+        this.linea = linea;
+        this.columna = columna;
+    }
+    
+    public Return(int linea, int columna){
+        this.expresion = null;
         this.linea = linea;
         this.columna = columna;
     }
 
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
-        Object resultado = mensaje.ejecutar(ts, mensajes);
+        if(this.expresion== null)
+            return this;
         
-        if(resultado instanceof Error || resultado == null)
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Ha sucedido un error procesando el mensaje en el print."));
-        else
-            mensajes.add(new Mensaje(linea,columna,MENSAJE,resultado.toString()));
-        
-        return null;
+        return this.expresion.ejecutar(ts,mensajes);
     }
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public Instruccion getMensaje() {
-        return mensaje;
+
+    public Instruccion getExpresion() {
+        return expresion;
     }
-    public void setMensaje(Instruccion mensaje) {
-        this.mensaje = mensaje;
+    public void setExpresion(Instruccion expresion) {
+        this.expresion = expresion;
     }
     public int getLinea() {
         return linea;
