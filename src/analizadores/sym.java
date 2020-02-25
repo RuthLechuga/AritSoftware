@@ -8,67 +8,62 @@ package analizadores;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int DOSPUNTOS = 54;
-  public static final int RBARPLOT = 27;
+  public static final int DOSPUNTOS = 49;
+  public static final int RBARPLOT = 22;
   public static final int RTRUE = 4;
   public static final int RWHILE = 11;
   public static final int RCONTINUE = 15;
   public static final int RNULL = 3;
-  public static final int ENTERO = 58;
-  public static final int LLDER = 31;
-  public static final int RLENGTH = 21;
-  public static final int PIZQ = 32;
+  public static final int ENTERO = 53;
+  public static final int LLDER = 26;
+  public static final int PIZQ = 27;
   public static final int RDEFAULT = 18;
-  public static final int PUNTOCOMA = 37;
-  public static final int TERNARIO = 53;
+  public static final int PUNTOCOMA = 32;
+  public static final int TERNARIO = 48;
   public static final int RFALSE = 5;
-  public static final int RNCOL = 22;
-  public static final int CDER = 35;
-  public static final int RSTRINGLENGTH = 24;
+  public static final int CDER = 30;
   public static final int RELSE = 7;
-  public static final int IDENTIFICADOR = 57;
-  public static final int NOT = 52;
-  public static final int AND = 50;
+  public static final int IDENTIFICADOR = 52;
+  public static final int NOT = 47;
+  public static final int AND = 45;
   public static final int RPRINT = 19;
-  public static final int MAYORQUE = 47;
-  public static final int IGUALQUE = 44;
-  public static final int RREMOVE = 25;
-  public static final int OR = 51;
-  public static final int RNROW = 23;
-  public static final int UMENOS = 60;
+  public static final int MAYORQUE = 42;
+  public static final int IGUALQUE = 39;
+  public static final int OR = 46;
+  public static final int UMENOS = 55;
   public static final int RDO = 12;
-  public static final int DECIMAL = 59;
+  public static final int DECIMAL = 54;
   public static final int EOF = 0;
-  public static final int ASIG = 36;
-  public static final int MAYORIGUALQUE = 48;
+  public static final int ASIG = 31;
+  public static final int MAYORIGUALQUE = 43;
   public static final int error = 1;
   public static final int RC = 20;
-  public static final int COMA = 55;
+  public static final int COMA = 50;
   public static final int CADENA = 2;
-  public static final int MODULO = 43;
-  public static final int MENOS = 39;
-  public static final int PDER = 33;
-  public static final int MENORQUE = 46;
-  public static final int POTENCIA = 42;
-  public static final int RHIST = 29;
+  public static final int MODULO = 38;
+  public static final int MENOS = 34;
+  public static final int PDER = 28;
+  public static final int MENORQUE = 41;
+  public static final int POTENCIA = 37;
+  public static final int RHIST = 24;
   public static final int RRETURN = 16;
-  public static final int LLIZQ = 30;
+  public static final int LLIZQ = 25;
   public static final int RCASE = 9;
-  public static final int DISTINTOQUE = 45;
-  public static final int CIZQ = 34;
-  public static final int RPIE = 26;
-  public static final int MENORIGUALQUE = 49;
+  public static final int DISTINTOQUE = 40;
+  public static final int CIZQ = 29;
+  public static final int RPIE = 21;
+  public static final int MENORIGUALQUE = 44;
   public static final int RIN = 14;
   public static final int RSWITCH = 8;
-  public static final int ASGFUNCTION = 56;
+  public static final int ASGFUNCTION = 51;
   public static final int RFOR = 13;
-  public static final int DIVISION = 41;
-  public static final int RPLOT = 28;
+  public static final int DIVISION = 36;
+  public static final int RPLOT = 23;
   public static final int RBREAK = 10;
   public static final int RIF = 6;
   public static final int RFUNCTION = 17;
-  public static final int MULTIPLICACION = 40;
-  public static final int MAS = 38;
+  public static final int MULTIPLICACION = 35;
+  public static final int MAS = 33;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -91,11 +86,6 @@ public class sym {
   "RDEFAULT",
   "RPRINT",
   "RC",
-  "RLENGTH",
-  "RNCOL",
-  "RNROW",
-  "RSTRINGLENGTH",
-  "RREMOVE",
   "RPIE",
   "RBARPLOT",
   "RPLOT",

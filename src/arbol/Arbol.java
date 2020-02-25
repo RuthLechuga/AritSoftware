@@ -19,6 +19,7 @@ public class Arbol{
     }
 
     public void ejecutar(){
+        
         for(Instruccion ins:instrucciones){
             ins.ejecutar(tsglobal, mensajes);
         }

@@ -16,6 +16,7 @@ import arbol.Instruccion;
 import arbol.LlamadaFunction;
 import arbol.Operacion;
 import arbol.Operacion.tipo_operacion;
+import arbol.OperadorTernario;
 import arbol.Print;
 import arbol.Return;
 import arbol.Switch;
@@ -42,7 +43,6 @@ parser code
 terminal String CADENA, RNULL, RTRUE, RFALSE, RIF, RELSE;
 terminal String RSWITCH, RCASE, RBREAK, RWHILE, RDO, RFOR, RIN, RCONTINUE;
 terminal String RRETURN, RFUNCTION, RDEFAULT, RPRINT, RC;
-terminal String RLENGTH, RNCOL, RNROW, RSTRINGLENGTH, RREMOVE;
 terminal String RPIE, RBARPLOT, RPLOT, RHIST;
 terminal String LLIZQ, LLDER, PIZQ, PDER, CIZQ, CDER, ASIG, PUNTOCOMA;
 terminal String MAS, MENOS, MULTIPLICACION, DIVISION, POTENCIA, MODULO;
@@ -76,6 +76,7 @@ non terminal Declaracion parametro;
 non terminal Instruccion llfunction;
 non terminal LinkedList<Instruccion> lista_valores;
 
+precedence right TERNARIO;
 precedence left  OR;
 precedence left  AND;
 precedence right NOT;
@@ -87,7 +88,6 @@ precedence left  POTENCIA;
 precedence right UMENOS; 
 
 precedence right RELSE;
-//precedence left  RRETURN;
 
 start with inicio; 
 
@@ -262,4 +262,6 @@ expresion ::=
             | IDENTIFICADOR:exp                                                 {: RESULT = new Operacion(tipo_operacion.IDENTIFICADOR,exp, expleft, expright); :}
             | PIZQ expresion:exp PDER                                           {: RESULT = exp; :}
             | IDENTIFICADOR:id PIZQ lista_valores:lv PDER                       {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
+            | expresion:cond TERNARIO expresion:exp_true DOSPUNTOS expresion:exp_false
+                                                                                {: RESULT = new OperadorTernario(cond,exp_true,exp_false,condleft,condright); :}
 ;
