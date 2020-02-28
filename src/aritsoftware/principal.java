@@ -1,12 +1,18 @@
 package aritsoftware;
 
+import Entorno.Simbolo;
+import Entorno.TablaDeSimbolos;
 import arbol.Arbol;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +42,7 @@ public class principal extends javax.swing.JFrame {
     int tabSeleccionada;
     String[] urls;
     SimpleAttributeSet set;
+    Arbol AST_arbolSintaxisAbstracta;
     
     public principal() {
         initComponents();
@@ -48,7 +55,7 @@ public class principal extends javax.swing.JFrame {
         urls = new String[100000];
         n = 0;
         tabSeleccionada = 0;
-        jMenuItem1.doClick();
+        ejNuevaPestana.doClick();
         
     }
    
@@ -67,20 +74,20 @@ public class principal extends javax.swing.JFrame {
         lblColumna = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        ejNuevaPestana = new javax.swing.JMenuItem();
+        ejAbrir = new javax.swing.JMenuItem();
+        ejGuardar = new javax.swing.JMenuItem();
+        ejGuardarComo = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem7 = new javax.swing.JMenuItem();
+        ejColor = new javax.swing.JMenuItem();
         ejecutar = new javax.swing.JMenu();
         ejAscendente = new javax.swing.JMenuItem();
-        jMenuItem14 = new javax.swing.JMenuItem();
+        ejDescendente = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
-        jMenuItem10 = new javax.swing.JMenuItem();
+        ejReporteErrores = new javax.swing.JMenuItem();
+        ejReporteAST = new javax.swing.JMenuItem();
+        ejReporteTS = new javax.swing.JMenuItem();
+        ejReporteGraficas = new javax.swing.JMenuItem();
 
         jMenuItem5.setText("jMenuItem5");
 
@@ -116,60 +123,60 @@ public class principal extends javax.swing.JFrame {
         jMenu1.setForeground(new java.awt.Color(255, 255, 255));
         jMenu1.setText("Archivo");
 
-        jMenuItem1.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem1.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem1.setText("Nueva Pestana");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        ejNuevaPestana.setBackground(new java.awt.Color(0, 0, 0));
+        ejNuevaPestana.setForeground(new java.awt.Color(255, 255, 255));
+        ejNuevaPestana.setText("Nueva Pestana");
+        ejNuevaPestana.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                ejNuevaPestanaActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(ejNuevaPestana);
 
-        jMenuItem2.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem2.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem2.setText("Abrir");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        ejAbrir.setBackground(new java.awt.Color(0, 0, 0));
+        ejAbrir.setForeground(new java.awt.Color(255, 255, 255));
+        ejAbrir.setText("Abrir");
+        ejAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                ejAbrirActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        jMenu1.add(ejAbrir);
 
-        jMenuItem3.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem3.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem3.setText("Guardar");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        ejGuardar.setBackground(new java.awt.Color(0, 0, 0));
+        ejGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        ejGuardar.setText("Guardar");
+        ejGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                ejGuardarActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem3);
+        jMenu1.add(ejGuardar);
 
-        jMenuItem4.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem4.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem4.setText("Guardar como");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        ejGuardarComo.setBackground(new java.awt.Color(0, 0, 0));
+        ejGuardarComo.setForeground(new java.awt.Color(255, 255, 255));
+        ejGuardarComo.setText("Guardar como");
+        ejGuardarComo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                ejGuardarComoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem4);
+        jMenu1.add(ejGuardarComo);
 
         jMenuBar1.add(jMenu1);
 
         jMenu3.setForeground(new java.awt.Color(255, 255, 255));
         jMenu3.setText("Edición");
 
-        jMenuItem7.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem7.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem7.setText("Color Background");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+        ejColor.setBackground(new java.awt.Color(0, 0, 0));
+        ejColor.setForeground(new java.awt.Color(255, 255, 255));
+        ejColor.setText("Color Background");
+        ejColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
+                ejColorActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem7);
+        jMenu3.add(ejColor);
 
         jMenuBar1.add(jMenu3);
 
@@ -186,10 +193,10 @@ public class principal extends javax.swing.JFrame {
         });
         ejecutar.add(ejAscendente);
 
-        jMenuItem14.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem14.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem14.setText("Descendente");
-        ejecutar.add(jMenuItem14);
+        ejDescendente.setBackground(new java.awt.Color(0, 0, 0));
+        ejDescendente.setForeground(new java.awt.Color(255, 255, 255));
+        ejDescendente.setText("Descendente");
+        ejecutar.add(ejDescendente);
 
         jMenuBar1.add(ejecutar);
         ejecutar.getAccessibleContext().setAccessibleName("bttEjecutar");
@@ -197,35 +204,35 @@ public class principal extends javax.swing.JFrame {
         jMenu4.setForeground(new java.awt.Color(255, 255, 255));
         jMenu4.setText("Reportes");
 
-        jMenuItem6.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem6.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem6.setText("Errores");
-        jMenu4.add(jMenuItem6);
-        jMenuItem6.getAccessibleContext().setAccessibleName("bttErrores");
+        ejReporteErrores.setBackground(new java.awt.Color(0, 0, 0));
+        ejReporteErrores.setForeground(new java.awt.Color(255, 255, 255));
+        ejReporteErrores.setText("Errores");
+        jMenu4.add(ejReporteErrores);
+        ejReporteErrores.getAccessibleContext().setAccessibleName("bttErrores");
 
-        jMenuItem8.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem8.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem8.setText("AST");
-        jMenu4.add(jMenuItem8);
-        jMenuItem8.getAccessibleContext().setAccessibleName("bttAST");
+        ejReporteAST.setBackground(new java.awt.Color(0, 0, 0));
+        ejReporteAST.setForeground(new java.awt.Color(255, 255, 255));
+        ejReporteAST.setText("AST");
+        jMenu4.add(ejReporteAST);
+        ejReporteAST.getAccessibleContext().setAccessibleName("bttAST");
 
-        jMenuItem9.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem9.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem9.setLabel("Tabla de Simbolos");
-        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+        ejReporteTS.setBackground(new java.awt.Color(0, 0, 0));
+        ejReporteTS.setForeground(new java.awt.Color(255, 255, 255));
+        ejReporteTS.setLabel("Tabla de Simbolos");
+        ejReporteTS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem9ActionPerformed(evt);
+                ejReporteTSActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem9);
-        jMenuItem9.getAccessibleContext().setAccessibleName("bttTablaSimbolos");
+        jMenu4.add(ejReporteTS);
+        ejReporteTS.getAccessibleContext().setAccessibleName("bttTablaSimbolos");
 
-        jMenuItem10.setBackground(new java.awt.Color(0, 0, 0));
-        jMenuItem10.setForeground(new java.awt.Color(255, 255, 255));
-        jMenuItem10.setText("Gráficas");
-        jMenu4.add(jMenuItem10);
-        jMenuItem10.getAccessibleContext().setAccessibleName("bttGraficas");
-        jMenuItem10.getAccessibleContext().setAccessibleDescription("");
+        ejReporteGraficas.setBackground(new java.awt.Color(0, 0, 0));
+        ejReporteGraficas.setForeground(new java.awt.Color(255, 255, 255));
+        ejReporteGraficas.setText("Gráficas");
+        jMenu4.add(ejReporteGraficas);
+        ejReporteGraficas.getAccessibleContext().setAccessibleName("bttGraficas");
+        ejReporteGraficas.getAccessibleContext().setAccessibleDescription("");
 
         jMenuBar1.add(jMenu4);
         jMenu4.getAccessibleContext().setAccessibleName("bttReportes");
@@ -270,7 +277,7 @@ public class principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     //Metodo para crear nuevas pestanas
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void ejNuevaPestanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejNuevaPestanaActionPerformed
         panel[n] = new JPanel();
         tpPanel[n] = new JTextPane();
         scrolls[n] = new JScrollPane();
@@ -308,7 +315,7 @@ public class principal extends javax.swing.JFrame {
         });
 
         n++; 
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_ejNuevaPestanaActionPerformed
     
     public static int getRow(int pos, JTextComponent editor) {
         int rn = (pos==0) ? 1 : 0;
@@ -334,7 +341,7 @@ public class principal extends javax.swing.JFrame {
     }
      
     //Metodo para guardar un archivo
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void ejGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejGuardarActionPerformed
         String texto = "";
         String linea = "";
         try{
@@ -346,10 +353,10 @@ public class principal extends javax.swing.JFrame {
         }catch(Exception e){
             
         }        
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_ejGuardarActionPerformed
 
     //Metodo para guardar como
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void ejGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejGuardarComoActionPerformed
         String texto = "";
         String linea = "";
         try{
@@ -370,10 +377,10 @@ public class principal extends javax.swing.JFrame {
         }catch(Exception e){
             
         }        
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_ejGuardarComoActionPerformed
 
     //Metodo para abrir un archivo
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void ejAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejAbrirActionPerformed
         String texto = "";
         String linea = "";
         try{
@@ -398,17 +405,85 @@ public class principal extends javax.swing.JFrame {
         }catch(Exception e){
             
         }
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_ejAbrirActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+    private void ejColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejColorActionPerformed
         JColorChooser colorVentana=new JColorChooser();
         Color color=colorVentana.showDialog(null, "Seleccione un Color", Color.gray);
         tpPanel[tabSeleccionada].setBackground(color);
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+    }//GEN-LAST:event_ejColorActionPerformed
 
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
+    private void ejReporteTSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejReporteTSActionPerformed
+        
+        if(AST_arbolSintaxisAbstracta != null){
+            TablaDeSimbolos ts = AST_arbolSintaxisAbstracta.getTsglobal();
+            
+            String temporal = "<html>\n" +
+                            "\n" +
+                            "<head>\n" +
+                            "    <title>Tabla de Simbolos</title>\n" +
+                            "</head>\n" +
+                            "\n" +
+                            "<style>\n" +
+                            "    table {\n" +
+                            "        width:100%;\n" +
+                            "    }\n" +
+                            "    table, th, td {\n" +
+                            "        border: 1px solid black;\n" +
+                            "        border-collapse: collapse;\n" +
+                            "    }\n" +
+                            "    th, td {\n" +
+                            "        padding: 15px;\n" +
+                            "        text-align: left;\n" +
+                            "    }\n" +
+                            "    table th {\n" +
+                            "      background-color: black;\n" +
+                            "      color: white;\n" +
+                            "      width: 25%;\n" +
+                            "    }\n" +
+                            "</style>\n" +
+                            "    \n" +
+                            "\n" +
+                            "<body>\n" +
+                            "    <table>\n" +
+                            "        <tr>\n" +
+                            "          <th>Identificador</th>\n" +
+                            "          <th>Tipo          </th> \n" +
+                            "          <th>Dimension(x,y)</th>\n" +
+                            "          <th>Valor         </th>\n" +
+                            "        </tr>\n";
+            
+            for(Simbolo s: ts.getLocal()){
+                temporal += "        <tr>\n" +
+                            "          <td>"+s.getIdentificador()+"</td>\n" +
+                            "          <td>"+s.getTipo().getTipo_primitivo().name()+"</td>\n" +
+                            "          <td>"+s.getDimensionX()+","+s.getDimensionY()+"</td>\n" +
+                            "          <td>"+s.getValorCadena()+"</td>\n" +
+                            "        </tr>\n";
+            }
+            
+            temporal += "    </table>  \n" +
+                        "</body>\n" +
+                        "\n" +
+                        "</html>";
+            
+            String ruta = "C:\\Users\\mini_\\Desktop\\reporteTS.html";
+            File archivo = new File(ruta);
+            BufferedWriter bw;
+            try {             
+                bw = new BufferedWriter(new FileWriter(archivo));
+                PrintWriter wr = new PrintWriter(bw);
+                wr.write(temporal);
+                wr.close();
+                bw.close();
+                File objetofile = new File(ruta);
+                Desktop.getDesktop().open(objetofile);
+
+            } catch (IOException ex) {
+                System.out.println("Error al escribir el archivo");
+            }
+        }        
+    }//GEN-LAST:event_ejReporteTSActionPerformed
 
     private void ejAscendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejAscendenteActionPerformed
         String entrada="";
@@ -424,7 +499,7 @@ public class principal extends javax.swing.JFrame {
     public void interpretar(String entrada){
         
         analizadores.Sintactico pars;
-        Arbol AST_arbolSintaxisAbstracta=null;
+        AST_arbolSintaxisAbstracta=null;
         try {
             pars=new analizadores.Sintactico(new analizadores.Lexico(new BufferedReader(new StringReader(entrada))));
             pars.parse();        
@@ -470,26 +545,26 @@ public class principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ejAbrir;
     private javax.swing.JMenuItem ejAscendente;
+    private javax.swing.JMenuItem ejColor;
+    private javax.swing.JMenuItem ejDescendente;
+    private javax.swing.JMenuItem ejGuardar;
+    private javax.swing.JMenuItem ejGuardarComo;
+    private javax.swing.JMenuItem ejNuevaPestana;
+    private javax.swing.JMenuItem ejReporteAST;
+    private javax.swing.JMenuItem ejReporteErrores;
+    private javax.swing.JMenuItem ejReporteGraficas;
+    private javax.swing.JMenuItem ejReporteTS;
     private javax.swing.JMenu ejecutar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem14;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextPane jTextPane1;

@@ -17,7 +17,7 @@ public class TablaDeSimbolos{
         
         while(temporal != null){
             for(Simbolo s: temporal.local){
-                if(s.getIdentificador().compareTo(identificador) == 0)
+                if(s.getIdentificador().toLowerCase().compareTo(identificador.toLowerCase()) == 0)
                     return s;
             }
             

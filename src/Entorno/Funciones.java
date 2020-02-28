@@ -1,5 +1,6 @@
 package Entorno;
 
+import static Entorno.Tipo.tipo_primitivo.LISTA;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
 import arbol.Function;
@@ -45,7 +46,7 @@ public class Funciones {
         
         for(Function f: lista_funciones){           
             //se compara que no exista una funcion con el mismo nombre
-            if(f.getNombre().compareTo(nombre)==0){
+            if(f.getNombre().toLowerCase().compareTo(nombre.toLowerCase())==0){
                 if(f.getParametros().size() == num_parametros)
                     return f;
             }
@@ -57,6 +58,9 @@ public class Funciones {
     public Object funcionesNativas(String nombre, LinkedList<Instruccion> parametros, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         
         nombre = nombre.toLowerCase();
+        
+        if(nombre.compareTo("list")==0)
+            return functionList(nombre,parametros,ts,mensajes,linea,columna);
         
         if(nombre.compareTo("stringlength")==0 && parametros.size()==1)
             return stringLength(parametros.get(0),ts,mensajes,linea,columna);
@@ -145,6 +149,36 @@ public class Funciones {
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido aplicar la función round sobre la operación."));
             return 0;
         }
+    }
+    
+    public LinkedList<Object> functionList(String nombre, LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        
+        try{
+            LinkedList<Object> temporal = new LinkedList<>();
+            
+            temporal.add(new Tipo(LISTA));
+        
+            for(Instruccion exp: expresiones){
+                
+                Object objt = exp.ejecutar(ts, mensajes);
+                
+                if(objt instanceof LinkedList){
+                    if(((LinkedList)objt).get(0) instanceof Tipo && ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(LISTA)==0)
+                        ((LinkedList)objt).remove(0);
+                    temporal.addAll(((LinkedList)objt));
+                }
+                else{
+                    temporal.add(objt);
+                }
+            }
+
+            return temporal;
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido crear la lista."));           
+            return null;
+        }
+        
     }
     
     public LinkedList<Function> getLista_funciones() {

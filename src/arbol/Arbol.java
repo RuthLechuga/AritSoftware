@@ -9,7 +9,7 @@ public class Arbol{
     
     LinkedList<Instruccion> instrucciones;
     LinkedList<Mensaje> mensajes;
-    TablaDeSimbolos tsglobal;
+    private TablaDeSimbolos tsglobal;
     
     public Arbol(LinkedList<Instruccion> instrucciones){
         this.instrucciones = instrucciones;
@@ -21,7 +21,7 @@ public class Arbol{
     public void ejecutar(){
         
         for(Instruccion ins:instrucciones){
-            ins.ejecutar(tsglobal, mensajes);
+            ins.ejecutar(getTsglobal(), mensajes);
         }
             
         for(Mensaje mensaje: mensajes)
@@ -32,7 +32,16 @@ public class Arbol{
         String temporal = "";
         
         for(Instruccion ins:instrucciones){
-            temporal += ins.getArbol(tsglobal);
+            temporal += ins.getArbol(getTsglobal());
         }
     }
+
+
+    public TablaDeSimbolos getTsglobal() {
+        return tsglobal;
+    }
+    public void setTsglobal(TablaDeSimbolos tsglobal) {
+        this.tsglobal = tsglobal;
+    }
+
 }

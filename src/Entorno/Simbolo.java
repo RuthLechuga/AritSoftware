@@ -1,5 +1,6 @@
 package Entorno;
 import static Entorno.Tipo.tipo_primitivo.*;
+import java.util.LinkedList;
 
 public class Simbolo {
 
@@ -14,6 +15,8 @@ public class Simbolo {
     public Simbolo(Tipo tipo, String identificador){
         this.tipo = tipo;
         this.identificador = identificador;
+        this.dimensionX = 1;
+        this.dimensionY = 1;
         
         switch(this.tipo.getTipo_primitivo()){
             case ENTERO: 
@@ -38,6 +41,8 @@ public class Simbolo {
     public Simbolo(String identificador, Object valor){
         this.identificador = identificador;
         this.valor = valor;
+        this.dimensionX = 1;
+        this.dimensionY = 1;
         
         if(valor instanceof Integer)
             this.tipo = new Tipo(ENTERO);
@@ -50,6 +55,16 @@ public class Simbolo {
         
         else if(valor instanceof Boolean)
             this.tipo = new Tipo(BOOLEAN);
+        
+        else if(valor instanceof LinkedList){
+            
+            this.tipo = (Tipo)(((LinkedList)valor).get(0));
+            ((LinkedList) this.valor).remove(0);
+            
+            if(this.tipo.getTipo_primitivo().compareTo(LISTA)==0){
+                this.dimensionX = ((LinkedList) this.valor).size();
+            }
+        }
     }
     
     public Simbolo(String identificador){
@@ -68,9 +83,6 @@ public class Simbolo {
     }
     public void setIdentificador(String identificador) {
         this.identificador = identificador;
-    }
-    public Object getValor() {
-        return valor;
     }
     public void setValor(Object valor) {
         this.valor = valor;
@@ -98,6 +110,13 @@ public class Simbolo {
     }
     public void setColumna(int columna) {
         this.columna = columna;
+    }   
+    public Object getValor() {
+        return valor;
     }
- 
+    
+    public String getValorCadena(){
+        return valor.toString();
+    }
+   
 }

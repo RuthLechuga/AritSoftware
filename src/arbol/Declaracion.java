@@ -27,6 +27,7 @@ public class Declaracion implements Instruccion {
     
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
+        Object t = getExpresion().ejecutar(ts, mensajes);
         Simbolo nuevo = new Simbolo(getIdentificador(), getExpresion().ejecutar(ts, mensajes));
         ts.addSymbol(nuevo);
         return null;
