@@ -1,10 +1,16 @@
 package Entorno;
 
+import static Entorno.Tipo.tipo_primitivo.CADENA;
+import static Entorno.Tipo.tipo_primitivo.DECIMAL;
+import static Entorno.Tipo.tipo_primitivo.ENTERO;
 import static Entorno.Tipo.tipo_primitivo.LISTA;
+import static Entorno.Tipo.tipo_primitivo.VECTOR;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
 import arbol.Function;
 import arbol.Instruccion;
+import arbol.Operacion;
+import arbol.Operacion.tipo_operacion;
 import java.util.LinkedList;
 
 public class Funciones {
@@ -60,7 +66,10 @@ public class Funciones {
         nombre = nombre.toLowerCase();
         
         if(nombre.compareTo("list")==0)
-            return functionList(nombre,parametros,ts,mensajes,linea,columna);
+            return functionList(parametros,ts,mensajes,linea,columna);
+        
+        if(nombre.compareTo("c")==0)
+            return functionC(parametros,ts,mensajes,linea,columna);
         
         if(nombre.compareTo("stringlength")==0 && parametros.size()==1)
             return stringLength(parametros.get(0),ts,mensajes,linea,columna);
@@ -79,6 +88,11 @@ public class Funciones {
         
         if(nombre.compareTo("round")==0 && parametros.size()==1)
             return round(parametros.get(0),ts,mensajes,linea,columna);
+        
+        if(nombre.compareTo("typeof")==0 && parametros.size()==1)
+            return typeof(parametros.get(0),ts,mensajes,linea,columna);
+        
+        mensajes.add(new Mensaje(linea,columna,SEMANTICO,"La función:"+nombre+" no ha sido declarada"));
         
         return null;
     }
@@ -151,7 +165,46 @@ public class Funciones {
         }
     }
     
-    public LinkedList<Object> functionList(String nombre, LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+    public String typeof(Instruccion expresion, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        try{
+            
+            if(expresion instanceof Operacion && ((Operacion)expresion).getTipo()==tipo_operacion.IDENTIFICADOR){
+                String identificador = ((Operacion)expresion).getValor().toString();
+                
+                Simbolo s = ts.getSymbol(identificador);
+                return s.getTipo().getTipo_primitivo().name();
+                
+            }
+            else{
+                
+                Object result = expresion.ejecutar(ts, mensajes);
+                
+                if(result instanceof Integer)
+                    return "ENTERO";
+                
+                if(result instanceof Double)
+                    return "DECIMAL";
+                
+                if(result instanceof String)
+                    return "CADENA";
+                
+                if(result instanceof Boolean)
+                    return "BOOLEAN";
+                
+                if(result instanceof LinkedList)
+                    return "VECTOR";              
+            }
+            
+            return "";
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido aplicar la función typeof sobre la operación."));
+            return "";
+        }
+    }
+
+    
+    public LinkedList<Object> functionList(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         
         try{
             LinkedList<Object> temporal = new LinkedList<>();
@@ -163,19 +216,80 @@ public class Funciones {
                 Object objt = exp.ejecutar(ts, mensajes);
                 
                 if(objt instanceof LinkedList){
-                    if(((LinkedList)objt).get(0) instanceof Tipo && ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(LISTA)==0)
+                    if(((LinkedList)objt).get(0) instanceof Tipo && (((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(LISTA)==0 || ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(VECTOR)==0))
                         ((LinkedList)objt).remove(0);
-                    temporal.addAll(((LinkedList)objt));
                 }
-                else{
-                    temporal.add(objt);
-                }
+                
+                temporal.add(objt);
             }
 
             return temporal;
         }
         catch(Exception e){
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido crear la lista."));           
+            return null;
+        }
+        
+    }
+    
+    public LinkedList<Object> functionC(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        try{
+            LinkedList<Object> temporal = new LinkedList<>();
+            
+            temporal.add(new Tipo(VECTOR,ENTERO));
+            int prioridad_casteo = 1;
+        
+            for(Instruccion exp: expresiones){
+                
+                Object objt = exp.ejecutar(ts, mensajes);
+                
+                if(objt instanceof LinkedList){
+                    if(((LinkedList)objt).get(0) instanceof Tipo && ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(LISTA)==0){
+                        ((LinkedList)objt).remove(0);
+                        temporal.set(0,new Tipo(LISTA)); 
+                        prioridad_casteo = 4;
+                    }
+                    else if (((LinkedList)objt).get(0) instanceof Tipo && ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(VECTOR)==0){
+                        ((LinkedList)objt).remove(0);
+                    }
+                    
+                    temporal.addAll(((LinkedList)objt));                    
+                }
+                else{
+                    temporal.add(objt);
+                }
+                
+                if(objt instanceof String)
+                    prioridad_casteo = 3;
+                
+                else if(objt instanceof Double && prioridad_casteo == 1)
+                    prioridad_casteo = 2;              
+            }
+            
+            if(prioridad_casteo == 4){
+                return temporal;   
+            }else{
+                
+                if(prioridad_casteo == 3){
+                    temporal.set(0,new Tipo(VECTOR,CADENA));
+                    
+                    for(int i=1;i<temporal.size();i++)
+                        temporal.set(i, temporal.get(i).toString());
+                }
+                
+                else if(prioridad_casteo == 2){
+                    temporal.set(0,new Tipo(VECTOR,DECIMAL));
+                    
+                    for(int i=1;i<temporal.size();i++)
+                        temporal.set(i, new Double(temporal.get(i).toString()));
+                }
+                
+                return temporal;
+            }
+            
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido crear el vector."));           
             return null;
         }
         

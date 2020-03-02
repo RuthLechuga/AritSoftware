@@ -2,7 +2,11 @@ package aritsoftware;
 
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
+import Entorno.Tipo.tipo_primitivo;
+import Utilidades.Mensaje;
+import Utilidades.Mensaje.tipo_mensaje;
 import arbol.Arbol;
+import arbol.Instruccion;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -14,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JColorChooser;
@@ -22,11 +27,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import static javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS;
+import static javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN;
 import javax.swing.JTextPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
@@ -43,6 +51,7 @@ public class principal extends javax.swing.JFrame {
     String[] urls;
     SimpleAttributeSet set;
     Arbol AST_arbolSintaxisAbstracta;
+    LinkedList<Mensaje> errores;
     
     public principal() {
         initComponents();
@@ -56,7 +65,8 @@ public class principal extends javax.swing.JFrame {
         n = 0;
         tabSeleccionada = 0;
         ejNuevaPestana.doClick();
-        
+        tablaErrores.getColumnModel().getColumn(3).setPreferredWidth(400);
+        tablaErrores.setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN);
     }
    
     @SuppressWarnings("unchecked")
@@ -67,11 +77,14 @@ public class principal extends javax.swing.JFrame {
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jLabel1 = new javax.swing.JLabel();
         lblFila = new javax.swing.JLabel();
         lblColumna = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        consola = new javax.swing.JTextPane();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaErrores = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         ejNuevaPestana = new javax.swing.JMenuItem();
@@ -84,7 +97,6 @@ public class principal extends javax.swing.JFrame {
         ejAscendente = new javax.swing.JMenuItem();
         ejDescendente = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        ejReporteErrores = new javax.swing.JMenuItem();
         ejReporteAST = new javax.swing.JMenuItem();
         ejReporteTS = new javax.swing.JMenuItem();
         ejReporteGraficas = new javax.swing.JMenuItem();
@@ -97,24 +109,46 @@ public class principal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arit Software");
-        setPreferredSize(new java.awt.Dimension(720, 720));
+        setPreferredSize(new java.awt.Dimension(1200, 720));
         setResizable(false);
 
         jTabbedPane1.setBackground(new java.awt.Color(0, 153, 255));
-
-        jTextPane1.setBackground(new java.awt.Color(0, 0, 0));
-        jTextPane1.setForeground(new java.awt.Color(255, 255, 255));
-        jTextPane1.setEnabled(false);
-        jScrollPane1.setViewportView(jTextPane1);
-
-        jLabel1.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 18)); // NOI18N
-        jLabel1.setText("Consola");
 
         lblFila.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lblFila.setText("Fila: 1");
 
         lblColumna.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lblColumna.setText("Columna: 1");
+
+        consola.setBackground(new java.awt.Color(0, 0, 0));
+        consola.setForeground(new java.awt.Color(255, 255, 255));
+        consola.setEnabled(false);
+        jScrollPane1.setViewportView(consola);
+
+        jLabel1.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 18)); // NOI18N
+        jLabel1.setText("Consola");
+
+        tablaErrores.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tablaErrores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Tipo", "Descripcion", "Linea", "Columna"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tablaErrores);
+
+        jLabel2.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 18)); // NOI18N
+        jLabel2.setText("Errores");
 
         jMenuBar1.setBackground(new java.awt.Color(0, 0, 0));
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -204,12 +238,6 @@ public class principal extends javax.swing.JFrame {
         jMenu4.setForeground(new java.awt.Color(255, 255, 255));
         jMenu4.setText("Reportes");
 
-        ejReporteErrores.setBackground(new java.awt.Color(0, 0, 0));
-        ejReporteErrores.setForeground(new java.awt.Color(255, 255, 255));
-        ejReporteErrores.setText("Errores");
-        jMenu4.add(ejReporteErrores);
-        ejReporteErrores.getAccessibleContext().setAccessibleName("bttErrores");
-
         ejReporteAST.setBackground(new java.awt.Color(0, 0, 0));
         ejReporteAST.setForeground(new java.awt.Color(255, 255, 255));
         ejReporteAST.setText("AST");
@@ -243,34 +271,48 @@ public class principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblFila)
-                .addGap(58, 58, 58)
-                .addComponent(lblColumna)
-                .addGap(52, 52, 52))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblFila)
+                        .addGap(71, 71, 71)
+                        .addComponent(lblColumna)
+                        .addGap(529, 529, 529))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblFila)
-                        .addComponent(lblColumna))
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 61, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblFila)
+                            .addComponent(lblColumna))
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(8, 8, 8)))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -413,64 +455,82 @@ public class principal extends javax.swing.JFrame {
         tpPanel[tabSeleccionada].setBackground(color);
     }//GEN-LAST:event_ejColorActionPerformed
 
-    private void ejReporteTSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejReporteTSActionPerformed
+    private void ejAscendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejAscendenteActionPerformed
+        String entrada="";
+        try {
+            entrada = tpPanel[tabSeleccionada].getDocument().getText(0, tpPanel[tabSeleccionada].getDocument().getLength());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+        interpretar(entrada);
+        imprimirErrores();
+        imprimirConsola();
+    }//GEN-LAST:event_ejAscendenteActionPerformed
+
+    private void ejReporteTSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejReporteTSActionPerformed
+
         if(AST_arbolSintaxisAbstracta != null){
             TablaDeSimbolos ts = AST_arbolSintaxisAbstracta.getTsglobal();
-            
+
             String temporal = "<html>\n" +
-                            "\n" +
-                            "<head>\n" +
-                            "    <title>Tabla de Simbolos</title>\n" +
-                            "</head>\n" +
-                            "\n" +
-                            "<style>\n" +
-                            "    table {\n" +
-                            "        width:100%;\n" +
-                            "    }\n" +
-                            "    table, th, td {\n" +
-                            "        border: 1px solid black;\n" +
-                            "        border-collapse: collapse;\n" +
-                            "    }\n" +
-                            "    th, td {\n" +
-                            "        padding: 15px;\n" +
-                            "        text-align: left;\n" +
-                            "    }\n" +
-                            "    table th {\n" +
-                            "      background-color: black;\n" +
-                            "      color: white;\n" +
-                            "      width: 25%;\n" +
-                            "    }\n" +
-                            "</style>\n" +
-                            "    \n" +
-                            "\n" +
-                            "<body>\n" +
-                            "    <table>\n" +
-                            "        <tr>\n" +
-                            "          <th>Identificador</th>\n" +
-                            "          <th>Tipo          </th> \n" +
-                            "          <th>Dimension(x,y)</th>\n" +
-                            "          <th>Valor         </th>\n" +
-                            "        </tr>\n";
-            
+            "\n" +
+            "<head>\n" +
+            "    <title>Tabla de Simbolos</title>\n" +
+            "</head>\n" +
+            "\n" +
+            "<style>\n" +
+            "    table {\n" +
+            "        width:100%;\n" +
+            "    }\n" +
+            "    table, th, td {\n" +
+            "        border: 1px solid black;\n" +
+            "        border-collapse: collapse;\n" +
+            "    }\n" +
+            "    th, td {\n" +
+            "        padding: 15px;\n" +
+            "        text-align: left;\n" +
+            "    }\n" +
+            "    table th {\n" +
+            "      background-color: black;\n" +
+            "      color: white;\n" +
+            "      width: 25%;\n" +
+            "    }\n" +
+            "</style>\n" +
+            "    \n" +
+            "\n" +
+            "<body>\n" +
+            "    <table>\n" +
+            "        <tr>\n" +
+            "          <th>Identificador</th>\n" +
+            "          <th>Tipo          </th> \n" +
+            "          <th>Dimension(x,y)</th>\n" +
+            "          <th>Valor         </th>\n" +
+            "        </tr>\n";
+
             for(Simbolo s: ts.getLocal()){
                 temporal += "        <tr>\n" +
-                            "          <td>"+s.getIdentificador()+"</td>\n" +
-                            "          <td>"+s.getTipo().getTipo_primitivo().name()+"</td>\n" +
-                            "          <td>"+s.getDimensionX()+","+s.getDimensionY()+"</td>\n" +
-                            "          <td>"+s.getValorCadena()+"</td>\n" +
-                            "        </tr>\n";
+                "          <td>"+s.getIdentificador()+"</td>\n";
+
+                if(s.getTipo().getTipo_primitivo()==tipo_primitivo.VECTOR)
+                temporal+="          <td>VECTOR: "+s.getTipo().getTipo_vector().name()+"</td>\n";
+                else
+                temporal+="          <td>"+s.getTipo().getTipo_primitivo().name()+"</td>\n";
+
+                temporal+= "          <td>"+s.getDimensionX()+","+s.getDimensionY()+"</td>\n" +
+                "          <td>"+s.getValorCadena()+"</td>\n" +
+                "        </tr>\n";
             }
-            
+
             temporal += "    </table>  \n" +
-                        "</body>\n" +
-                        "\n" +
-                        "</html>";
-            
+            "</body>\n" +
+            "\n" +
+            "</html>";
+
             String ruta = "C:\\Users\\mini_\\Desktop\\reporteTS.html";
             File archivo = new File(ruta);
             BufferedWriter bw;
-            try {             
+            try {
                 bw = new BufferedWriter(new FileWriter(archivo));
                 PrintWriter wr = new PrintWriter(bw);
                 wr.write(temporal);
@@ -482,38 +542,82 @@ public class principal extends javax.swing.JFrame {
             } catch (IOException ex) {
                 System.out.println("Error al escribir el archivo");
             }
-        }        
-    }//GEN-LAST:event_ejReporteTSActionPerformed
-
-    private void ejAscendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejAscendenteActionPerformed
-        String entrada="";
-        try {
-            entrada = tpPanel[tabSeleccionada].getDocument().getText(0, tpPanel[tabSeleccionada].getDocument().getLength());
-        } catch (BadLocationException ex) {
-            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        interpretar(entrada);
-    }//GEN-LAST:event_ejAscendenteActionPerformed
+    }//GEN-LAST:event_ejReporteTSActionPerformed
     
     public void interpretar(String entrada){
-        
-        analizadores.Sintactico pars;
+        errores = new LinkedList<>();
+        analizadores.Sintactico pars = null;
         AST_arbolSintaxisAbstracta=null;
+        analizadores.Lexico lexico = null;
         try {
-            pars=new analizadores.Sintactico(new analizadores.Lexico(new BufferedReader(new StringReader(entrada))));
+            lexico = new analizadores.Lexico(new BufferedReader(new StringReader(entrada)));
+            pars=new analizadores.Sintactico(lexico);
             pars.parse();        
             AST_arbolSintaxisAbstracta=pars.getAST();
+            
         } catch (Exception ex) {
             System.err.println("Error fatal en compilación de entrada.");
         } 
         if(AST_arbolSintaxisAbstracta==null){
+            
+            if(lexico != null)
+                errores.addAll(lexico.errores_lexicos);
+            
+            if(pars != null)
+                errores.addAll(pars.getErrores());
+            
             System.err.println("No es posible ejecutar las instrucciones porque\r\n"
                     + "el árbol no fue cargado de forma adecuada por la existencia\r\n"
                     + "de errores léxicos o sintácticos.");
             return;
         }
         AST_arbolSintaxisAbstracta.ejecutar();
+              
+    }
+    
+    public void imprimirErrores(){
+        DefaultTableModel modelo = (DefaultTableModel) tablaErrores.getModel();
+        
+        Object[] fila = new Object[4];
+        
+        for(Mensaje mensaje: errores){
+            if(mensaje.getTipo()==tipo_mensaje.MENSAJE)
+                continue;
+
+            fila[0] = mensaje.getTipo().name();
+            fila[1] = mensaje.getLinea();
+            fila[2] = mensaje.getColumna();
+            fila[3] = mensaje.getDescripcion();
+            modelo.addRow(fila);
+        }    
+        
+        if(AST_arbolSintaxisAbstracta != null){
+            for(Mensaje mensaje: AST_arbolSintaxisAbstracta.getMensajes()){
+                if(mensaje.getTipo()==tipo_mensaje.MENSAJE)
+                    continue;
+
+                fila[0] = mensaje.getTipo().name();
+                fila[1] = mensaje.getLinea();
+                fila[2] = mensaje.getColumna();
+                fila[3] = mensaje.getDescripcion();
+                modelo.addRow(fila);
+            }
+        }
+          
+        tablaErrores.setModel(modelo);
+    }
+    
+    public void imprimirConsola(){
+        String temporal = "";
+        if(AST_arbolSintaxisAbstracta != null){
+            for(Mensaje mensaje: AST_arbolSintaxisAbstracta.getMensajes()){
+                if(mensaje.getTipo()==tipo_mensaje.MENSAJE)
+                    temporal += mensaje.getDescripcion()+"\n" ;
+            }
+        }
+        
+        consola.setText(temporal);
     }
     
     public static void main(String args[]) {
@@ -545,6 +649,7 @@ public class principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextPane consola;
     private javax.swing.JMenuItem ejAbrir;
     private javax.swing.JMenuItem ejAscendente;
     private javax.swing.JMenuItem ejColor;
@@ -553,11 +658,11 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem ejGuardarComo;
     private javax.swing.JMenuItem ejNuevaPestana;
     private javax.swing.JMenuItem ejReporteAST;
-    private javax.swing.JMenuItem ejReporteErrores;
     private javax.swing.JMenuItem ejReporteGraficas;
     private javax.swing.JMenuItem ejReporteTS;
     private javax.swing.JMenu ejecutar;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -566,10 +671,11 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lblColumna;
     private javax.swing.JLabel lblFila;
+    private javax.swing.JTable tablaErrores;
     // End of variables declaration//GEN-END:variables
 
 }

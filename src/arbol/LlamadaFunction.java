@@ -51,12 +51,7 @@ public class LlamadaFunction implements Instruccion {
         else{
             
             Object result = instancia.funcionesNativas(identificador, lista_valores, ts, mensajes, linea, columna);
-            
-            if(result != null)
-                return result;
-            
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"La función:"+identificador+" no ha sido declarada."));
-        
+            return result;        
         }
         
         return null;

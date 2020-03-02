@@ -14,6 +14,8 @@ import arbol.Function;
 import arbol.If;
 import arbol.Instruccion;
 import arbol.LlamadaFunction;
+import Utilidades.Mensaje;
+import Utilidades.Mensaje.tipo_mensaje;
 import arbol.Operacion;
 import arbol.Operacion.tipo_operacion;
 import arbol.OperadorTernario;
@@ -27,16 +29,22 @@ parser code
     
     public Arbol AST;
 
+    public LinkedList<Mensaje> errores_sintacticos = new LinkedList<>();
+
     public Arbol getAST() {
         return AST;
     }
 
-    public void syntax_error(Symbol s){ 
-            System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    public LinkedList<Mensaje> getErrores(){
+        return errores_sintacticos;
+    }
+
+    public void syntax_error(Symbol s){
+        errores_sintacticos.add(new Mensaje(s.left,s.right,tipo_mensaje.SINTACTICO,"No se esperaba este componente: " +s.value+"."));
     } 
     
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+        errores_sintacticos.add(new Mensaje(s.left,s.right,tipo_mensaje.SINTACTICO,"Error síntactico irrecuperable, componente " + s.value + " no reconocido."));
     }    
 :} 
 

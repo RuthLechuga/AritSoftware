@@ -1,4 +1,7 @@
 package analizadores;
+import Utilidades.Mensaje;
+import Utilidades.Mensaje.tipo_mensaje;
+import java.util.LinkedList;
 import java_cup.runtime.Symbol; 
 
 %% 
@@ -10,9 +13,15 @@ import java_cup.runtime.Symbol;
 %unicode
 %ignorecase
 
+%{
+    public LinkedList<Mensaje> errores_lexicos = new LinkedList<>();
+
+%}
+
 %init{ 
     yyline = 1; 
     yychar = 1; 
+    LinkedList<Mensaje> errores_lexicos = new LinkedList<>();
 %init} 
  
 BLANCOS = [ \r\t]+
@@ -45,7 +54,6 @@ COMENTARIO_MULTIPLE = "#*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*#"
 "function"          {return new Symbol(sym.RFUNCTION,yyline,yychar, yytext());} 
 "default"           {return new Symbol(sym.RDEFAULT,yyline,yychar, yytext());} 
 "print"             {return new Symbol(sym.RPRINT,yyline,yychar, yytext());} 
-"c"                 {return new Symbol(sym.RC,yyline,yychar, yytext());} 
 "pie"               {return new Symbol(sym.RPIE,yyline,yychar, yytext());} 
 "barplot"           {return new Symbol(sym.RBARPLOT,yyline,yychar, yytext());} 
 "plot"              {return new Symbol(sym.RPLOT,yyline,yychar, yytext());} 
@@ -87,5 +95,5 @@ COMENTARIO_MULTIPLE = "#*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*#"
 {DECIMAL}           {return new Symbol(sym.DECIMAL,yyline,yychar, yytext());} 
 
 . {
-    System.err.println("Error léxico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+    errores_lexicos.add(new Mensaje(yyline,yychar,tipo_mensaje.LEXICO,yytext()));
 }

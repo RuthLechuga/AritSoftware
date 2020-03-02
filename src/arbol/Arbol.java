@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class Arbol{
     
     LinkedList<Instruccion> instrucciones;
-    LinkedList<Mensaje> mensajes;
+    private LinkedList<Mensaje> mensajes;
     private TablaDeSimbolos tsglobal;
     
     public Arbol(LinkedList<Instruccion> instrucciones){
@@ -18,14 +18,10 @@ public class Arbol{
         Funciones instancia = Funciones.getSingletonInstance();
     }
 
-    public void ejecutar(){
-        
+    public void ejecutar(){        
         for(Instruccion ins:instrucciones){
-            ins.ejecutar(getTsglobal(), mensajes);
+            ins.ejecutar(getTsglobal(), getMensajes());
         }
-            
-        for(Mensaje mensaje: mensajes)
-            System.out.println(mensaje.getDescripcion());
     }
     
     public void reporteAST(){
@@ -42,6 +38,13 @@ public class Arbol{
     }
     public void setTsglobal(TablaDeSimbolos tsglobal) {
         this.tsglobal = tsglobal;
+    }
+    public LinkedList<Mensaje> getMensajes() {
+        return mensajes;
+    }
+    public void setMensajes(LinkedList<Mensaje> mensajes) {
+        if(mensajes.size() > 0)
+            this.mensajes.addAll(mensajes);
     }
 
 }

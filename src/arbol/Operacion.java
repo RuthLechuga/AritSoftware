@@ -101,7 +101,7 @@ public class Operacion implements Instruccion {
             if(a instanceof String || b instanceof String)
                 return a.toString()+b.toString();
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear."));
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la suma."));
             
             return new Error();
         }
@@ -114,7 +114,7 @@ public class Operacion implements Instruccion {
                     || a instanceof Double && b instanceof Double)
                 return new Double(a.toString()) - new Double(b.toString());
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear."));
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la resta."));
             
             return new Error();
         }
@@ -127,7 +127,7 @@ public class Operacion implements Instruccion {
                     || a instanceof Double && b instanceof Double)
                 return new Double(a.toString()) * new Double(b.toString());
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear."));
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la multiplicación."));
             
             return new Error();
         }
@@ -146,7 +146,7 @@ public class Operacion implements Instruccion {
                     || a instanceof Double && b instanceof Double)
                 return new Double(a.toString()) / new Double(b.toString());
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear."));
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear en la division."));
             
             return new Error();
         }
@@ -156,7 +156,7 @@ public class Operacion implements Instruccion {
                     || a instanceof Double && b instanceof Integer || a instanceof Double && b instanceof Double)
                 return Math.pow(new Double(a.toString()), new Double(b.toString()));
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear."));
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear en la potencia."));
             
             return new Error();                      
         }
@@ -169,7 +169,7 @@ public class Operacion implements Instruccion {
                     || a instanceof Double && b instanceof Double)
                 return new Double(a.toString()) % new Double(b.toString());
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear."));
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en el modulo."));
             
             return new Error();
         }
@@ -181,7 +181,7 @@ public class Operacion implements Instruccion {
             if(a instanceof Double)
                 return (-1)*(new Double(a.toString()));
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear."));
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la resta unitaria."));
             
             return new Error();
         }
