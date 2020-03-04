@@ -5,6 +5,8 @@ import static Entorno.Tipo.tipo_primitivo.DECIMAL;
 import static Entorno.Tipo.tipo_primitivo.ENTERO;
 import static Entorno.Tipo.tipo_primitivo.LISTA;
 import static Entorno.Tipo.tipo_primitivo.VECTOR;
+import Estructuras.Lista;
+import Estructuras.Vector;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
 import arbol.Function;
@@ -22,7 +24,7 @@ public class Funciones {
         this.lista_funciones = new LinkedList<>();
     }
     
-    public  static Funciones getSingletonInstance() {
+    public static Funciones getSingletonInstance() {
 
         if (stFunciones == null)
             stFunciones = new Funciones();
@@ -202,28 +204,18 @@ public class Funciones {
             return "";
         }
     }
-
-    
-    public LinkedList<Object> functionList(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+  
+    public Object functionList(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         
         try{
             LinkedList<Object> temporal = new LinkedList<>();
-            
-            temporal.add(new Tipo(LISTA));
-        
+                    
             for(Instruccion exp: expresiones){
-                
                 Object objt = exp.ejecutar(ts, mensajes);
-                
-                if(objt instanceof LinkedList){
-                    if(((LinkedList)objt).get(0) instanceof Tipo && (((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(LISTA)==0 || ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(VECTOR)==0))
-                        ((LinkedList)objt).remove(0);
-                }
-                
                 temporal.add(objt);
             }
 
-            return temporal;
+            return (new Lista(temporal));
         }
         catch(Exception e){
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido crear la lista."));           
@@ -232,59 +224,49 @@ public class Funciones {
         
     }
     
-    public LinkedList<Object> functionC(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+    public Object functionC(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         try{
             LinkedList<Object> temporal = new LinkedList<>();
             
-            temporal.add(new Tipo(VECTOR,ENTERO));
             int prioridad_casteo = 1;
         
             for(Instruccion exp: expresiones){
                 
                 Object objt = exp.ejecutar(ts, mensajes);
                 
-                if(objt instanceof LinkedList){
-                    if(((LinkedList)objt).get(0) instanceof Tipo && ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(LISTA)==0){
-                        ((LinkedList)objt).remove(0);
-                        temporal.set(0,new Tipo(LISTA)); 
-                        prioridad_casteo = 4;
-                    }
-                    else if (((LinkedList)objt).get(0) instanceof Tipo && ((Tipo)((LinkedList)objt).get(0)).getTipo_primitivo().compareTo(VECTOR)==0){
-                        ((LinkedList)objt).remove(0);
-                    }
-                    
-                    temporal.addAll(((LinkedList)objt));                    
-                }
-                else{
-                    temporal.add(objt);
+                if(objt instanceof Lista){
+                    prioridad_casteo = 4;
+                    temporal.addAll(((Lista) objt).getLista());
                 }
                 
+                else if(objt instanceof Vector){
+                    temporal.addAll(((Vector) objt).getVector());
+                }
+                
+                else{
+                    temporal.add(objt);
+                                       
                 if(objt instanceof String)
                     prioridad_casteo = 3;
                 
                 else if(objt instanceof Double && prioridad_casteo == 1)
-                    prioridad_casteo = 2;              
+                    prioridad_casteo = 2; 
+                }                            
             }
             
             if(prioridad_casteo == 4){
-                return temporal;   
+                return new Lista(temporal);   
             }else{
                 
                 if(prioridad_casteo == 3){
-                    temporal.set(0,new Tipo(VECTOR,CADENA));
-                    
-                    for(int i=1;i<temporal.size();i++)
-                        temporal.set(i, temporal.get(i).toString());
+                    return new Vector(temporal,new Tipo(CADENA));
                 }
                 
                 else if(prioridad_casteo == 2){
-                    temporal.set(0,new Tipo(VECTOR,DECIMAL));
-                    
-                    for(int i=1;i<temporal.size();i++)
-                        temporal.set(i, new Double(temporal.get(i).toString()));
+                    return new Vector(temporal,new Tipo(DECIMAL));
                 }
                 
-                return temporal;
+                return new Vector(temporal,new Tipo(ENTERO));
             }
             
         }

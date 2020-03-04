@@ -430,6 +430,10 @@ public class Lexico implements java_cup.runtime.Scanner {
    */
   private int zzFinalHighSurrogate = 0;
 
+  /* user code: */
+    public LinkedList<Mensaje> errores_lexicos = new LinkedList<>();
+
+
 
   /**
    * Creates a new scanner
@@ -437,11 +441,7 @@ public class Lexico implements java_cup.runtime.Scanner {
    * @param   in  the java.io.Reader to read input from.
    */
   public Lexico(java.io.Reader in) {
-      public LinkedList<Mensaje> errores_lexicos = new LinkedList<>();
-}%
-
-%init{ 
-    yyline = 1; 
+      yyline = 1; 
     yychar = 1; 
     LinkedList<Mensaje> errores_lexicos = new LinkedList<>();
     this.zzReader = in;

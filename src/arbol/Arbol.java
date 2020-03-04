@@ -18,7 +18,10 @@ public class Arbol{
         Funciones instancia = Funciones.getSingletonInstance();
     }
 
-    public void ejecutar(){        
+    public void ejecutar(){  
+        Funciones instancia = Funciones.getSingletonInstance();
+        instancia.reiniciar();
+        
         for(Instruccion ins:instrucciones){
             ins.ejecutar(getTsglobal(), getMensajes());
         }

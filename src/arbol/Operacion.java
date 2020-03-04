@@ -1,6 +1,7 @@
 package arbol;
 
 import Entorno.TablaDeSimbolos;
+import Entorno.Tipo;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.*;
 import static arbol.Operacion.tipo_operacion.*;
@@ -8,13 +9,14 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 public class Operacion implements Instruccion {
-    
+
     private tipo_operacion tipo;
     private Instruccion operador_izquierdo;
     private Instruccion operador_derecho;
     private Object valor;
     private int linea;
     private int columna;
+    private Boolean acceso_arreglo;
     
     public Operacion(tipo_operacion tipo, Instruccion operador_izquierdo, Instruccion operador_derecho, int linea, int columna){
         this.tipo = tipo;
@@ -76,6 +78,16 @@ public class Operacion implements Instruccion {
         this.columna = columna;
     }
     
+    //Constructor para acceso al arreglo, saber si se devuelve una posicion o un arreglo
+    //true para retornar un tipo 1 y false para retornar un tipo 2
+    public Operacion(tipo_operacion tipo, Instruccion operador_izquierdo, Boolean acceso_arreglo, int linea, int columna){
+        this.tipo = tipo;
+        this.operador_izquierdo = operador_izquierdo;
+        this.acceso_arreglo = acceso_arreglo;
+        this.linea = linea;
+        this.columna = columna;
+    }
+    
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         Object a = (operador_izquierdo == null) ? null : operador_izquierdo.ejecutar(ts, mensajes);
@@ -84,11 +96,17 @@ public class Operacion implements Instruccion {
         if(a instanceof Error || b instanceof Error)
             return new Error();
         
+        if(a instanceof Null)
+            return a;
+        
         if(tipo == ENTERO || tipo == DECIMAL || tipo == CADENA || tipo == BOOLEAN)
             return valor;
         
         if(tipo == IDENTIFICADOR)
             return ts.getSymbol(valor.toString()).getValor();
+        
+        if(tipo == ACCESO_ARREGLO)
+            return a;
         
         if(tipo == SUMA){
             if(a instanceof Integer && b instanceof Integer)
@@ -100,6 +118,10 @@ public class Operacion implements Instruccion {
             
             if(a instanceof String || b instanceof String)
                 return a.toString()+b.toString();
+            
+            if(a instanceof LinkedList && (b instanceof Integer || b instanceof Double)){
+                
+            }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la suma."));
             
@@ -335,7 +357,8 @@ public class Operacion implements Instruccion {
         OR,             //si
         NOT,            //si
         IDENTIFICADOR,  //si
-        TERNARIO        //Por implementar y definir si es mejor como metodo o clase
+        TERNARIO,       //si
+        ACCESO_ARREGLO  
     }
     
     public tipo_operacion getTipo() {
@@ -374,4 +397,11 @@ public class Operacion implements Instruccion {
     public void setColumna(int columna) {
         this.columna = columna;
     }
+    public Boolean getAcceso_arreglo() {
+        return acceso_arreglo;
+    }
+    public void setAcceso_arreglo(Boolean acceso_arreglo) {
+        this.acceso_arreglo = acceso_arreglo;
+    }
+    
 }

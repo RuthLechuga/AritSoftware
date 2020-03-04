@@ -2,6 +2,7 @@ package analizadores;
 
 import java.util.LinkedList;
 import java_cup.runtime.*;
+import arbol.Acceso;
 import arbol.Arbol;
 import arbol.Break;
 import arbol.Case;
@@ -14,8 +15,10 @@ import arbol.Function;
 import arbol.If;
 import arbol.Instruccion;
 import arbol.LlamadaFunction;
+import arbol.Modificacion;
 import Utilidades.Mensaje;
 import Utilidades.Mensaje.tipo_mensaje;
+import arbol.Null;
 import arbol.Operacion;
 import arbol.Operacion.tipo_operacion;
 import arbol.OperadorTernario;
@@ -83,6 +86,9 @@ non terminal LinkedList<Declaracion> lista_parametros;
 non terminal Declaracion parametro;
 non terminal Instruccion llfunction;
 non terminal LinkedList<Instruccion> lista_valores;
+non terminal LinkedList<Instruccion> lista_acceso;
+non terminal Instruccion acceso;
+non terminal Instruccion modificacion;
 
 precedence right TERNARIO;
 precedence left  OR;
@@ -116,6 +122,7 @@ instruccion ::= print:ins                                                       
             | ntswitch:ins                                                      {: RESULT = ins; :}
             | ntfunction:ins                                                    {: RESULT = ins; :}
             | llfunction:ins                                                    {: RESULT = ins; :}
+            | modificacion:ins                                                  {: RESULT = ins; :}
 ;
 
 //---------------------------Instrucciones que solo pueden ir en una instruccion de control---------------------------------//
@@ -134,6 +141,7 @@ instruccion_local ::= print:ins                                                 
             | ntswitch:ins                                                      {: RESULT = ins; :}
             | ntreturn:ins                                                      {: RESULT = ins; :}
             | llfunction:ins                                                    {: RESULT = ins; :}
+            | modificacion: ins                                                 {: RESULT = ins; :}
 ;
 
 //---------------------------------------------------Instrucciones-----------------------------------------------------------//
@@ -244,6 +252,21 @@ lista_valores ::= lista_valores:lv COMA expresion:exp                           
             | expresion:exp                                                     {: RESULT = new LinkedList<Instruccion>(); RESULT.add(exp); :}
 ;
 
+//------------------------------------------------------Arreglos-------------------------------------------------------------//
+lista_acceso::= lista_acceso:lacc acceso:acc                                    {: RESULT = lacc; RESULT.add(acc); :}
+            | acceso:acc                                                        {: RESULT = new LinkedList<Instruccion>(); RESULT.add(acc); :}
+;
+
+acceso ::= CIZQ expresion:exp CDER                                              {: RESULT = new Operacion(tipo_operacion.ACCESO_ARREGLO,exp,true,expleft,expright); :}
+            | CIZQ CIZQ expresion:exp CDER CDER                                 {: RESULT = new Operacion(tipo_operacion.ACCESO_ARREGLO,exp,false,expleft,expright); :}
+;
+
+modificacion ::= IDENTIFICADOR:id lista_acceso:lacc ASIG expresion:exp PUNTOCOMA   
+                                                                                {: RESULT = new Modificacion(id,lacc,exp,idleft,idright); :}
+            | IDENTIFICADOR:id lista_acceso:lacc ASIG expresion:exp                
+                                                                                {: RESULT = new Modificacion(id,lacc,exp,idleft,idright); :}
+;
+
 //----------------------------------------------------Expresiones------------------------------------------------------------//
 expresion ::= 
               MENOS expresion:exp                                               {: RESULT = new Operacion(tipo_operacion.MENOS_UNARIO, exp, expleft, expright); :}%prec UMENOS     
@@ -272,4 +295,6 @@ expresion ::=
             | IDENTIFICADOR:id PIZQ lista_valores:lv PDER                       {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
             | expresion:cond TERNARIO expresion:exp_true DOSPUNTOS expresion:exp_false
                                                                                 {: RESULT = new OperadorTernario(cond,exp_true,exp_false,condleft,condright); :}
+            | IDENTIFICADOR:id lista_acceso:lacc                                {: RESULT = new Acceso(id,lacc,idleft,idright); :}
+            | RNULL                                                             {: RESULT = new Null(); :}
 ;

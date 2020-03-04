@@ -3,10 +3,10 @@ package aritsoftware;
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
 import Entorno.Tipo.tipo_primitivo;
+import Estructuras.Vector;
 import Utilidades.Mensaje;
 import Utilidades.Mensaje.tipo_mensaje;
 import arbol.Arbol;
-import arbol.Instruccion;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -27,7 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import static javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS;
 import static javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN;
 import javax.swing.JTextPane;
 import javax.swing.event.CaretEvent;
@@ -513,7 +512,7 @@ public class principal extends javax.swing.JFrame {
                 "          <td>"+s.getIdentificador()+"</td>\n";
 
                 if(s.getTipo().getTipo_primitivo()==tipo_primitivo.VECTOR)
-                temporal+="          <td>VECTOR: "+s.getTipo().getTipo_vector().name()+"</td>\n";
+                temporal+="          <td>VECTOR: "+((Vector)s.getValor()).getTipo_dato().getTipo_primitivo().name()+"</td>\n";
                 else
                 temporal+="          <td>"+s.getTipo().getTipo_primitivo().name()+"</td>\n";
 

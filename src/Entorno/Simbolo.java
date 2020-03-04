@@ -1,5 +1,7 @@
 package Entorno;
 import static Entorno.Tipo.tipo_primitivo.*;
+import Estructuras.Lista;
+import Estructuras.Vector;
 import java.util.LinkedList;
 
 public class Simbolo {
@@ -56,14 +58,14 @@ public class Simbolo {
         else if(valor instanceof Boolean)
             this.tipo = new Tipo(BOOLEAN);
         
-        else if(valor instanceof LinkedList){
-            
-            this.tipo = (Tipo)(((LinkedList)valor).get(0));
-            ((LinkedList) this.valor).remove(0);
-            
-            if(this.tipo.getTipo_primitivo().compareTo(LISTA)==0){
-                this.dimensionX = ((LinkedList) this.valor).size();
-            }
+        else if(valor instanceof Lista){            
+            this.tipo = new Tipo(LISTA);
+            this.dimensionX = ((Lista) this.valor).size();
+        }
+        
+        else if(valor instanceof Vector){            
+            this.tipo = new Tipo(VECTOR);
+            this.dimensionX = ((Vector) this.valor).size();
         }
     }
     

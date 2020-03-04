@@ -4,7 +4,6 @@ import Entorno.Funciones;
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
 import Utilidades.Mensaje;
-import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
 import java.util.LinkedList;
 
 public class LlamadaFunction implements Instruccion {
