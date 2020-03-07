@@ -2,7 +2,9 @@ package arbol;
 
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
+import Utilidades.Error;
 import Utilidades.Mensaje;
+import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
 import java.util.LinkedList;
 
 public class Declaracion implements Instruccion {
@@ -28,8 +30,15 @@ public class Declaracion implements Instruccion {
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         Object t = getExpresion().ejecutar(ts, mensajes);
-        Simbolo nuevo = new Simbolo(getIdentificador(), getExpresion().ejecutar(ts, mensajes));
-        ts.addSymbol(nuevo);
+        
+        if(!(t instanceof Error) && t != null){
+            Simbolo nuevo = new Simbolo(getIdentificador(), t);
+            ts.addSymbol(nuevo);   
+        }
+        else{
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo declarar la variable porque la operación no es válida."));
+        }
+        
         return null;
     }
 

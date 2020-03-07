@@ -2,6 +2,7 @@ package arbol;
 
 import Entorno.Funciones;
 import Entorno.TablaDeSimbolos;
+import Utilidades.Graficas;
 import Utilidades.Mensaje;
 import java.util.LinkedList;
 
@@ -22,6 +23,9 @@ public class Arbol{
         Funciones instancia = Funciones.getSingletonInstance();
         instancia.reiniciar();
         
+        Graficas i_graficas = Graficas.getSingletonInstance();
+        i_graficas.reiniciar();
+        
         for(Instruccion ins:instrucciones){
             ins.ejecutar(getTsglobal(), getMensajes());
         }
@@ -34,7 +38,6 @@ public class Arbol{
             temporal += ins.getArbol(getTsglobal());
         }
     }
-
 
     public TablaDeSimbolos getTsglobal() {
         return tsglobal;

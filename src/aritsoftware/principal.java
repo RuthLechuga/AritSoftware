@@ -4,6 +4,7 @@ import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
 import Entorno.Tipo.tipo_primitivo;
 import Estructuras.Vector;
+import Utilidades.Graficas;
 import Utilidades.Mensaje;
 import Utilidades.Mensaje.tipo_mensaje;
 import arbol.Arbol;
@@ -108,7 +109,7 @@ public class principal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arit Software");
-        setPreferredSize(new java.awt.Dimension(1200, 720));
+        setPreferredSize(new java.awt.Dimension(1300, 720));
         setResizable(false);
 
         jTabbedPane1.setBackground(new java.awt.Color(0, 153, 255));
@@ -121,6 +122,7 @@ public class principal extends javax.swing.JFrame {
 
         consola.setBackground(new java.awt.Color(0, 0, 0));
         consola.setForeground(new java.awt.Color(255, 255, 255));
+        consola.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         consola.setEnabled(false);
         jScrollPane1.setViewportView(consola);
 
@@ -133,7 +135,7 @@ public class principal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Tipo", "Descripcion", "Linea", "Columna"
+                "Tipo", "Linea", "Columna", "Descripcion"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -257,6 +259,11 @@ public class principal extends javax.swing.JFrame {
         ejReporteGraficas.setBackground(new java.awt.Color(0, 0, 0));
         ejReporteGraficas.setForeground(new java.awt.Color(255, 255, 255));
         ejReporteGraficas.setText("Gráficas");
+        ejReporteGraficas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ejReporteGraficasActionPerformed(evt);
+            }
+        });
         jMenu4.add(ejReporteGraficas);
         ejReporteGraficas.getAccessibleContext().setAccessibleName("bttGraficas");
         ejReporteGraficas.getAccessibleContext().setAccessibleDescription("");
@@ -275,8 +282,8 @@ public class principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(84, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -543,6 +550,11 @@ public class principal extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ejReporteTSActionPerformed
+
+    private void ejReporteGraficasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejReporteGraficasActionPerformed
+        Galeria graficas = new Galeria();
+        graficas.show();
+    }//GEN-LAST:event_ejReporteGraficasActionPerformed
     
     public void interpretar(String entrada){
         errores = new LinkedList<>();

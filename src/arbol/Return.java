@@ -26,7 +26,7 @@ public class Return implements Instruccion{
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         if(this.expresion== null)
             return this;
-        
+        System.out.print(" ");
         return this.expresion.ejecutar(ts,mensajes);
     }
 
