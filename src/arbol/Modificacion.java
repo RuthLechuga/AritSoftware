@@ -2,8 +2,8 @@ package arbol;
 
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
-import static Entorno.Tipo.tipo_primitivo.VECTOR;
 import Estructuras.Lista;
+import Estructuras.Matriz;
 import Estructuras.Vector;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
@@ -29,6 +29,7 @@ public class Modificacion implements Instruccion{
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         
         Simbolo s = ts.getSymbol(identificador);
+        Boolean tipo_acceso = false;
         
         Object temporal = null;
         
@@ -36,6 +37,8 @@ public class Modificacion implements Instruccion{
             temporal = ((Lista)s.getValor()).getLista();
         else if(s.getValor() instanceof Vector)
             temporal = ((Vector)s.getValor()).getVector();
+        else if(s.getValor() instanceof Matriz)
+            temporal = ((Matriz)s.getValor()).getMatriz();
         else
         {
             temporal = new LinkedList<Object>();
@@ -69,6 +72,9 @@ public class Modificacion implements Instruccion{
             }
             else if(s.getValor() instanceof Vector){
                 ts.addSymbol(new Simbolo(s.getIdentificador(),new Vector((LinkedList<Object>) temporal)));
+            }
+            else if(s.getValor() instanceof Matriz){
+                ts.addSymbol(new Simbolo(s.getIdentificador(),new Matriz(((LinkedList<Object>) temporal),s.getDimensionX(),s.getDimensionY())));
             }
             else{
                 ts.addSymbol(new Simbolo(s.getIdentificador(),new Vector((LinkedList<Object>) temporal)));

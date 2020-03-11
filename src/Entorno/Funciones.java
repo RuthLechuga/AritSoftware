@@ -4,6 +4,7 @@ import static Entorno.Tipo.tipo_primitivo.CADENA;
 import static Entorno.Tipo.tipo_primitivo.DECIMAL;
 import static Entorno.Tipo.tipo_primitivo.ENTERO;
 import Estructuras.Lista;
+import Estructuras.Matriz;
 import Estructuras.Vector;
 import Utilidades.Graficas;
 import Utilidades.Mensaje;
@@ -77,6 +78,9 @@ public class Funciones {
         if(nombre.compareTo("c")==0)
             return functionC(parametros,ts,mensajes,linea,columna);
         
+        if(nombre.compareTo("matrix")==0 && parametros.size()==3)
+            return functionMatrix(parametros.get(0),parametros.get(1),parametros.get(2),ts,mensajes,linea,columna);
+            
         if(nombre.compareTo("stringlength")==0 && parametros.size()==1)
             return stringLength(parametros.get(0),ts,mensajes,linea,columna);
         
@@ -126,6 +130,14 @@ public class Funciones {
             Graficas instancia = Graficas.getSingletonInstance();
             instancia.add_grafica(barplot(parametros.get(0),parametros.get(1),parametros.get(2),parametros.get(3),parametros.get(4),ts,mensajes,linea,columna));
             return null;
+        }
+        
+        if(nombre.compareTo("ncol")==0 && parametros.size()==1){
+            return f_ncol(parametros.get(0),ts,mensajes,linea,columna);
+        }
+        
+        if(nombre.compareTo("nrow")==0 && parametros.size()==1){
+            return f_nrow(parametros.get(0),ts,mensajes,linea,columna);
         }
         
         mensajes.add(new Mensaje(linea,columna,SEMANTICO,"La función:"+nombre+" no ha sido declarada"));
@@ -459,6 +471,33 @@ public class Funciones {
         
     }
     
+    public int f_ncol(Instruccion matriz, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        try{
+            
+            Object t = ((Matriz)matriz.ejecutar(ts, mensajes));
+            return ((Matriz)t).getDimension_x();
+            
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo realizar la función nCol."));
+            return 0;
+        }
+    }
+    
+    public int f_nrow(Instruccion matriz, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        try{
+            
+            Object t = ((Matriz)matriz.ejecutar(ts, mensajes));
+            return ((Matriz)t).getDimension_y();
+            
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo realizar la función nCol."));
+            return 0;
+        }
+    }
+    
+    //---------------------------------------ESTRUCTURAS-------------------------------------------------------//
     public Object functionList(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         
         try{
@@ -531,6 +570,41 @@ public class Funciones {
         
     }
     
+    public Object functionMatrix(Instruccion vector, Instruccion nrow, Instruccion ncol, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        
+        try{
+            Object v = vector.ejecutar(ts, mensajes);
+            LinkedList<Object> tvector;
+            
+            if(v instanceof Vector)
+                tvector = ((Vector)v).getVector();
+            else{
+                tvector = new LinkedList<Object>();
+                tvector.add(v);
+            }
+                
+            int rows = ((int)nrow.ejecutar(ts, mensajes));
+            int cols = ((int)ncol.ejecutar(ts, mensajes));
+            int total = rows*cols;
+            LinkedList<Object> temporal = new LinkedList<Object>();
+            int cont = 0;
+            
+            for(int i=0;i<total;i++){
+                temporal.add(tvector.get(cont));
+                
+                cont++;
+                if(cont == tvector.size())
+                    cont =0;
+            }
+            
+            return new Matriz(temporal,cols,rows);
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido crear la matriz."));
+            return null;
+        }
+        
+    }
     
     //---------------------------------------GRAFICAS-------------------------------------------------------//
     public JFreeChart pieChart(Instruccion valores, Instruccion labels, Instruccion titulos, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){

@@ -3,6 +3,7 @@ package analizadores;
 import java.util.LinkedList;
 import java_cup.runtime.*;
 import arbol.Acceso;
+import arbol.AccesoMatriz;
 import arbol.Arbol;
 import arbol.Break;
 import arbol.Case;
@@ -16,6 +17,7 @@ import arbol.If;
 import arbol.Instruccion;
 import arbol.LlamadaFunction;
 import arbol.Modificacion;
+import arbol.ModificacionMatriz;
 import Utilidades.Mensaje;
 import Utilidades.Mensaje.tipo_mensaje;
 import arbol.Null;
@@ -88,6 +90,7 @@ non terminal LinkedList<Instruccion> lista_valores;
 non terminal LinkedList<Instruccion> lista_acceso;
 non terminal Instruccion acceso;
 non terminal Instruccion modificacion;
+non terminal Instruccion modificacionMatriz;
 
 precedence right TERNARIO;
 precedence left  OR;
@@ -122,6 +125,7 @@ instruccion ::= print:ins                                                       
             | ntfunction:ins                                                    {: RESULT = ins; :}
             | llfunction:ins                                                    {: RESULT = ins; :}
             | modificacion:ins                                                  {: RESULT = ins; :}
+            | modificacionMatriz:ins                                            {: RESULT = ins; :}
 ;
 
 //---------------------------Instrucciones que solo pueden ir en una instruccion de control---------------------------------//
@@ -141,6 +145,7 @@ instruccion_local ::= print:ins                                                 
             | ntreturn:ins                                                      {: RESULT = ins; :}
             | llfunction:ins                                                    {: RESULT = ins; :}
             | modificacion: ins                                                 {: RESULT = ins; :}
+            | modificacionMatriz:ins                                            {: RESULT = ins; :}
 ;
 
 //---------------------------------------------------Instrucciones-----------------------------------------------------------//
@@ -266,6 +271,21 @@ modificacion ::= IDENTIFICADOR:id lista_acceso:lacc ASIG expresion:exp PUNTOCOMA
                                                                                 {: RESULT = new Modificacion(id,lacc,exp,idleft,idright); :}
 ;
 
+modificacionMatriz ::= IDENTIFICADOR:id CIZQ expresion:x COMA expresion:y CDER ASIG expresion:exp PUNTOCOMA
+                                                                                {: RESULT = new ModificacionMatriz(id,x,y,exp,idleft,idright); :}
+            | IDENTIFICADOR:id CIZQ expresion:x COMA expresion:y CDER ASIG expresion:exp
+                                                                                {: RESULT = new ModificacionMatriz(id,x,y,exp,idleft,idright); :}
+            | IDENTIFICADOR:id CIZQ expresion:x COMA CDER ASIG expresion:exp PUNTOCOMA
+                                                                                {: RESULT = new ModificacionMatriz(id,x,null,exp,idleft,idright); :}
+            | IDENTIFICADOR:id CIZQ expresion:x COMA CDER ASIG expresion:exp
+                                                                                {: RESULT = new ModificacionMatriz(id,x,null,exp,idleft,idright); :}
+            | IDENTIFICADOR:id CIZQ COMA expresion:y CDER ASIG expresion:exp PUNTOCOMA
+                                                                                {: RESULT = new ModificacionMatriz(id,null,y,exp,idleft,idright); :}
+            | IDENTIFICADOR:id CIZQ COMA expresion:y CDER ASIG expresion:exp
+                                                                                {: RESULT = new ModificacionMatriz(id,null,y,exp,idleft,idright); :}
+;
+
+
 //----------------------------------------------------Expresiones------------------------------------------------------------//
 expresion ::= 
               MENOS expresion:exp                                               {: RESULT = new Operacion(tipo_operacion.MENOS_UNARIO, exp, expleft, expright); :}%prec UMENOS     
@@ -296,4 +316,7 @@ expresion ::=
                                                                                 {: RESULT = new OperadorTernario(cond,exp_true,exp_false,condleft,condright); :}
             | IDENTIFICADOR:id lista_acceso:lacc                                {: RESULT = new Acceso(id,lacc,idleft,idright); :}
             | RNULL                                                             {: RESULT = new Null(); :}
+            | IDENTIFICADOR:id CIZQ expresion:x COMA expresion:y CDER           {: RESULT = new AccesoMatriz(id,x,y,idleft,idright); :}
+            | IDENTIFICADOR:id CIZQ expresion:x COMA CDER                       {: RESULT = new AccesoMatriz(id,x,null,idleft,idright); :}
+            | IDENTIFICADOR:id CIZQ COMA expresion:y CDER                       {: RESULT = new AccesoMatriz(id,null,y,idleft,idright); :}
 ;

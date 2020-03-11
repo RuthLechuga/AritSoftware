@@ -3,6 +3,7 @@ package arbol;
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
 import Estructuras.Lista;
+import Estructuras.Matriz;
 import Estructuras.Vector;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
@@ -26,6 +27,8 @@ public class Acceso implements Instruccion {
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
     
         Simbolo s = ts.getSymbol(nombre_estructura);
+        Boolean tipo_acceso = false;
+        int tipo_estructura = 1; //1 vector, 2 lista, 3 matrices, 4 arreglos
         
         if(s != null){
             
@@ -35,6 +38,7 @@ public class Acceso implements Instruccion {
                 int posicion = 1;
                 try{
                    posicion = (int)ins.ejecutar(ts, mensajes);
+                   tipo_acceso = ((Operacion)ins).getAcceso_arreglo();
                 }
                 catch(Exception e){
                     mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Acceso incorrecto a la estructura"));
@@ -43,11 +47,19 @@ public class Acceso implements Instruccion {
                 
                 posicion -=1;
                 
-                if(temporal instanceof Lista)
+                if(temporal instanceof Lista){
                     temporal = ((Lista)temporal).getLista();
-                
-                else if(temporal instanceof Vector)
+                    tipo_estructura = 2;
+                } 
+                else if(temporal instanceof Vector){
                     temporal = ((Vector)temporal).getVector();
+                    tipo_estructura = 1;
+                }
+                else if(temporal instanceof Matriz){
+                    temporal = ((Matriz)temporal).getMatriz();
+                    tipo_estructura = 3;
+                }
+                
                 
                 if(temporal instanceof LinkedList){
                     
@@ -65,6 +77,23 @@ public class Acceso implements Instruccion {
                 }
             }
             
+            if(tipo_estructura == 2){
+                
+                if(!tipo_acceso)
+                    return temporal;
+                
+                if(!(temporal instanceof LinkedList))
+                {
+                    Object t = temporal;
+                    temporal = new LinkedList<Object>();
+                    ((LinkedList)temporal).add(t);
+                }
+                
+                if(tipo_acceso)
+                    return new Lista(((LinkedList)temporal));
+                
+            }
+                
             return temporal;
             
         }

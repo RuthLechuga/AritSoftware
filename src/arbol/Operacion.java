@@ -1,6 +1,7 @@
 package arbol;
 
 import Entorno.TablaDeSimbolos;
+import Estructuras.Matriz;
 import Estructuras.Vector;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.*;
@@ -117,8 +118,17 @@ public class Operacion implements Instruccion {
         if(tipo == ENTERO || tipo == DECIMAL || tipo == CADENA || tipo == BOOLEAN)
             return valor;
         
-        if(tipo == IDENTIFICADOR)
+        if(tipo == IDENTIFICADOR){
+            
+            Object t = ts.getSymbol(valor.toString());
+            
+            if(t == null){
+                mensajes.add(new Mensaje(linea,columna,SEMANTICO,"El identificador no ha sido encontrado en el contexto."));
+                return new Error();   
+            }
+            
             return ts.getSymbol(valor.toString()).getValor();
+        }
         
         if(tipo == ACCESO_ARREGLO)
             return a;
@@ -140,6 +150,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Double){
+                LinkedList<Object> t = suma_vector(((Matriz)a).getMatriz(),new Double(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Double){
                 LinkedList<Object> t = suma_vector(((Vector)b).getVector(),new Double(a.toString())); 
                 
@@ -147,6 +166,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);   
+            }
+            
+            if(b instanceof Matriz && a instanceof Double){
+                LinkedList<Object> t = suma_vector(((Matriz)b).getMatriz(),new Double(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y()); 
             }
             
             if(a instanceof Vector && b instanceof Integer){
@@ -158,6 +186,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Integer){
+                LinkedList<Object> t = suma_vector(((Matriz)a).getMatriz(),new Integer(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Integer){
                 LinkedList<Object> t = suma_vector(((Vector)b).getVector(),new Integer(a.toString())); 
                 
@@ -165,6 +202,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);  
+            }
+            
+            if(b instanceof Matriz && a instanceof Integer){
+                LinkedList<Object> t = suma_vector(((Matriz)b).getMatriz(),new Integer(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof String){
@@ -176,6 +222,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);  
             }
             
+            if(a instanceof Matriz && b instanceof String){
+                LinkedList<Object> t = suma_vector(((Matriz)a).getMatriz(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof String){
                 LinkedList<Object> t = suma_vector(a.toString(),((Vector)b).getVector()); 
                 
@@ -185,6 +240,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t); 
             }
             
+            if(b instanceof Matriz && a instanceof String){
+                LinkedList<Object> t = suma_vector(a.toString(),((Matriz)b).getMatriz()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = suma_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -192,6 +256,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);     
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = suma_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
             }
             
             if(a instanceof String || b instanceof String)
@@ -682,6 +755,51 @@ public class Operacion implements Instruccion {
             if(a instanceof String && b instanceof String)
                 return (a.toString().compareTo(b.toString())<0);
             
+            if(a instanceof Vector && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = mayor_que_vector(((Vector)a).getVector(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = menor_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(a instanceof Vector && b instanceof String){
+                LinkedList<Object> t = mayor_que_vector(((Vector)a).getVector(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(b instanceof Vector && a instanceof String){
+                LinkedList<Object> t = menor_que_vector(((Vector)b).getVector(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t); 
+            }
+            
+            if(a instanceof Vector && b instanceof Vector){
+                LinkedList<Object> t = mayor_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);     
+            }
+           
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
                       
             return new Error();
@@ -695,6 +813,51 @@ public class Operacion implements Instruccion {
             
             if(a instanceof String && b instanceof String)
                 return (a.toString().compareTo(b.toString())>0);
+            
+            if(a instanceof Vector && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = menor_que_vector(((Vector)a).getVector(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = mayor_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(a instanceof Vector && b instanceof String){
+                LinkedList<Object> t = menor_que_vector(((Vector)a).getVector(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(b instanceof Vector && a instanceof String){
+                LinkedList<Object> t = mayor_que_vector(((Vector)b).getVector(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t); 
+            }
+            
+            if(a instanceof Vector && b instanceof Vector){
+                LinkedList<Object> t = menor_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);     
+            }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
             
@@ -710,6 +873,52 @@ public class Operacion implements Instruccion {
             if(a instanceof String && b instanceof String)
                 return (a.toString().compareTo(b.toString())<=0);
             
+            if(a instanceof Vector && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = mayor_igual_que_vector(((Vector)a).getVector(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = menor_igual_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(a instanceof Vector && b instanceof String){
+                LinkedList<Object> t = mayor_igual_que_vector(((Vector)a).getVector(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(b instanceof Vector && a instanceof String){
+                LinkedList<Object> t = menor_igual_que_vector(((Vector)b).getVector(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t); 
+            }
+            
+            if(a instanceof Vector && b instanceof Vector){
+                LinkedList<Object> t = mayor_igual_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);     
+            }
+           
+            
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
             
             return new Error();
@@ -724,6 +933,51 @@ public class Operacion implements Instruccion {
             if(a instanceof String && b instanceof String)
                 return (a.toString().compareTo(b.toString())>=0);
             
+            if(a instanceof Vector && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = menor_igual_que_vector(((Vector)a).getVector(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = mayor_igual_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(a instanceof Vector && b instanceof String){
+                LinkedList<Object> t = menor_igual_que_vector(((Vector)a).getVector(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);  
+            }
+            
+            if(b instanceof Vector && a instanceof String){
+                LinkedList<Object> t = mayor_igual_que_vector(((Vector)b).getVector(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t); 
+            }
+            
+            if(a instanceof Vector && b instanceof Vector){
+                LinkedList<Object> t = menor_igual_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);     
+            }
+            
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
             
             return new Error();
@@ -733,6 +987,33 @@ public class Operacion implements Instruccion {
             
             if(a instanceof Boolean && b instanceof Boolean)
                 return (Boolean)a && (Boolean)b;
+            
+            if(a instanceof Vector && b instanceof Boolean){
+                LinkedList<Object> t = and_vector(((Vector)a).getVector(),((Boolean)b)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(b instanceof Vector && a instanceof Boolean){
+                LinkedList<Object> t = and_vector(((Vector)b).getVector(),((Boolean)a)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(a instanceof Vector && b instanceof Vector){
+                LinkedList<Object> t = and_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, el operador lógico AND solo puede aplicarse sobre valores booleanos."));
             
@@ -744,6 +1025,33 @@ public class Operacion implements Instruccion {
             if(a instanceof Boolean && b instanceof Boolean)
                 return (Boolean)a || (Boolean)b;
             
+            if(a instanceof Vector && b instanceof Boolean){
+                LinkedList<Object> t = or_vector(((Vector)a).getVector(),((Boolean)b)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(b instanceof Vector && a instanceof Boolean){
+                LinkedList<Object> t = or_vector(((Vector)b).getVector(),((Boolean)a)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
+            if(a instanceof Vector && b instanceof Vector){
+                LinkedList<Object> t = or_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, el operador lógico OR solo puede aplicarse sobre valores booleanos."));
             
             return new Error();
@@ -753,6 +1061,15 @@ public class Operacion implements Instruccion {
             if(a instanceof Boolean)
                 return !((Boolean)a);
             
+            if(a instanceof Vector){
+                LinkedList<Object> t = not_vector(((Vector)a).getVector()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Vector(t);   
+            }
+            
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, el operador lógico OR solo puede aplicarse sobre valores booleanos."));
             
             return new Error();
@@ -761,9 +1078,11 @@ public class Operacion implements Instruccion {
         return new Error();
     }
     
-    public LinkedList<Object> suma_vector(LinkedList<Object> lista, Double valor){
+    public LinkedList<Object> suma_vector(LinkedList<Object> listap, Double valor){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -778,10 +1097,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> suma_vector(LinkedList<Object> lista, int valor){
+    public LinkedList<Object> suma_vector(LinkedList<Object> listap, int valor){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -800,14 +1121,20 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> suma_vector(LinkedList<Object> lista, String valor){
+    public LinkedList<Object> suma_vector(LinkedList<Object> listap, String valor){
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
         for(int i=0;i<lista.size();i++){
             lista.set(i,lista.get(i).toString()+valor);
         }      
         return lista;
     }
     
-    public LinkedList<Object> suma_vector(String valor,LinkedList<Object> lista){
+    public LinkedList<Object> suma_vector(String valor,LinkedList<Object> listap){
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
         for(int i=0;i<lista.size();i++){
             lista.set(i,valor+lista.get(i).toString());
         }      
@@ -859,9 +1186,11 @@ public class Operacion implements Instruccion {
         return null;
     }
     
-    public LinkedList<Object> resta_vector(LinkedList<Object> lista, Double valor){
+    public LinkedList<Object> resta_vector(LinkedList<Object> listap, Double valor){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -876,9 +1205,11 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> resta_vector(Double valor,LinkedList<Object> lista){
+    public LinkedList<Object> resta_vector(Double valor,LinkedList<Object> listap){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -893,10 +1224,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> resta_vector(LinkedList<Object> lista, int valor){
+    public LinkedList<Object> resta_vector(LinkedList<Object> listap, int valor){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -915,10 +1248,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> resta_vector(int valor,LinkedList<Object> lista){
+    public LinkedList<Object> resta_vector(int valor,LinkedList<Object> listap){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -982,9 +1317,11 @@ public class Operacion implements Instruccion {
         return null;
     }
     
-    public LinkedList<Object> multiplicacion_vector(LinkedList<Object> lista,Double valor){
+    public LinkedList<Object> multiplicacion_vector(LinkedList<Object> listap,Double valor){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -999,10 +1336,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> multiplicacion_vector(LinkedList<Object> lista,int valor){
+    public LinkedList<Object> multiplicacion_vector(LinkedList<Object> listap,int valor){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1066,9 +1405,11 @@ public class Operacion implements Instruccion {
         return null;
     }
     
-    public LinkedList<Object> division_vector(LinkedList<Object> lista, Double valor){
+    public LinkedList<Object> division_vector(LinkedList<Object> listap, Double valor){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         if(valor == 0)
             return null;
@@ -1086,10 +1427,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> division_vector(Double valor,LinkedList<Object> lista){
+    public LinkedList<Object> division_vector(Double valor,LinkedList<Object> listap){
         
         Double t1;
         LinkedList lista_temporal = new LinkedList<Object>();
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1108,10 +1451,12 @@ public class Operacion implements Instruccion {
         return lista_temporal;
     }
     
-    public LinkedList<Object> division_vector(LinkedList<Object> lista, int valor){
+    public LinkedList<Object> division_vector(LinkedList<Object> listap, int valor){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         if(valor == 0)
             return null;
@@ -1221,8 +1566,10 @@ public class Operacion implements Instruccion {
         return null;
     }
     
-    public LinkedList<Object> potencia_vector(LinkedList<Object> lista, Double valor){
+    public LinkedList<Object> potencia_vector(LinkedList<Object> listap, Double valor){
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1236,8 +1583,10 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> potencia_vector(Double valor,LinkedList<Object> lista){
+    public LinkedList<Object> potencia_vector(Double valor,LinkedList<Object> listap){
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1296,9 +1645,11 @@ public class Operacion implements Instruccion {
         return null;
     }
     
-    public LinkedList<Object> modulo_vector(LinkedList<Object> lista, Double valor){
+    public LinkedList<Object> modulo_vector(LinkedList<Object> listap, Double valor){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1313,9 +1664,11 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> modulo_vector(Double valor,LinkedList<Object> lista){
+    public LinkedList<Object> modulo_vector(Double valor,LinkedList<Object> listap){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1330,10 +1683,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> modulo_vector(LinkedList<Object> lista, int valor){
+    public LinkedList<Object> modulo_vector(LinkedList<Object> listap, int valor){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1352,10 +1707,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> modulo_vector(int valor,LinkedList<Object> lista){
+    public LinkedList<Object> modulo_vector(int valor,LinkedList<Object> listap){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1419,8 +1776,10 @@ public class Operacion implements Instruccion {
         return null;
     }
     
-    public LinkedList<Object> resta_unaria_vector(LinkedList<Object> lista){
-    Double t1;
+    public LinkedList<Object> resta_unaria_vector(LinkedList<Object> listap){
+        Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1433,9 +1792,11 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> igual_que_vector(LinkedList<Object> lista, Double valor){
+    public LinkedList<Object> igual_que_vector(LinkedList<Object> listap, Double valor){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1450,10 +1811,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> igual_que_vector(LinkedList<Object> lista, int valor){
+    public LinkedList<Object> igual_que_vector(LinkedList<Object> listap, int valor){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1472,7 +1835,10 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> igual_que_vector(LinkedList<Object> lista, String valor){
+    public LinkedList<Object> igual_que_vector(LinkedList<Object> listap, String valor){
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
         for(int i=0;i<lista.size();i++){
             lista.set(i,lista.get(i).toString().compareTo(valor)==0);
         }      
@@ -1524,9 +1890,11 @@ public class Operacion implements Instruccion {
         return null;
     }
 
-    public LinkedList<Object> distinto_que_vector(LinkedList<Object> lista, Double valor){
+    public LinkedList<Object> distinto_que_vector(LinkedList<Object> listap, Double valor){
         
         Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1541,10 +1909,12 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> distinto_que_vector(LinkedList<Object> lista, int valor){
+    public LinkedList<Object> distinto_que_vector(LinkedList<Object> listap, int valor){
         
         Double t1;
         int t2;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
         
         for(int i=0;i<lista.size();i++){
             
@@ -1563,7 +1933,10 @@ public class Operacion implements Instruccion {
         return lista;
     }
     
-    public LinkedList<Object> distinto_que_vector(LinkedList<Object> lista, String valor){
+    public LinkedList<Object> distinto_que_vector(LinkedList<Object> listap, String valor){
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
         for(int i=0;i<lista.size();i++){
             lista.set(i,lista.get(i).toString().compareTo(valor)!=0);
         }      
@@ -1613,6 +1986,442 @@ public class Operacion implements Instruccion {
         }
           
         return null;
+    }
+
+    public LinkedList<Object> mayor_que_vector(LinkedList<Object> listap, Double valor){
+        
+        Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            
+            if(lista.get(i) instanceof Integer || lista.get(i) instanceof Double){
+                
+                t1 = new Double(lista.get(i).toString());
+                lista.set(i, (t1>valor));    
+            }
+            
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> mayor_que_vector(LinkedList<Object> listap, String valor){
+        
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            lista.set(i, (lista.get(i).toString().compareTo(valor)>0));    
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> mayor_que_vector(LinkedList<Object> v1, LinkedList<Object> v2, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes){
+        
+        LinkedList lista_temporal = new LinkedList<Object>();
+        Operacion ope_temporal;
+        Instruccion auxiliar;
+        LinkedList<Instruccion> lista_auxiliar;
+        
+        if(v1.size() == v2.size()){
+            
+            for(int i=0;i<v1.size();i++){
+                ope_temporal = new Operacion(MAYOR_QUE,new Operacion(v1.get(i),linea,columna),new Operacion(v2.get(i),linea,columna),linea,columna);
+                Object r = ope_temporal.ejecutar(ts, mensajes);
+                lista_temporal.add(ope_temporal.ejecutar(ts, mensajes));
+            }
+            
+            return lista_temporal;            
+        }
+        
+        else if(v1.size() == 1){
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v2)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MAYOR_QUE,new Operacion(v1.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+        
+        else if(v2.size() == 1){
+            
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v1)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MAYOR_QUE,new Operacion(v2.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+          
+        return null;
+    }
+    
+    public LinkedList<Object> menor_que_vector(LinkedList<Object> listap, Double valor){
+        
+        Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            
+            if(lista.get(i) instanceof Integer || lista.get(i) instanceof Double){
+                
+                t1 = new Double(lista.get(i).toString());
+                lista.set(i, (t1<valor));    
+            }
+            
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> menor_que_vector(LinkedList<Object> listap, String valor){
+        
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            lista.set(i, (lista.get(i).toString().compareTo(valor)<0));    
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> menor_que_vector(LinkedList<Object> v1, LinkedList<Object> v2, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes){
+        
+        LinkedList lista_temporal = new LinkedList<Object>();
+        Operacion ope_temporal;
+        Instruccion auxiliar;
+        LinkedList<Instruccion> lista_auxiliar;
+        
+        if(v1.size() == v2.size()){
+            
+            for(int i=0;i<v1.size();i++){
+                ope_temporal = new Operacion(MENOR_QUE,new Operacion(v1.get(i),linea,columna),new Operacion(v2.get(i),linea,columna),linea,columna);
+                Object r = ope_temporal.ejecutar(ts, mensajes);
+                lista_temporal.add(ope_temporal.ejecutar(ts, mensajes));
+            }
+            
+            return lista_temporal;            
+        }
+        
+        else if(v1.size() == 1){
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v2)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MENOR_QUE,new Operacion(v1.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+        
+        else if(v2.size() == 1){
+            
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v1)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MENOR_QUE,new Operacion(v2.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+          
+        return null;
+    }
+
+    public LinkedList<Object> mayor_igual_que_vector(LinkedList<Object> listap, Double valor){
+        
+        Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            
+            if(lista.get(i) instanceof Integer || lista.get(i) instanceof Double){
+                
+                t1 = new Double(lista.get(i).toString());
+                lista.set(i, (t1>=valor));    
+            }
+            
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> mayor_igual_que_vector(LinkedList<Object> listap, String valor){
+        
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            lista.set(i, (lista.get(i).toString().compareTo(valor)>=0));    
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> mayor_igual_que_vector(LinkedList<Object> v1, LinkedList<Object> v2, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes){
+        
+        LinkedList lista_temporal = new LinkedList<Object>();
+        Operacion ope_temporal;
+        Instruccion auxiliar;
+        LinkedList<Instruccion> lista_auxiliar;
+        
+        if(v1.size() == v2.size()){
+            
+            for(int i=0;i<v1.size();i++){
+                ope_temporal = new Operacion(MAYOR_IGUAL_QUE,new Operacion(v1.get(i),linea,columna),new Operacion(v2.get(i),linea,columna),linea,columna);
+                Object r = ope_temporal.ejecutar(ts, mensajes);
+                lista_temporal.add(ope_temporal.ejecutar(ts, mensajes));
+            }
+            
+            return lista_temporal;            
+        }
+        
+        else if(v1.size() == 1){
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v2)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MAYOR_IGUAL_QUE,new Operacion(v1.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+        
+        else if(v2.size() == 1){
+            
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v1)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MAYOR_IGUAL_QUE,new Operacion(v2.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+          
+        return null;
+    }
+
+    public LinkedList<Object> menor_igual_que_vector(LinkedList<Object> listap, Double valor){
+        
+        Double t1;
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            
+            if(lista.get(i) instanceof Integer || lista.get(i) instanceof Double){
+                
+                t1 = new Double(lista.get(i).toString());
+                lista.set(i, (t1<=valor));    
+            }
+            
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> menor_igual_que_vector(LinkedList<Object> listap, String valor){
+        
+        LinkedList lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            lista.set(i, (lista.get(i).toString().compareTo(valor)<=0));    
+        }
+        
+        return lista;
+    }
+    
+    public LinkedList<Object> menor_igual_que_vector(LinkedList<Object> v1, LinkedList<Object> v2, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes){
+        
+        LinkedList lista_temporal = new LinkedList<Object>();
+        Operacion ope_temporal;
+        Instruccion auxiliar;
+        LinkedList<Instruccion> lista_auxiliar;
+        
+        if(v1.size() == v2.size()){
+            
+            for(int i=0;i<v1.size();i++){
+                ope_temporal = new Operacion(MENOR_IGUAL_QUE,new Operacion(v1.get(i),linea,columna),new Operacion(v2.get(i),linea,columna),linea,columna);
+                Object r = ope_temporal.ejecutar(ts, mensajes);
+                lista_temporal.add(ope_temporal.ejecutar(ts, mensajes));
+            }
+            
+            return lista_temporal;            
+        }
+        
+        else if(v1.size() == 1){
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v2)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MENOR_IGUAL_QUE,new Operacion(v1.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+        
+        else if(v2.size() == 1){
+            
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v1)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(MENOR_IGUAL_QUE,new Operacion(v2.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+          
+        return null;
+    }
+    
+    public LinkedList<Object> and_vector(LinkedList<Object> listap, Boolean valor){
+        
+        LinkedList<Object> lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            lista.set(i,((Boolean)lista.get(i))&&valor);
+        }
+        
+        return lista;
+    }
+  
+    public LinkedList<Object> and_vector(LinkedList<Object> v1, LinkedList<Object> v2, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes){
+        
+        LinkedList lista_temporal = new LinkedList<Object>();
+        Operacion ope_temporal;
+        Instruccion auxiliar;
+        LinkedList<Instruccion> lista_auxiliar;
+        
+        if(v1.size() == v2.size()){
+            
+            for(int i=0;i<v1.size();i++){
+                ope_temporal = new Operacion(AND,new Operacion(v1.get(i),linea,columna),new Operacion(v2.get(i),linea,columna),linea,columna);
+                Object r = ope_temporal.ejecutar(ts, mensajes);
+                lista_temporal.add(ope_temporal.ejecutar(ts, mensajes));
+            }
+            
+            return lista_temporal;            
+        }
+        
+        else if(v1.size() == 1){
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v2)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(AND,new Operacion(v1.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+        
+        else if(v2.size() == 1){
+            
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v1)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(AND,new Operacion(v2.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+          
+        return null;
+    }
+
+    public LinkedList<Object> or_vector(LinkedList<Object> listap, Boolean valor){
+        
+        LinkedList<Object> lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            lista.set(i,((Boolean)lista.get(i))||valor);
+        }
+        
+        return lista;
+    }
+  
+    public LinkedList<Object> or_vector(LinkedList<Object> v1, LinkedList<Object> v2, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes){
+        
+        LinkedList lista_temporal = new LinkedList<Object>();
+        Operacion ope_temporal;
+        Instruccion auxiliar;
+        LinkedList<Instruccion> lista_auxiliar;
+        
+        if(v1.size() == v2.size()){
+            
+            for(int i=0;i<v1.size();i++){
+                ope_temporal = new Operacion(OR,new Operacion(v1.get(i),linea,columna),new Operacion(v2.get(i),linea,columna),linea,columna);
+                Object r = ope_temporal.ejecutar(ts, mensajes);
+                lista_temporal.add(ope_temporal.ejecutar(ts, mensajes));
+            }
+            
+            return lista_temporal;            
+        }
+        
+        else if(v1.size() == 1){
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v2)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(OR,new Operacion(v1.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+        
+        else if(v2.size() == 1){
+            
+            lista_auxiliar = new LinkedList<Instruccion>();
+            
+            for(Object obj: v1)
+                lista_auxiliar.add(new Operacion(obj,linea,columna));
+            
+            auxiliar = new LlamadaFunction("c",lista_auxiliar,linea,columna);
+            
+            ope_temporal = new Operacion(OR,new Operacion(v2.get(0),linea,columna),auxiliar,linea,columna);
+            return (LinkedList)((Vector)ope_temporal.ejecutar(ts, mensajes)).getVector();
+        }
+          
+        return null;
+    }
+
+    public LinkedList<Object> not_vector(LinkedList<Object> listap){
+        
+        LinkedList<Object> lista = new LinkedList<Object>();
+        lista.addAll(listap);
+        
+        for(int i=0;i<lista.size();i++){
+            lista.set(i,!((Boolean)lista.get(i)));
+        }
+        
+        return lista;
     }
 
     
