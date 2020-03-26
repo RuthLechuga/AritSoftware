@@ -7,6 +7,9 @@ import Estructuras.Vector;
 import Utilidades.Graficas;
 import Utilidades.Mensaje;
 import Utilidades.Mensaje.tipo_mensaje;
+import analizadores.Gramatica;
+import analizadores.ParseException;
+import analizadores.TokenMgrError;
 import arbol.Arbol;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -14,6 +17,7 @@ import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -231,6 +235,11 @@ public class principal extends javax.swing.JFrame {
         ejDescendente.setBackground(new java.awt.Color(0, 0, 0));
         ejDescendente.setForeground(new java.awt.Color(255, 255, 255));
         ejDescendente.setText("Descendente");
+        ejDescendente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ejDescendenteActionPerformed(evt);
+            }
+        });
         ejecutar.add(ejDescendente);
 
         jMenuBar1.add(ejecutar);
@@ -555,6 +564,27 @@ public class principal extends javax.swing.JFrame {
         Galeria graficas = new Galeria();
         graficas.show();
     }//GEN-LAST:event_ejReporteGraficasActionPerformed
+
+    private void ejDescendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejDescendenteActionPerformed
+        try {
+            errores = new LinkedList<>();
+            String entrada = tpPanel[tabSeleccionada].getDocument().getText(0, tpPanel[tabSeleccionada].getDocument().getLength());
+            Gramatica parser = new Gramatica(new BufferedReader(new StringReader(entrada)));
+            parser.start();
+            
+            AST_arbolSintaxisAbstracta = new Arbol(parser.instrucciones);
+            AST_arbolSintaxisAbstracta.ejecutar();
+            imprimirErrores();
+            imprimirConsola();
+            
+        } catch(TokenMgrError e){
+            System.err.println(e.getMessage());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_ejDescendenteActionPerformed
     
     public void interpretar(String entrada){
         errores = new LinkedList<>();

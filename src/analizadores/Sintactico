@@ -175,7 +175,7 @@ ntdowhile ::= RDO LLIZQ instrucciones_locales:ins LLDER RWHILE PIZQ expresion:co
                                                                                 {: RESULT = new DoWhile(cond,ins,condleft,condright); :}
 ;
 
-ntfor ::= RFOR PIZQ IDENTIFICADOR:var RIN expresion:exp LLIZQ instrucciones_locales:ins LLDER
+ntfor ::= RFOR PIZQ IDENTIFICADOR:var RIN expresion:exp PDER LLIZQ instrucciones_locales:ins LLDER
                                                                                 {: RESULT = new For(var,exp,ins,varleft,varright); :}
 ;
 

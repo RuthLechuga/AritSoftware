@@ -146,6 +146,10 @@ public class Matriz {
         return temporal;
     }
     
+    public int size(){
+        return matriz.size();
+    }
+    
     @Override
     public String toString(){
         String temporal = "";

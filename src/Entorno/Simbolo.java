@@ -79,7 +79,7 @@ public class Simbolo {
     
     public Simbolo(String identificador){
         this.identificador = identificador;
-        this.valor = null;
+        this.valor = 0;
     }
     
     public Tipo getTipo() {

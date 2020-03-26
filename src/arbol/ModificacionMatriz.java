@@ -41,7 +41,7 @@ public class ModificacionMatriz implements Instruccion{
                     if(x != null && y != null){
                         int posx = ((int)x.ejecutar(ts, mensajes));
                         int posy = ((int)y.ejecutar(ts, mensajes));
-                        ((Matriz)temporal).setValor(posx, posy, valor);
+                        ((Matriz)temporal).setValor(posy, posx, valor);
                     }
                     
                     else if(x != null && y == null){

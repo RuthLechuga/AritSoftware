@@ -29,13 +29,27 @@ public class Declaracion implements Instruccion {
     
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
-        Object t = getExpresion().ejecutar(ts, mensajes);
+        try{
+           Object t=null;
         
-        if(!(t instanceof Error) && t != null){
-            Simbolo nuevo = new Simbolo(getIdentificador(), t);
-            ts.addSymbol(nuevo);   
+            if(expresion != null){
+                t= getExpresion().ejecutar(ts, mensajes);   
+            }
+            else{
+                Simbolo nuevo = new Simbolo(this.identificador);
+                ts.addSymbol(nuevo);
+                return null;
+            }
+
+            if(!(t instanceof Error) && t != null){
+                Simbolo nuevo = new Simbolo(getIdentificador(), t);
+                ts.addSymbol(nuevo);   
+            }
+            else{
+                mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo declarar la variable porque la operación no es válida."));
+            } 
         }
-        else{
+        catch(Exception e){
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo declarar la variable porque la operación no es válida."));
         }
         

@@ -293,6 +293,15 @@ public class Operacion implements Instruccion {
             
             }
             
+            if(a instanceof Matriz && b instanceof Double){
+                LinkedList<Object> t = resta_vector(((Matriz)a).getMatriz(),new Double(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());     
+            }
+            
             if(b instanceof Vector && a instanceof Double){
                 LinkedList<Object> t = resta_vector(new Double(a.toString()),((Vector)b).getVector()); 
                 
@@ -300,6 +309,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);     
+            }
+            
+            if(b instanceof Matriz && a instanceof Double){
+                LinkedList<Object> t = resta_vector(new Double(a.toString()),((Matriz)b).getMatriz()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             if(a instanceof Vector && b instanceof Integer){
@@ -311,6 +329,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);         
             }
             
+            if(a instanceof Matriz && b instanceof Integer){
+                LinkedList<Object> t = resta_vector(((Matriz)a).getMatriz(),new Integer(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());     
+            }
+            
             if(b instanceof Vector && a instanceof Integer){
                 LinkedList<Object> t = resta_vector(new Integer(a.toString()),((Vector)b).getVector()); 
                 
@@ -320,6 +347,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);         
             }
             
+            if(b instanceof Matriz && a instanceof Integer){
+                LinkedList<Object> t = resta_vector(new Integer(a.toString()),((Matriz)b).getMatriz()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = resta_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -327,6 +363,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);         
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = resta_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la resta."));
@@ -351,6 +396,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);
             }
             
+            if(a instanceof Matriz && b instanceof Double){
+                LinkedList<Object> t = multiplicacion_vector(((Matriz)a).getMatriz(),new Double(b.toString()));
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
+            }
+            
             if(b instanceof Vector && a instanceof Double){
                 LinkedList<Object> t = multiplicacion_vector(((Vector)b).getVector(),new Double(a.toString()));
                 
@@ -358,6 +412,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);
+            }
+            
+            if(b instanceof Matriz && a instanceof Double){
+                LinkedList<Object> t = multiplicacion_vector(((Matriz)b).getMatriz(),new Double(a.toString()));
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             if(a instanceof Vector && b instanceof Integer){
@@ -369,6 +432,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);
             }
             
+            if(a instanceof Matriz && b instanceof Integer){
+                LinkedList<Object> t = multiplicacion_vector(((Matriz)a).getMatriz(),new Integer(b.toString()));
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
+            }
+            
             if(b instanceof Vector && a instanceof Integer){
                 LinkedList<Object> t = multiplicacion_vector(((Vector)b).getVector(),new Integer(a.toString()));
                 
@@ -378,6 +450,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);
             }
             
+            if(b instanceof Matriz && a instanceof Integer){
+                LinkedList<Object> t = multiplicacion_vector(((Matriz)b).getMatriz(),new Integer(a.toString()));
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = multiplicacion_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes);
                 
@@ -385,6 +466,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = multiplicacion_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes);
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la multiplicación."));
@@ -427,6 +517,18 @@ public class Operacion implements Instruccion {
                 return new Vector(t);
             }
             
+            if(a instanceof Matriz && b instanceof Double){
+                
+                LinkedList t = division_vector(((Matriz)a).getMatriz(),new Double(b.toString()));
+                
+                if(t == null){
+                    mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, la división entre cero no está definida."));
+                    return null;
+                }
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
+            }
+            
             if(b instanceof Vector && a instanceof Double){
                 
                 LinkedList t = division_vector(new Double(a.toString()),((Vector)b).getVector());
@@ -437,6 +539,18 @@ public class Operacion implements Instruccion {
                 }
                 
                 return new Vector(t);
+            }
+            
+            if(b instanceof Matriz && a instanceof Double){
+                
+                LinkedList t = division_vector(new Double(a.toString()),((Matriz)b).getMatriz());
+                
+                if(t == null){
+                    mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, la división entre cero no está definida."));
+                    return null;
+                }
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             if(a instanceof Vector && b instanceof Integer){
@@ -451,6 +565,18 @@ public class Operacion implements Instruccion {
                 return new Vector(t);
             }
             
+            if(a instanceof Matriz && b instanceof Integer){
+                
+                LinkedList t = division_vector(((Matriz)a).getMatriz(),new Integer(b.toString()));
+                
+                if(t == null){
+                    mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, la división entre cero no está definida."));
+                    return null;
+                }
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
+            }
+            
             if(b instanceof Vector && a instanceof Integer){
             
                 LinkedList t = division_vector(new Integer(a.toString()),((Vector)b).getVector());    
@@ -463,6 +589,18 @@ public class Operacion implements Instruccion {
                 return new Vector(t);
             }
             
+            if(b instanceof Matriz && a instanceof Integer){
+            
+                LinkedList t = division_vector(new Integer(a.toString()),((Matriz)b).getMatriz());    
+                
+                if(t == null){
+                    mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, la división entre cero no está definida."));
+                    return null;
+                }
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = division_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes);
                 
@@ -470,6 +608,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);    
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = division_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes);
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
                     
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear en la division."));
@@ -491,12 +638,29 @@ public class Operacion implements Instruccion {
                 return new Vector(t);
             }
             
+            if(a instanceof Matriz && (b instanceof Double|| b instanceof Integer)){
+                LinkedList<Object> t = potencia_vector(((Matriz)a).getMatriz(),new Double(b.toString()));
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
+            }
+            
             if(b instanceof Vector && (a instanceof Double|| a instanceof Integer)){
                 LinkedList<Object> t = potencia_vector(new Double(a.toString()),((Vector)b).getVector());
                 if(t == null)
                     return new Error();
                 
                 return new Vector(t);
+            }
+            
+            if(b instanceof Matriz && (a instanceof Double|| a instanceof Integer)){
+                LinkedList<Object> t = potencia_vector(new Double(a.toString()),((Matriz)b).getMatriz());
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             if(a instanceof Vector && b instanceof Vector){
@@ -506,6 +670,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = potencia_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes);
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear en la potencia."));
@@ -530,6 +703,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);    
             }
             
+            if(a instanceof Matriz && b instanceof Double){
+                LinkedList<Object> t = modulo_vector(((Matriz)a).getMatriz(),new Double(b.toString()));
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
+            }
+            
             if(b instanceof Vector && a instanceof Double){
                 LinkedList<Object> t = modulo_vector(new Double(a.toString()),((Vector)b).getVector());
                 
@@ -537,6 +719,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t); 
+            }
+            
+            if(b instanceof Matriz && a instanceof Double){
+                LinkedList<Object> t = modulo_vector(new Double(a.toString()),((Matriz)b).getMatriz());
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             if(a instanceof Vector && b instanceof Integer){
@@ -548,6 +739,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);    
             }
             
+            if(a instanceof Matriz && b instanceof Integer){
+                LinkedList<Object> t = modulo_vector(((Matriz)a).getMatriz(),new Integer(b.toString()));
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
+            }
+            
             if(b instanceof Vector && a instanceof Integer){
                 LinkedList<Object> t = modulo_vector(new Integer(a.toString()),((Vector)b).getVector());
                 
@@ -557,6 +757,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);    
             }
             
+            if(b instanceof Matriz && a instanceof Integer){
+                LinkedList<Object> t = modulo_vector(new Integer(a.toString()),((Matriz)b).getMatriz());
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = modulo_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes);
                 
@@ -564,6 +773,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);    
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = modulo_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes);
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en el modulo."));
@@ -580,6 +798,9 @@ public class Operacion implements Instruccion {
             
             if(a instanceof Vector)
                 return new Vector(resta_unaria_vector(((Vector)a).getVector()));
+            
+            if(a instanceof Matriz)
+                return new Matriz(resta_unaria_vector(((Matriz)a).getMatriz()),((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, imposible castear  en la resta unitaria."));
             
@@ -607,6 +828,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Double){
+                LinkedList<Object> t = igual_que_vector(((Matriz)a).getMatriz(),new Double(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Double){
                 LinkedList<Object> t = igual_que_vector(((Vector)b).getVector(),new Double(a.toString())); 
                 
@@ -614,6 +844,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);   
+            }
+            
+            if(b instanceof Matriz && a instanceof Double){
+                LinkedList<Object> t = igual_que_vector(((Matriz)b).getMatriz(),new Double(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof Integer){
@@ -625,6 +864,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Integer){
+                LinkedList<Object> t = igual_que_vector(((Matriz)a).getMatriz(),new Integer(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Integer){
                 LinkedList<Object> t = igual_que_vector(((Vector)b).getVector(),new Integer(a.toString())); 
                 
@@ -632,6 +880,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);  
+            }
+            
+            if(b instanceof Matriz && a instanceof Integer){
+                LinkedList<Object> t = igual_que_vector(((Matriz)b).getMatriz(),new Integer(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof String){
@@ -643,6 +900,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);  
             }
             
+            if(a instanceof Matriz && b instanceof String){
+                LinkedList<Object> t = igual_que_vector(((Matriz)a).getMatriz(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof String){
                 LinkedList<Object> t = igual_que_vector(((Vector)b).getVector(),a.toString()); 
                 
@@ -652,6 +918,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t); 
             }
             
+            if(b instanceof Matriz && a instanceof String){
+                LinkedList<Object> t = igual_que_vector(((Matriz)b).getMatriz(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = igual_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -659,6 +934,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);     
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = igual_que_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
@@ -687,6 +971,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Double){
+                LinkedList<Object> t = distinto_que_vector(((Matriz)a).getMatriz(),new Double(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Double){
                 LinkedList<Object> t = distinto_que_vector(((Vector)b).getVector(),new Double(a.toString())); 
                 
@@ -694,6 +987,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);   
+            }
+            
+            if(b instanceof Matriz && a instanceof Double){
+                LinkedList<Object> t = distinto_que_vector(((Matriz)b).getMatriz(),new Double(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof Integer){
@@ -705,6 +1007,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Integer){
+                LinkedList<Object> t = distinto_que_vector(((Matriz)a).getMatriz(),new Integer(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Integer){
                 LinkedList<Object> t = distinto_que_vector(((Vector)b).getVector(),new Integer(a.toString())); 
                 
@@ -712,6 +1023,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);  
+            }
+            
+            if(b instanceof Matriz && a instanceof Integer){
+                LinkedList<Object> t = distinto_que_vector(((Matriz)b).getMatriz(),new Integer(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof String){
@@ -723,6 +1043,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);  
             }
             
+            if(a instanceof Matriz && b instanceof String){
+                LinkedList<Object> t = distinto_que_vector(((Matriz)a).getMatriz(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof String){
                 LinkedList<Object> t = distinto_que_vector(((Vector)b).getVector(),a.toString()); 
                 
@@ -732,6 +1061,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t); 
             }
             
+            if(b instanceof Matriz && a instanceof String){
+                LinkedList<Object> t = distinto_que_vector(((Matriz)b).getMatriz(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = distinto_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -739,6 +1077,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);     
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = distinto_que_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
@@ -763,6 +1110,15 @@ public class Operacion implements Instruccion {
                 
                 return new Vector(t);   
             }
+
+            if(a instanceof Matriz && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = mayor_que_vector(((Matriz)a).getMatriz(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
             
             if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
                 LinkedList<Object> t = menor_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
@@ -771,6 +1127,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);  
+            }
+            
+            if(b instanceof Matriz && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = menor_que_vector(((Matriz)b).getMatriz(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof String){
@@ -782,6 +1147,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);  
             }
             
+            if(a instanceof Matriz && b instanceof String){
+                LinkedList<Object> t = mayor_que_vector(((Matriz)a).getMatriz(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof String){
                 LinkedList<Object> t = menor_que_vector(((Vector)b).getVector(),a.toString()); 
                 
@@ -791,6 +1165,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t); 
             }
             
+            if(b instanceof Matriz && a instanceof String){
+                LinkedList<Object> t = menor_que_vector(((Matriz)b).getMatriz(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = mayor_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -798,6 +1181,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);     
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = mayor_que_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
             }
            
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
@@ -823,6 +1215,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = menor_que_vector(((Matriz)a).getMatriz(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
                 LinkedList<Object> t = mayor_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
                 
@@ -830,6 +1231,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);  
+            }
+            
+            if(b instanceof Matriz && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = mayor_que_vector(((Matriz)b).getMatriz(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof String){
@@ -841,6 +1251,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);  
             }
             
+            if(a instanceof Matriz && b instanceof String){
+                LinkedList<Object> t = menor_que_vector(((Matriz)a).getMatriz(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof String){
                 LinkedList<Object> t = mayor_que_vector(((Vector)b).getVector(),a.toString()); 
                 
@@ -850,6 +1269,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t); 
             }
             
+            if(b instanceof Matriz && a instanceof String){
+                LinkedList<Object> t = mayor_que_vector(((Matriz)b).getMatriz(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = menor_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -857,6 +1285,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);     
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = menor_que_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
@@ -882,6 +1319,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = mayor_igual_que_vector(((Matriz)a).getMatriz(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
                 LinkedList<Object> t = menor_igual_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
                 
@@ -889,6 +1335,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);  
+            }
+            
+            if(b instanceof Matriz && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = menor_igual_que_vector(((Matriz)b).getMatriz(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof String){
@@ -900,6 +1355,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);  
             }
             
+            if(a instanceof Matriz && b instanceof String){
+                LinkedList<Object> t = mayor_igual_que_vector(((Matriz)a).getMatriz(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof String){
                 LinkedList<Object> t = menor_igual_que_vector(((Vector)b).getVector(),a.toString()); 
                 
@@ -907,6 +1371,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t); 
+            }
+            
+            if(b instanceof Matriz && a instanceof String){
+                LinkedList<Object> t = menor_igual_que_vector(((Matriz)b).getMatriz(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof Vector){
@@ -918,6 +1391,14 @@ public class Operacion implements Instruccion {
                 return new Vector(t);     
             }
            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = mayor_igual_que_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
             
@@ -942,6 +1423,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && (b instanceof Integer || b instanceof Double)){
+                LinkedList<Object> t = menor_igual_que_vector(((Matriz)a).getMatriz(),Double.parseDouble(b.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && (a instanceof Integer || a instanceof Double)){
                 LinkedList<Object> t = mayor_igual_que_vector(((Vector)b).getVector(),Double.parseDouble(a.toString())); 
                 
@@ -949,6 +1439,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);  
+            }
+            
+            if(b instanceof Matriz && (a instanceof Integer || a instanceof Double)){
+                LinkedList<Object> t = mayor_igual_que_vector(((Matriz)b).getMatriz(),Double.parseDouble(a.toString())); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             if(a instanceof Vector && b instanceof String){
@@ -960,6 +1459,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);  
             }
             
+            if(a instanceof Matriz && b instanceof String){
+                LinkedList<Object> t = menor_igual_que_vector(((Matriz)a).getMatriz(),b.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof String){
                 LinkedList<Object> t = mayor_igual_que_vector(((Vector)b).getVector(),a.toString()); 
                 
@@ -969,6 +1477,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t); 
             }
             
+            if(b instanceof Matriz && a instanceof String){
+                LinkedList<Object> t = mayor_igual_que_vector(((Matriz)b).getMatriz(),a.toString()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = menor_igual_que_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -976,6 +1493,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);     
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = menor_igual_que_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, no pueden compararse estos tipos de datos."));
@@ -997,6 +1523,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Boolean){
+                LinkedList<Object> t = and_vector(((Matriz)a).getMatriz(),((Boolean)b)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Boolean){
                 LinkedList<Object> t = and_vector(((Vector)b).getVector(),((Boolean)a)); 
                 
@@ -1006,6 +1541,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(b instanceof Matriz && a instanceof Boolean){
+                LinkedList<Object> t = and_vector(((Matriz)b).getMatriz(),((Boolean)a)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = and_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -1013,6 +1557,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);   
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = and_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, el operador lógico AND solo puede aplicarse sobre valores booleanos."));
@@ -1034,6 +1587,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(a instanceof Matriz && b instanceof Boolean){
+                LinkedList<Object> t = or_vector(((Matriz)a).getMatriz(),((Boolean)b)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
             if(b instanceof Vector && a instanceof Boolean){
                 LinkedList<Object> t = or_vector(((Vector)b).getVector(),((Boolean)a)); 
                 
@@ -1043,6 +1605,15 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
+            if(b instanceof Matriz && a instanceof Boolean){
+                LinkedList<Object> t = or_vector(((Matriz)b).getMatriz(),((Boolean)a)); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
+            }
+            
             if(a instanceof Vector && b instanceof Vector){
                 LinkedList<Object> t = or_vector(((Vector)a).getVector(),((Vector)b).getVector(),ts,mensajes); 
                 
@@ -1050,6 +1621,15 @@ public class Operacion implements Instruccion {
                     return new Error();
                 
                 return new Vector(t);   
+            }
+            
+            if(a instanceof Matriz && b instanceof Matriz){
+                LinkedList<Object> t = or_vector(((Matriz)a).getMatriz(),((Matriz)b).getMatriz(),ts,mensajes); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)b).getDimension_x(),((Matriz)b).getDimension_y());   
             }
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, el operador lógico OR solo puede aplicarse sobre valores booleanos."));
@@ -1070,7 +1650,16 @@ public class Operacion implements Instruccion {
                 return new Vector(t);   
             }
             
-            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, el operador lógico OR solo puede aplicarse sobre valores booleanos."));
+            if(a instanceof Matriz){
+                LinkedList<Object> t = not_vector(((Matriz)a).getMatriz()); 
+                
+                if(t == null)
+                    return new Error();
+                
+                return new Matriz(t,((Matriz)a).getDimension_x(),((Matriz)a).getDimension_y());   
+            }
+            
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Operación inválida, el operador lógico NOT solo puede aplicarse sobre valores booleanos."));
             
             return new Error();
         }

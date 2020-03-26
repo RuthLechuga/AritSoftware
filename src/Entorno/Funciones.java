@@ -13,12 +13,23 @@ import arbol.Function;
 import arbol.Instruccion;
 import arbol.Operacion;
 import arbol.Operacion.tipo_operacion;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.util.LinkedList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.xy.DefaultXYZDataset; 
 
 public class Funciones {
 
@@ -122,13 +133,19 @@ public class Funciones {
         
         if(nombre.compareTo("pie")==0 && parametros.size()==3){
             Graficas instancia = Graficas.getSingletonInstance();
-            instancia.add_grafica(pieChart(parametros.get(0),parametros.get(1),parametros.get(2),ts,mensajes,linea,columna));
+            JFreeChart chart = pieChart(parametros.get(0),parametros.get(1),parametros.get(2),ts,mensajes,linea,columna);
+            
+            if(chart != null)
+                instancia.add_grafica(chart);
             return null;
         }
         
         if(nombre.compareTo("barplot")==0 && parametros.size()==5){
             Graficas instancia = Graficas.getSingletonInstance();
-            instancia.add_grafica(barplot(parametros.get(0),parametros.get(1),parametros.get(2),parametros.get(3),parametros.get(4),ts,mensajes,linea,columna));
+            JFreeChart chart = barplot(parametros.get(0),parametros.get(1),parametros.get(2),parametros.get(3),parametros.get(4),ts,mensajes,linea,columna);
+            
+            if(chart != null)
+                instancia.add_grafica(chart);
             return null;
         }
         
@@ -139,6 +156,27 @@ public class Funciones {
         if(nombre.compareTo("nrow")==0 && parametros.size()==1){
             return f_nrow(parametros.get(0),ts,mensajes,linea,columna);
         }
+        
+        if(nombre.compareTo("plot")==0 && parametros.size()==5){
+            Graficas instancia = Graficas.getSingletonInstance();
+            JFreeChart chart = plot(parametros.get(0),parametros.get(1),parametros.get(2),parametros.get(3),parametros.get(4),ts,mensajes,linea,columna);
+            
+            if(chart != null)
+                instancia.add_grafica(chart);
+            return null;
+        }
+        
+        if(nombre.compareTo("hist")==0 && parametros.size()==3){
+            Graficas instancia = Graficas.getSingletonInstance();
+            JFreeChart chart = hist(parametros.get(0),parametros.get(1),parametros.get(2),ts,mensajes,linea,columna);
+            
+            if(chart != null)
+                instancia.add_grafica(chart);
+            return null;
+        }
+        
+        if(nombre.compareTo("length")==0 && parametros.size()==1)
+            return f_length(parametros.get(0),ts,mensajes,linea,columna);
         
         mensajes.add(new Mensaje(linea,columna,SEMANTICO,"La función:"+nombre+" no ha sido declarada"));
         
@@ -497,6 +535,31 @@ public class Funciones {
         }
     }
     
+    public Object f_length(Instruccion i_estructura, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna) {
+    
+        try{
+            
+            Object estructura = i_estructura.ejecutar(ts, mensajes);
+            
+            if(estructura instanceof Vector)
+                return ((Vector)estructura).size();
+            
+            if(estructura instanceof Lista)
+                return ((Lista)estructura).size();
+            
+            if(estructura instanceof Matriz)
+                return ((Matriz)estructura).size();
+            
+            return 0;
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"La función length no pudo ser procesada."));
+            return 0;
+        }
+    
+    }
+
+    
     //---------------------------------------ESTRUCTURAS-------------------------------------------------------//
     public Object functionList(LinkedList<Instruccion> expresiones, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         
@@ -669,6 +732,153 @@ public class Funciones {
         }
         catch(Exception e){
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Es imposible crear el gráfico barplot."));
+            return null;
+        }
+        
+    }
+    
+    public JFreeChart plot(Instruccion valores, Instruccion type, Instruccion Xlab, Instruccion Ylab, Instruccion name, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        
+        try{
+            Object t = name.ejecutar(ts, mensajes);
+            
+            if(t instanceof String){
+                LinkedList<Object> xy;
+                Object temporal = valores.ejecutar(ts, mensajes);
+
+                if(temporal instanceof Matriz)
+                    xy = ((Matriz)temporal).getMatriz();
+                else
+                    xy = ((Vector)temporal).getVector();
+
+                String tipo = type.ejecutar(ts, mensajes).toString().toLowerCase();
+                String et_x = Xlab.ejecutar(ts, mensajes).toString();
+                String et_y = Ylab.ejecutar(ts, mensajes).toString();
+                String titulo = name.ejecutar(ts, mensajes).toString();
+
+                if(tipo.compareTo("i")==0){
+                    XYSeriesCollection dataset = new XYSeriesCollection();
+                    XYSeries serie = new XYSeries(et_x +" vs " +et_y);
+
+                    for(int i=0;i<xy.size();i++){
+                        serie.add(i+1,Double.parseDouble(xy.get(i).toString()));
+                    }
+
+                    dataset.addSeries(serie);
+
+                    JFreeChart chart = ChartFactory.createXYLineChart(titulo,et_x, et_y, dataset, PlotOrientation.VERTICAL, false, false, false);
+                    return chart;
+                }
+
+                else if(tipo.compareTo("o")==0){
+                    XYSeriesCollection dataset = new XYSeriesCollection();
+                    XYSeries serie = new XYSeries(et_x +" vs " +et_y);
+
+                    for(int i=0;i<xy.size();i++){
+                        serie.add(i+1,Double.parseDouble(xy.get(i).toString()));
+                    }
+
+                    dataset.addSeries(serie);
+
+                    JFreeChart chart = ChartFactory.createXYLineChart(titulo,et_x, et_y, dataset, PlotOrientation.VERTICAL, false, false, false);
+                    XYPlot plot = chart.getXYPlot();
+                    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+                    renderer.setSeriesPaint(0, Color.GREEN);
+                    renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+                    plot.setRenderer(renderer);
+                    return chart;
+                }
+
+                else if(tipo.compareTo("p")==0){
+                    DefaultXYZDataset dataset = new DefaultXYZDataset();
+
+                    for(int i=0;i<xy.size();i++){
+                        dataset.addSeries( ""+(i+1) , new double[][] {{i+1},{Double.parseDouble(xy.get(i).toString())},{0.5}});
+                    }
+
+                    JFreeChart chart = ChartFactory.createBubbleChart(titulo, et_x, et_y, dataset, PlotOrientation.VERTICAL, false, false, false);
+                    return chart;
+                }
+
+                else
+                    mensajes.add(new Mensaje(linea,columna,SEMANTICO,"El tipo del grafico plot no es valido, posibles opciones: I, O, P"));
+
+            }
+            else{
+                LinkedList<Object> xy;
+                Object temporal = valores.ejecutar(ts, mensajes);
+
+                if(temporal instanceof Matriz)
+                    xy = ((Matriz)temporal).getMatriz();
+                else
+                    xy = ((Vector)temporal).getVector();
+
+                String et_x = type.ejecutar(ts, mensajes).toString().toLowerCase();
+                String et_y = Xlab.ejecutar(ts, mensajes).toString();
+                String titulo = Ylab.ejecutar(ts, mensajes).toString();
+                Vector ylim = (Vector)(name.ejecutar(ts, mensajes));
+                double y_inferior = Double.parseDouble(ylim.getVector().get(0).toString());
+                double y_superior = Double.parseDouble(ylim.getVector().get(1).toString());
+                DefaultXYZDataset dataset = new DefaultXYZDataset();
+
+                for(int i=0;i<xy.size();i++){
+                    dataset.addSeries( ""+(i+1) , new double[][] {{i+1},{Double.parseDouble(xy.get(i).toString())},{0.5}});
+                }
+                
+                JFreeChart chart = ChartFactory.createBubbleChart(titulo, et_x, et_y, dataset, PlotOrientation.VERTICAL, false, false, false);
+                XYPlot xyPlot = chart.getXYPlot();
+                NumberAxis rangeAxis = (NumberAxis) xyPlot.getRangeAxis();
+                rangeAxis.setRange(y_inferior, y_superior);
+                rangeAxis.setTickUnit(new NumberTickUnit(50));
+                xyPlot.setBackgroundPaint(Color.white);
+                xyPlot.setDomainGridlinePaint(Color.white);
+                xyPlot.setRangeGridlinePaint(Color.white);
+                xyPlot.setForegroundAlpha(0.8f);
+                chart.setBackgroundPaint(Color.white);
+
+                return chart;
+            }
+            
+            
+            return null;
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Es imposible crear el gráfico plot."));
+            return null;
+        }
+        
+    }
+    
+    //public JFreeChart plot(Instruccion valores, Instruccion Xlab, Instruccion Ylab, Instruccion main, Instruccion Ylim, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){}
+    
+    public JFreeChart hist(Instruccion valores, Instruccion Xlab, Instruccion main, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        
+        try{
+            
+            String et_x = Xlab.ejecutar(ts, mensajes).toString();
+            String titulo = main.ejecutar(ts, mensajes).toString();
+            
+            LinkedList<Object> v;
+            Object temporal = valores.ejecutar(ts, mensajes);
+            
+            if(temporal instanceof Matriz)
+                v = ((Matriz)temporal).getMatriz();
+            else
+                v = ((Vector)temporal).getVector();
+            
+            double[] value = new double[v.size()];
+            for(int i=0;i<v.size();i++)
+                value[i] = Double.parseDouble(v.get(i).toString());
+            HistogramDataset dataset = new HistogramDataset();
+            dataset.setType(HistogramType.RELATIVE_FREQUENCY);
+            dataset.addSeries("Histogram",value,5);
+            
+            JFreeChart chart = ChartFactory.createHistogram(titulo, et_x, "Y", dataset, PlotOrientation.VERTICAL, true, true, true);
+            return chart;
+            
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido realizar el gráfico hist."));
             return null;
         }
         

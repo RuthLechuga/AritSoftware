@@ -29,6 +29,7 @@ public class Arbol{
         for(Instruccion ins:instrucciones){
             ins.ejecutar(getTsglobal(), getMensajes());
         }
+        System.out.println(";d");
     }
     
     public void reporteAST(){
