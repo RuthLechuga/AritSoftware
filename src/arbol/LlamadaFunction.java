@@ -33,9 +33,15 @@ public class LlamadaFunction implements Instruccion {
             String id_simbolo;
             Object valor;
             for(int i=0;i<lista_valores.size();i++){
-                id_simbolo = f.getParametros().get(i).getIdentificador(); 
                 valor = lista_valores.get(i).ejecutar(ts, mensajes);
-                local.addSymbol(new Simbolo(id_simbolo,valor));
+                
+                if(valor instanceof Default){
+                    f.getParametros().get(i).ejecutar(local, mensajes);
+                }
+                else{
+                    id_simbolo = f.getParametros().get(i).getIdentificador(); 
+                    local.addSymbol(new Simbolo(id_simbolo,valor));
+                }
             }
             
             Object result = null;

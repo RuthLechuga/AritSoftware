@@ -9,6 +9,7 @@ import arbol.Break;
 import arbol.Case;
 import arbol.Continue;
 import arbol.Declaracion;
+import arbol.Default;
 import arbol.DoWhile;
 import arbol.Elseif;
 import arbol.For;
@@ -85,12 +86,15 @@ non terminal Instruccion ntfunction;
 non terminal Instruccion ntreturn;
 non terminal LinkedList<Declaracion> lista_parametros;
 non terminal Declaracion parametro;
+non terminal LinkedList<Declaracion> lista_parametrosi;
+non terminal Declaracion parametroi;
 non terminal Instruccion llfunction;
 non terminal LinkedList<Instruccion> lista_valores;
 non terminal LinkedList<Instruccion> lista_acceso;
 non terminal Instruccion acceso;
 non terminal Instruccion modificacion;
 non terminal Instruccion modificacionMatriz;
+non terminal Instruccion valor;
 
 precedence right TERNARIO;
 precedence left  OR;
@@ -224,23 +228,39 @@ ntdefault ::= RDEFAULT DOSPUNTOS instrucciones_locales:ins                      
 ;
 
 //----------------------------------------------------Funciones------------------------------------------------------------//
-ntfunction ::= IDENTIFICADOR:id ASIG RFUNCTION PIZQ lista_parametros:lp PDER LLIZQ instrucciones_locales:ins LLDER 
+ntfunction ::= IDENTIFICADOR:id ASIG RFUNCTION PIZQ lista_parametrosi:lp PDER LLIZQ instrucciones_locales:ins LLDER 
                                                                                 {:
                                                                                     RESULT = new Function(id,lp,ins,idleft,idright);
                                                                                 :}
-/*            | IDENTIFICADOR:id ASIG PIZQ lista_parametros:lp PDER ASGFUNCTION LLIZQ instrucciones_locales:ins LLDER
+            | IDENTIFICADOR:id ASIG PIZQ lista_parametros:lp PDER ASGFUNCTION LLIZQ instrucciones_locales:ins LLDER
                                                                                 {:
                                                                                     RESULT = new Function(id,lp,ins,idleft,idright);
                                                                                 :}
-*/
+            | IDENTIFICADOR:id ASIG PIZQ expresion:exp PDER ASGFUNCTION LLIZQ instrucciones_locales:ins LLDER
+                                                                                {:
+                                                                                    LinkedList lp = new LinkedList<Declaracion>();
+                                                                                    
+                                                                                    Declaracion t = new Declaracion(((Operacion)exp).getValor().toString(),expleft,expright);
+                                                                                    lp.add(t);
+
+                                                                                    RESULT = new Function(id,lp,ins,idleft,idright);
+                                                                                :}                                                                    
+;
+
+lista_parametrosi ::= lista_parametrosi:lp COMA parametroi:p                    {: RESULT = lp; RESULT.add(p); :}
+            | parametroi:p                                                      {: RESULT = new LinkedList<Declaracion>(); RESULT.add(p); :}
+;
+
+parametroi ::= IDENTIFICADOR:id                                                  {: RESULT = new Declaracion(id,idleft,idright); :}
+            | declaracion:decl                                                  {: RESULT = (Declaracion)decl; :}
 ;
 
 lista_parametros ::= lista_parametros:lp COMA parametro:p                       {: RESULT = lp; RESULT.add(p); :}
-            | parametro:p                                                       {: RESULT = new LinkedList<Declaracion>(); RESULT.add(p); :}
+            | parametro:p1 COMA parametro:p2                                    {: RESULT = new LinkedList<Declaracion>(); RESULT.add(p1); RESULT.add(p2); :}
 ;
 
-parametro ::= IDENTIFICADOR:id                                                  {: RESULT = new Declaracion(id,idleft,idright); :}
-            | declaracion:decl                                                  {: RESULT = (Declaracion)decl; :}
+parametro ::= expresion:id                                                      {: RESULT = new Declaracion(((Operacion)id).getValor().toString(),idleft,idright); :}
+            | expresion:id ASIG expresion:exp                                   {: RESULT = new Declaracion(((Operacion)id).getValor().toString(),exp,idleft,idright); :}
 ;
 
 ntreturn ::= RRETURN:r PUNTOCOMA                                                {: RESULT = new Return(rleft,rright); :}
@@ -253,8 +273,12 @@ llfunction ::= IDENTIFICADOR:id PIZQ lista_valores:lv PDER PUNTOCOMA            
             | IDENTIFICADOR:id PIZQ lista_valores:lv PDER                       {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
 ;
 
-lista_valores ::= lista_valores:lv COMA expresion:exp                           {: RESULT = lv; RESULT.add(exp); :}
-            | expresion:exp                                                     {: RESULT = new LinkedList<Instruccion>(); RESULT.add(exp); :}
+lista_valores ::= lista_valores:lv COMA valor:exp                               {: RESULT = lv; RESULT.add(exp); :}
+            | valor:exp                                                         {: RESULT = new LinkedList<Instruccion>(); RESULT.add(exp); :}
+;
+
+valor ::=  expresion:exp                                                        {: RESULT = exp; :}
+            | RDEFAULT:def                                                      {: RESULT = new Default(defleft,defright); :}
 ;
 
 //------------------------------------------------------Arreglos-------------------------------------------------------------//

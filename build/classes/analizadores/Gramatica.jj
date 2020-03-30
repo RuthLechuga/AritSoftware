@@ -17,6 +17,7 @@ import arbol.Break;
 import arbol.Case;
 import arbol.Continue;
 import arbol.Declaracion;
+import arbol.Default;
 import arbol.DoWhile;
 import arbol.Elseif;
 import arbol.For;
@@ -275,6 +276,8 @@ Instruccion inst_id():
     nombre_function=<IDENTIFICADOR>.image <PIZQ> 
     (
         exp = Expresion() {valores.add(exp);} (<COMA>)?
+        |
+        <RDEFAULT> (<COMA>)? {valores.add(new Default(token.beginLine,token.beginColumn));}
     )* <PDER> (<PUNTOCOMA>)?
     {
         return new LlamadaFunction(nombre_function,valores,token.beginLine,token.beginColumn);
@@ -689,6 +692,8 @@ Instruccion ExpresionIdentificadores() :
     identificador=<IDENTIFICADOR>.image <PIZQ> 
     (
         exp = Expresion() {valores.add(exp);} (<COMA>)?
+        |
+        <RDEFAULT> (<COMA>)? {valores.add(new Default(token.beginLine,token.beginColumn));}
     )* <PDER>
     {
         return new LlamadaFunction(identificador,valores,token.beginLine,token.beginColumn);
