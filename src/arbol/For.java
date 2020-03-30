@@ -1,6 +1,11 @@
 package arbol;
 
+import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
+import Estructuras.Arreglo;
+import Estructuras.Lista;
+import Estructuras.Matriz;
+import Estructuras.Vector;
 import Utilidades.Mensaje;
 import java.util.LinkedList;
 
@@ -22,7 +27,40 @@ public class For implements Instruccion {
 
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
-        System.out.println("For :D");
+        Object exp = expresion.ejecutar(ts, mensajes);
+        LinkedList<Object> lista_iteracion = new LinkedList<Object>();
+        
+        if(exp instanceof Arreglo)
+            lista_iteracion = ((Arreglo)exp).getArreglo();
+        
+        else if(exp instanceof Lista)
+            lista_iteracion = ((Lista)exp).getLista();
+        
+        else if(exp instanceof Matriz)
+            lista_iteracion = ((Matriz)exp).getMatriz();
+        
+        else if(exp instanceof Vector)
+            lista_iteracion = ((Vector)exp).getVector();
+        
+        else
+            lista_iteracion.add(exp);
+        
+        TablaDeSimbolos local = new TablaDeSimbolos(ts);
+        
+        for(Object obj: lista_iteracion){
+            local.addSymbol(new Simbolo(variable,obj));
+            
+            for(Instruccion ins: bloque_instrucciones){
+                Object r = ins.ejecutar(local, mensajes);
+                
+                if(r instanceof Break)
+                    return null;
+                
+                if(r instanceof Continue)
+                    break;
+            }
+            
+        }
         
         return null;
     }

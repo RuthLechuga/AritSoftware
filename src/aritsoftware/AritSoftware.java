@@ -6,5 +6,4 @@ public class AritSoftware {
         principal inicio = new principal();
         inicio.show();
     }
-    
 }

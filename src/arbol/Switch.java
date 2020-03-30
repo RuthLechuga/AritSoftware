@@ -26,10 +26,12 @@ public class Switch implements Instruccion {
             ins.setExpresion_switch(expresion);
             result = ins.ejecutar(ts, mensajes);
             
-            if(ins.getIsEquals()){
+            if(ins.getIsEquals() || ins.getIsDefault()){
                 if(result != null){
                     if(result instanceof Break)
                         return null;
+                    
+                    return result;
                 }
             }
         }

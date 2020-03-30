@@ -1,7 +1,6 @@
 options {
   IGNORE_CASE = true;
   STATIC = false;
-  LOOKAHEAD = 5;
 }
 
 PARSER_BEGIN(Gramatica)
@@ -105,6 +104,7 @@ TOKEN : {
       | <RDO: "do">
       | <RFUNCTION: "function">
       | <RRETURN: "return">
+      | <ASG_FUNC: "=>">
       | <PIZQ: "(">
       | <PDER: ")">
       | <CIZQ: "[">
@@ -186,13 +186,31 @@ Instruccion inst_id():
     LinkedList<Instruccion> valores = new LinkedList<Instruccion>();
     LinkedList<Instruccion> accesos = new LinkedList<Instruccion>();
 }
-{    
+{   
+    LOOKAHEAD(5)
+    identificador=<IDENTIFICADOR>.image <ASIG> 
+    <PIZQ>
+    (
+        t=declaracion() {parametros.add(((Declaracion)t));} (<COMA>)?
+    )*
+    <PDER>
+    <ASG_FUNC>
+    <LLIZQ>
+        bloque_instrucciones = instrucciones_locales()
+    <LLDER>
+    {
+        return new Function(identificador,parametros,bloque_instrucciones,token.beginLine,token.beginColumn);
+    }
+
+    |
+    LOOKAHEAD(3)
     identificador=<IDENTIFICADOR>.image <ASIG> exp=Expresion() (<PUNTOCOMA>)?
     {
         return new Declaracion(identificador, exp, token.beginLine, token.beginColumn);
     }
     
     |
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image <ASIG> <RFUNCTION> 
     <PIZQ>
     (
@@ -207,13 +225,17 @@ Instruccion inst_id():
     }
     
     |
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image
     (
+        LOOKAHEAD(2)
         (
             <CIZQ> exp=Expresion() <CDER>
             {accesos.add(new Operacion(tipo_operacion.ACCESO_ARREGLO,exp,true,token.beginLine,token.beginColumn));}
         )
         |
+        
+        LOOKAHEAD(2)
         (
             <CIZQ><CIZQ> exp=Expresion() <CDER><CDER>
             {accesos.add(new Operacion(tipo_operacion.ACCESO_ARREGLO,exp,false,token.beginLine,token.beginColumn));}
@@ -225,6 +247,7 @@ Instruccion inst_id():
     }
     
     |
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ> x=Expresion() <COMA> y=Expresion() <CDER> <ASIG> exp=Expresion() (<PUNTOCOMA>)?
     {
@@ -232,6 +255,7 @@ Instruccion inst_id():
     }
 
     |
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ> x=Expresion() <COMA> <CDER> <ASIG> exp=Expresion() (<PUNTOCOMA>)?
     {
@@ -239,6 +263,7 @@ Instruccion inst_id():
     }
 
     |
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ> <COMA> y=Expresion() <CDER> <ASIG> exp=Expresion() (<PUNTOCOMA>)?
     {
@@ -246,6 +271,7 @@ Instruccion inst_id():
     }
 
     |
+    LOOKAHEAD(5)
     nombre_function=<IDENTIFICADOR>.image <PIZQ> 
     (
         exp = Expresion() {valores.add(exp);} (<COMA>)?
@@ -314,13 +340,13 @@ If ntif():
     <RIF> <PIZQ> exp=Expresion() <PDER> <LLIZQ> bloque_instrucciones=instrucciones_locales() <LLDER> 
     { ifp = new Elseif(exp,bloque_instrucciones,token.beginLine,token.beginColumn);}
     (
-        <RELSE> Tif=ntif() 
+        LOOKAHEAD(2) <RELSE> Tif=ntif() 
         {
             Telseif.addAll(Tif.getLista_elseif());
         }
         
         |
-        <RELSE> <LLIZQ> bloque_instrucciones=instrucciones_locales() <LLDER>
+        LOOKAHEAD(2) <RELSE> <LLIZQ> bloque_instrucciones=instrucciones_locales() <LLDER>
         {Telseif.addLast(new Elseif(bloque_instrucciones,token.beginLine,token.beginColumn));}
     )?
 
@@ -437,9 +463,11 @@ Instruccion ntreturn():
 {
     Instruccion exp=null;
 }
-{
+{   
+    LOOKAHEAD(2)
     <RRETURN> <PIZQ> exp=Expresion() <PDER> (<PUNTOCOMA>)?  { return new Return(exp,token.beginLine,token.beginColumn); }
     |
+    LOOKAHEAD(2)
     <RRETURN> (<PUNTOCOMA>)?    { return new Return(token.beginLine,token.beginColumn); }
 }
 
@@ -542,6 +570,7 @@ Instruccion ExpresionAditiva() :
 {
     izq=ExpresionMultiplicativa()
     (
+        
         <MAS> der=ExpresionMultiplicativa() {izq = new Operacion(tipo_operacion.SUMA,izq,der,token.beginLine,token.beginColumn);}
         |
         <MENOS> der=ExpresionMultiplicativa() {izq = new Operacion(tipo_operacion.RESTA,izq,der,token.beginLine,token.beginColumn);}
@@ -629,6 +658,7 @@ Instruccion ExpresionIdentificadores() :
     Instruccion y;
 }
 {
+    LOOKAHEAD(<CDER>)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ>
     x=Expresion() <COMA> y=Expresion()
@@ -637,7 +667,7 @@ Instruccion ExpresionIdentificadores() :
         return new AccesoMatriz(identificador,x,y,token.beginLine,token.beginColumn);
     }
     |
-
+    LOOKAHEAD(<CDER>)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ>
     x=Expresion() <COMA>
@@ -646,7 +676,7 @@ Instruccion ExpresionIdentificadores() :
         return new AccesoMatriz(identificador,x,null,token.beginLine,token.beginColumn);
     }
     |
-
+    LOOKAHEAD(<CDER>)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ> <COMA> 
     y=Expresion() 
@@ -655,7 +685,7 @@ Instruccion ExpresionIdentificadores() :
         return new AccesoMatriz(identificador,null,y,token.beginLine,token.beginColumn);
     }
     |
-   
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image <PIZQ> 
     (
         exp = Expresion() {valores.add(exp);} (<COMA>)?
@@ -665,15 +695,10 @@ Instruccion ExpresionIdentificadores() :
     }
 
     |
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image
     (
-        (
-            <CIZQ> 
-            exp=Expresion() 
-            <CDER> 
-            {accesos.add(new Operacion(tipo_operacion.ACCESO_ARREGLO,exp,true,token.beginLine,token.beginColumn));}
-        )
-        |
+        LOOKAHEAD(2)
         (
             <CIZQ>
             <CIZQ>
@@ -681,7 +706,17 @@ Instruccion ExpresionIdentificadores() :
             <CDER>
             <CDER>
             {accesos.add(new Operacion(tipo_operacion.ACCESO_ARREGLO,exp,false,token.beginLine,token.beginColumn));}
-        )        
+        )
+
+        |
+        LOOKAHEAD(1)
+        (
+            <CIZQ> 
+            exp=Expresion() 
+            <CDER> 
+            {accesos.add(new Operacion(tipo_operacion.ACCESO_ARREGLO,exp,true,token.beginLine,token.beginColumn));}
+        )
+               
     )+
     {
         return new Acceso(identificador,accesos,token.beginLine,token.beginColumn);

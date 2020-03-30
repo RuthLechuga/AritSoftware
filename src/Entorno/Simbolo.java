@@ -1,9 +1,9 @@
 package Entorno;
 import static Entorno.Tipo.tipo_primitivo.*;
+import Estructuras.Arreglo;
 import Estructuras.Lista;
 import Estructuras.Matriz;
 import Estructuras.Vector;
-import java.util.LinkedList;
 
 public class Simbolo {
 
@@ -73,6 +73,12 @@ public class Simbolo {
             this.tipo = new Tipo(MATRIZ);
             this.dimensionX = ((Matriz)this.valor).getDimension_x();
             this.dimensionY = ((Matriz)this.valor).getDimension_y();
+        }
+        
+        else if(valor instanceof Arreglo){
+            this.tipo = new Tipo(ARREGLO);
+            this.dimensionX = ((Arreglo)this.valor).getDimensionX();
+            this.dimensionY = ((Arreglo)this.valor).getDimensionY();
         }
         
     }

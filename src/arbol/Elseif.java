@@ -1,6 +1,7 @@
 package arbol;
 
 import Entorno.TablaDeSimbolos;
+import Estructuras.Vector;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
 import java.util.LinkedList;
@@ -32,7 +33,26 @@ public class Elseif implements Instruccion {
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         try{
-            valor_condicion = (condicion == null)? false: (Boolean)condicion.ejecutar(ts, mensajes);
+            if(condicion == null)
+                valor_condicion = false;
+            else{
+                Object t = condicion.ejecutar(ts, mensajes);
+                
+                if(t instanceof Boolean)
+                    valor_condicion = ((Boolean)t);
+                
+                else if(t instanceof Vector){
+                    valor_condicion=true;
+                    for(Object obj: ((Vector)t).getVector()){
+                        if(!((Boolean)obj)){
+                            valor_condicion = false;
+                            break;
+                        }   
+                    }
+                }
+            }
+            
+            //valor_condicion = (condicion == null)? false: (Boolean)condicion.ejecutar(ts, mensajes);
         }catch(Exception e){
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Expresión inválida."));
             return null;
@@ -40,11 +60,15 @@ public class Elseif implements Instruccion {
         
         if(valor_condicion || isElse){
             Object result = null;
+
             for(Instruccion ins: bloque_instrucciones){
                 result = ins.ejecutar(ts, mensajes);
                 
-                if(ins instanceof Return)
+                if(result != null && (ins instanceof Return || ins instanceof If || ins instanceof While || ins instanceof For || ins instanceof DoWhile || ins instanceof Switch))
+                {
+                    valor_condicion = true;
                     return result;
+                }
             }
         }
         

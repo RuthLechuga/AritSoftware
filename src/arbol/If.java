@@ -14,15 +14,19 @@ public class If implements Instruccion {
 
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
-        Object result;
         
-        for(Elseif i: lista_elseif){
+        try{
+            Object result;
+            for(Elseif i: lista_elseif){
             result = i.ejecutar(ts, mensajes);
             
-            if(i.getIsElse() || i.getValor_condicion())
-                return result;
+                if(i.getIsElse() || i.getValor_condicion())
+                    return result;
+            }
         }
-        
+        catch(Exception e){
+        }
+
         return null;
     }
 

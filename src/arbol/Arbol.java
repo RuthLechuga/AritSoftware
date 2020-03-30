@@ -26,10 +26,23 @@ public class Arbol{
         Graficas i_graficas = Graficas.getSingletonInstance();
         i_graficas.reiniciar();
         
+        LinkedList<Instruccion> new_instrucciones = new LinkedList<Instruccion>();
+        
+        //PRIMERA PASADA PARA FUNCIONES
         for(Instruccion ins:instrucciones){
+            if(ins instanceof Function){
+                ins.ejecutar(getTsglobal(), getMensajes()); 
+            }
+            else{
+                new_instrucciones.add(ins);
+            }
+        }
+         
+        //SEGUNDA PASADA PARA EL RESTO
+        for(Instruccion ins:new_instrucciones){
             ins.ejecutar(getTsglobal(), getMensajes());
         }
-        System.out.println(";d");
+
     }
     
     public void reporteAST(){

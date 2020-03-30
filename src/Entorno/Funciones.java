@@ -3,6 +3,7 @@ package Entorno;
 import static Entorno.Tipo.tipo_primitivo.CADENA;
 import static Entorno.Tipo.tipo_primitivo.DECIMAL;
 import static Entorno.Tipo.tipo_primitivo.ENTERO;
+import Estructuras.Arreglo;
 import Estructuras.Lista;
 import Estructuras.Matriz;
 import Estructuras.Vector;
@@ -82,6 +83,9 @@ public class Funciones {
     public Object funcionesNativas(String nombre, LinkedList<Instruccion> parametros, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         
         nombre = nombre.toLowerCase();
+        
+        if(nombre.compareTo("array")==0)
+            return functionArray(parametros.get(0),parametros.get(1),ts,mensajes,linea,columna);
         
         if(nombre.compareTo("list")==0)
             return functionList(parametros,ts,mensajes,linea,columna);
@@ -669,6 +673,43 @@ public class Funciones {
         
     }
     
+    public Object functionArray(Instruccion expresion, Instruccion vector, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
+        
+        try{
+            Object exp = expresion.ejecutar(ts, mensajes);
+            Vector dimensiones = ((Vector)(vector.ejecutar(ts, mensajes)));
+            LinkedList<Object> valores = new LinkedList<Object>();
+            
+            if(exp instanceof Vector)
+                valores = ((Vector)exp).getVector();
+            else
+                valores.add(exp);
+            
+            int tam_total=1;
+            
+            for(int i=0;i<dimensiones.getVector().size();i++)
+                tam_total *= ((int)dimensiones.getVector().get(i));
+            
+            LinkedList<Object> arreglo = new LinkedList<Object>();
+            int pos_exp = 0;
+            for(int i=0;i<tam_total;i++){
+                arreglo.add(valores.get(pos_exp));
+                pos_exp++;
+                
+                if(pos_exp==valores.size())
+                    pos_exp = 0;
+            }
+            
+            return new Arreglo(arreglo,dimensiones.getVector());
+            
+        }
+        catch(Exception e){
+            mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido declarar el arreglo."));
+            return null;
+        }
+        
+    }
+    
     //---------------------------------------GRAFICAS-------------------------------------------------------//
     public JFreeChart pieChart(Instruccion valores, Instruccion labels, Instruccion titulos, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         
@@ -848,8 +889,6 @@ public class Funciones {
         }
         
     }
-    
-    //public JFreeChart plot(Instruccion valores, Instruccion Xlab, Instruccion Ylab, Instruccion main, Instruccion Ylim, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){}
     
     public JFreeChart hist(Instruccion valores, Instruccion Xlab, Instruccion main, TablaDeSimbolos ts, LinkedList<Mensaje> mensajes, int linea, int columna){
         

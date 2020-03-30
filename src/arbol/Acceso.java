@@ -2,6 +2,7 @@ package arbol;
 
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
+import Estructuras.Arreglo;
 import Estructuras.Lista;
 import Estructuras.Matriz;
 import Estructuras.Vector;
@@ -33,6 +34,11 @@ public class Acceso implements Instruccion {
         if(s != null){
             
             Object temporal = s.getValor();
+            
+            if(temporal instanceof Arreglo){
+                System.out.println("Entre a codigo remachado :D");
+                return ((Arreglo)temporal).getValor(ts, accesos);
+            }
             
             for(Instruccion ins: accesos){
                 int posicion = 1;
