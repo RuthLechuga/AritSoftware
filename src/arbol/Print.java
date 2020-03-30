@@ -4,6 +4,7 @@ import Entorno.TablaDeSimbolos;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.*;
 import java.util.LinkedList;
+import Utilidades.Error;
 
 public class Print implements Instruccion {
    
@@ -21,15 +22,18 @@ public class Print implements Instruccion {
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         Object resultado = mensaje.ejecutar(ts, mensajes);
         
-        /*if(resultado.toString().compareTo("debuguear")==0)
+        if(resultado.toString().compareTo("debuguear")==0)
         { 
             if(true) System.out.println(":D");
-        }*/
+        }
         
         if(resultado instanceof Error || resultado == null)
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Ha sucedido un error procesando el mensaje en el print."));
-        else
+        else{
             mensajes.add(new Mensaje(linea,columna,MENSAJE,resultado.toString()));
+            System.out.println(resultado.toString());
+        }
+        
         
         return null;
     }

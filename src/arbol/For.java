@@ -45,13 +45,13 @@ public class For implements Instruccion {
         else
             lista_iteracion.add(exp);
         
-        TablaDeSimbolos local = new TablaDeSimbolos(ts);
+        //TablaDeSimbolos local = new TablaDeSimbolos(ts);
         
         for(Object obj: lista_iteracion){
-            local.addSymbol(new Simbolo(variable,obj));
+            ts.addSymbol(new Simbolo(variable,obj));
             
             for(Instruccion ins: bloque_instrucciones){
-                Object r = ins.ejecutar(local, mensajes);
+                Object r = ins.ejecutar(ts, mensajes);
                 
                 if(r instanceof Break)
                     return null;

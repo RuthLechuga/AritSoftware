@@ -8,6 +8,7 @@ import static Utilidades.Mensaje.tipo_mensaje.*;
 import static arbol.Operacion.tipo_operacion.*;
 import java.util.LinkedList;
 import java.util.Objects;
+import Utilidades.Error;
 
 public class Operacion implements Instruccion {
 
@@ -112,8 +113,8 @@ public class Operacion implements Instruccion {
         if(a instanceof Error || b instanceof Error)
             return new Error();
         
-        if(a instanceof Null)
-            return a;
+        /*if(a instanceof Null)
+            return a;*/
         
         if(tipo == ENTERO || tipo == DECIMAL || tipo == CADENA || tipo == BOOLEAN)
             return valor;
@@ -819,6 +820,9 @@ public class Operacion implements Instruccion {
             if(a instanceof Boolean && b instanceof Boolean)
                 return !((Boolean)a^(Boolean)b);
             
+            if(a instanceof Null && b instanceof Null)
+                return true;
+            
             if(a instanceof Vector && b instanceof Double){
                 LinkedList<Object> t = igual_que_vector(((Vector)a).getVector(),new Double(b.toString())); 
                 
@@ -961,6 +965,9 @@ public class Operacion implements Instruccion {
             
             if(a instanceof Boolean && b instanceof Boolean)
                 return ((Boolean)a^(Boolean)b);
+            
+            if(a instanceof Null && b instanceof Null)
+                return false;
             
             if(a instanceof Vector && b instanceof Double){
                 LinkedList<Object> t = distinto_que_vector(((Vector)a).getVector(),new Double(b.toString())); 
@@ -1664,6 +1671,9 @@ public class Operacion implements Instruccion {
             return new Error();
         }
         
+        if(a instanceof Null)
+            return a;
+        
         return new Error();
     }
     
@@ -1942,6 +1952,9 @@ public class Operacion implements Instruccion {
             else if(lista.get(i) instanceof Double){             
                 t1 = new Double(lista.get(i).toString());
                 lista.set(i, (valor)*t1);    
+            }
+            else{
+                return null;
             }
             
         }

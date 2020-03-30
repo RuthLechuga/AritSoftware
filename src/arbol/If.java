@@ -18,9 +18,12 @@ public class If implements Instruccion {
         try{
             Object result;
             for(Elseif i: lista_elseif){
-            result = i.ejecutar(ts, mensajes);
+                result = i.ejecutar(ts, mensajes);
             
                 if(i.getIsElse() || i.getValor_condicion())
+                    return result;
+                
+                if(result instanceof Break)
                     return result;
             }
         }

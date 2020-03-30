@@ -40,14 +40,20 @@ public class Declaracion implements Instruccion {
                 ts.addSymbol(nuevo);
                 return null;
             }
-
-            if(!(t instanceof Error) && t != null){
+            
+            if(t instanceof Error || t==null)
+                mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo declarar la variable porque la operación no es válida."));
+            else{
+                Simbolo nuevo = new Simbolo(getIdentificador(), t);
+                ts.addSymbol(nuevo);
+            }
+            /*if(!(t instanceof Error) && t != null){
                 Simbolo nuevo = new Simbolo(getIdentificador(), t);
                 ts.addSymbol(nuevo);   
             }
             else{
                 mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo declarar la variable porque la operación no es válida."));
-            } 
+            } */
         }
         catch(Exception e){
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo declarar la variable porque la operación no es válida."));

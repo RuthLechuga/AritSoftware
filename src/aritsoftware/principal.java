@@ -619,6 +619,7 @@ public class principal extends javax.swing.JFrame {
     
     public void imprimirErrores(){
         DefaultTableModel modelo = (DefaultTableModel) tablaErrores.getModel();
+        modelo.setRowCount(0);
         
         Object[] fila = new Object[4];
         

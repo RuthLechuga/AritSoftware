@@ -64,7 +64,7 @@ public class Elseif implements Instruccion {
             for(Instruccion ins: bloque_instrucciones){
                 result = ins.ejecutar(ts, mensajes);
                 
-                if(result != null && (ins instanceof Return || ins instanceof If || ins instanceof While || ins instanceof For || ins instanceof DoWhile || ins instanceof Switch))
+                if(result != null && (ins instanceof Return || ins instanceof Break || ins instanceof If || ins instanceof While || ins instanceof For || ins instanceof DoWhile || ins instanceof Switch))
                 {
                     valor_condicion = true;
                     return result;

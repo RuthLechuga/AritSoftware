@@ -1,6 +1,7 @@
 package arbol;
 
 import Entorno.TablaDeSimbolos;
+import Estructuras.Vector;
 import Utilidades.Mensaje;
 import static Utilidades.Mensaje.tipo_mensaje.SEMANTICO;
 import java.util.LinkedList;
@@ -24,7 +25,27 @@ public class OperadorTernario implements Instruccion {
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         try{
-            return ((Boolean)expresion.ejecutar(ts, mensajes)? resultado_true.ejecutar(ts, mensajes) : resultado_false.ejecutar(ts, mensajes));
+            boolean valor_condicion=true;
+            Object t = expresion.ejecutar(ts, mensajes);
+                
+            if(t instanceof Boolean)
+                valor_condicion = ((Boolean)t);
+
+            else if(t instanceof Vector){
+                valor_condicion=true;
+                for(Object obj: ((Vector)t).getVector()){
+                    if(!((Boolean)obj)){
+                        valor_condicion = false;
+                        break;
+                    }   
+                }
+            }
+            
+            if(valor_condicion)
+                return resultado_true.ejecutar(ts, mensajes);
+            else
+                return resultado_false.ejecutar(ts, mensajes);
+            //return ((Boolean)expresion.ejecutar(ts, mensajes)? resultado_true.ejecutar(ts, mensajes) : resultado_false.ejecutar(ts, mensajes));
         }catch(Exception e){
             
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se ha podido ejecutar la operación ternaria."));

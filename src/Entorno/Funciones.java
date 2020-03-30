@@ -262,7 +262,16 @@ public class Funciones {
                 String identificador = ((Operacion)expresion).getValor().toString();
                 
                 Simbolo s = ts.getSymbol(identificador);
-                return s.getTipo().getTipo_primitivo().name();
+                switch(s.getTipo().getTipo_primitivo().name()){
+                    case "ENTERO": return "integer";
+                    case "DECIMAL": return "numeric";
+                    case "BOOLEAN": return "boolean";
+                    case "CADENA": return "string";
+                    case "LISTA": return "list";
+                    case "VECTOR": return "vector";
+                    case "MATRIZ": return "matrix";
+                    case "ARREGLO": return "array";
+                }
                 
             }
             else{
@@ -270,19 +279,19 @@ public class Funciones {
                 Object result = expresion.ejecutar(ts, mensajes);
                 
                 if(result instanceof Integer)
-                    return "ENTERO";
+                    return "integer";
                 
                 if(result instanceof Double)
-                    return "DECIMAL";
+                    return "numeric";
                 
                 if(result instanceof String)
-                    return "CADENA";
+                    return "string";
                 
                 if(result instanceof Boolean)
-                    return "BOOLEAN";
+                    return "boolean";
                 
                 if(result instanceof LinkedList)
-                    return "VECTOR";              
+                    return "vector";              
             }
             
             return "";

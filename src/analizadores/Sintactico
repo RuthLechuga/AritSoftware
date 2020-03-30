@@ -244,8 +244,9 @@ parametro ::= IDENTIFICADOR:id                                                  
 ;
 
 ntreturn ::= RRETURN:r PUNTOCOMA                                                {: RESULT = new Return(rleft,rright); :}
-            | RRETURN expresion:exp PUNTOCOMA                                   {: RESULT = new Return(exp,expleft,expright); :}
-            | RRETURN expresion:exp                                             {: RESULT = new Return(exp,expleft,expright); :}
+            | RRETURN:r                                                         {: RESULT = new Return(rleft,rright); :}
+            | RRETURN PIZQ expresion:exp PDER PUNTOCOMA                         {: RESULT = new Return(exp,expleft,expright); :}
+            | RRETURN PIZQ expresion:exp PDER                                   {: RESULT = new Return(exp,expleft,expright); :}
 ;
 
 llfunction ::= IDENTIFICADOR:id PIZQ lista_valores:lv PDER PUNTOCOMA            {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
