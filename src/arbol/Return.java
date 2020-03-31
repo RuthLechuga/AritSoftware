@@ -32,7 +32,18 @@ public class Return implements Instruccion{
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"ins_return\"] ;\n" +
+                "   \""+this.toString()+"r\" [label=\"return\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"r\"\n"
+        ;
+        
+        if(expresion != null){
+            temporal += expresion.getArbol(ts);
+            temporal += "   \""+this.toString()+"\" -> \""+expresion.toString()+"\"\n";
+        }
+        
+        return temporal;
     }
 
     public Instruccion getExpresion() {

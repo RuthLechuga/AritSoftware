@@ -67,7 +67,31 @@ public class For implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"ins_for\"] ;\n" +
+                "   \""+this.toString()+"for"+"\" [label=\"for\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"for"+"\"\n";
+        
+        temporal+= "   \""+this.toString()+"id\" [label=\"IDENTIFICADOR\"] ;\n";
+        temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"id"+"\"\n";        
+        
+        temporal+= "   \""+this.toString()+"in\" [label=\"IN\"] ;\n";
+        temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"in"+"\"\n";        
+        
+        temporal+= expresion.getArbol(ts);
+        temporal+= "   \""+this.toString()+"\" -> \""+expresion.toString()+"\"\n";        
+        
+        temporal += "\""+bloque_instrucciones.toString()+"\" [label=\"instrucciones\"] ;\n";
+        temporal+= "\""+this.toString()+"\" -> \""+bloque_instrucciones.toString()+"\"\n";
+            
+        for(Instruccion ins:bloque_instrucciones){
+            temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+            temporal+= "\""+bloque_instrucciones.toString()+"\" -> \""+ins.toString()+"\"\n";
+        
+            temporal += ins.getArbol(ts);
+        }
+        
+        return temporal;
     }
 
     public String getVariable() {

@@ -40,7 +40,12 @@ public class Print implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"print\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+mensaje.toString()+"\"\n";
+        temporal+=mensaje.getArbol(ts);
+        return temporal;
+    
     }
     
     public Instruccion getMensaje() {

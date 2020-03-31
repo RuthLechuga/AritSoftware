@@ -64,7 +64,21 @@ public class Declaracion implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"ins_declaracion\"] ;\n" +
+                "   \""+this.toString()+identificador.toString()+"\" [label=\"IDENTIFICADOR\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+identificador.toString()+"\"\n"
+                ;                
+        
+        if(expresion != null){
+            temporal+="   \""+this.toString()+"igual\" [label=\"=\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"igual\"\n";
+                
+            temporal+= expresion.getArbol(ts);
+            temporal+= "   \""+this.toString()+"\" -> \""+expresion.toString()+"\"\n";   
+        }
+        
+        return temporal;
     }
 
     public String getIdentificador() {

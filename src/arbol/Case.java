@@ -56,7 +56,44 @@ public class Case implements Instruccion{
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = "";
+   
+        if(!isDefault){
+            temporal+= "   \""+this.toString()+"\" [label=\"ins_case\"] ;\n"+
+                "   \""+this.toString()+"et"+"\" [label=\"case\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+        
+            temporal+= expresion.getArbol(ts);
+            temporal+= "   \""+this.toString()+"\" -> \""+expresion.toString()+"\"\n";
+
+            temporal += "\""+bloque_instrucciones.toString()+"\" [label=\"instrucciones\"] ;\n";
+            temporal+= "\""+this.toString()+"\" -> \""+bloque_instrucciones.toString()+"\"\n";
+
+            for(Instruccion ins:bloque_instrucciones){
+                temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+                temporal+= "\""+bloque_instrucciones.toString()+"\" -> \""+ins.toString()+"\"\n";
+
+                temporal += ins.getArbol(ts);
+            }
+        }
+        else{
+            temporal+= "   \""+this.toString()+"\" [label=\"ins_case\"] ;\n"+
+                "   \""+this.toString()+"et"+"\" [label=\"default\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+
+            temporal += "\""+bloque_instrucciones.toString()+"\" [label=\"instrucciones\"] ;\n";
+            temporal+= "\""+this.toString()+"\" -> \""+bloque_instrucciones.toString()+"\"\n";
+
+            for(Instruccion ins:bloque_instrucciones){
+                temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+                temporal+= "\""+bloque_instrucciones.toString()+"\" -> \""+ins.toString()+"\"\n";
+
+                temporal += ins.getArbol(ts);
+            }
+        }
+              
+        return temporal;
+
     }
 
     public Instruccion getExpresion() {

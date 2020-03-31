@@ -3,7 +3,7 @@ package Entorno;
 import java.util.LinkedList;
 
 public class TablaDeSimbolos{
-   
+
     private LinkedList<Simbolo> local;
     private TablaDeSimbolos padre;
 
@@ -45,18 +45,38 @@ public class TablaDeSimbolos{
         return false;
     }
     
+//    public void addSymbol(Simbolo nuevo){
+//        for(Simbolo s: this.local){
+//         if(s.getIdentificador().compareTo(nuevo.getIdentificador()) == 0)
+//            {
+//                this.local.remove(s);
+//                this.local.add(nuevo);
+//                return;
+//            }    
+//        }
+//        
+//        this.local.add(nuevo);
+//    }
+    
     public void addSymbol(Simbolo nuevo){
-        for(Simbolo s: this.local){
-         if(s.getIdentificador().compareTo(nuevo.getIdentificador()) == 0)
-            {
-                this.local.remove(s);
-                this.local.add(nuevo);
-                return;
-            }    
+        TablaDeSimbolos local = this;
+        
+        while(local!=null){
+            for(Simbolo s: local.getLocal()){
+                if(s.getIdentificador().compareTo(nuevo.getIdentificador()) == 0)
+                {
+                    local.getLocal().remove(s);
+                    local.getLocal().add(nuevo);
+                    return;
+                }    
+            }
+            local = local.getPadre();
         }
+        
         
         this.local.add(nuevo);
     }
+
     
     public LinkedList<Simbolo> getLocal() {
         return local;

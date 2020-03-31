@@ -1,0 +1,64 @@
+digraph G {
+"arbol.Arbol@1448e439" [label="AST"] ;
+"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" [label="instrucciones"] ;
+"arbol.Arbol@1448e439" -> "[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]"
+"arbol.Declaracion@5410155d" [label="instruccion"] ;
+"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" -> "arbol.Declaracion@5410155d"
+   "arbol.Declaracion@5410155d" [label="ins_declaracion"] ;
+   "arbol.Declaracion@5410155dA" [label="IDENTIFICADOR"] ;
+   "arbol.Declaracion@5410155d" -> "arbol.Declaracion@5410155dA"
+   "arbol.Declaracion@5410155digual" [label="="] ;
+   "arbol.Declaracion@5410155d" -> "arbol.Declaracion@5410155digual"
+   "arbol.LlamadaFunction@3fd6e151" [label="llamada_funcion"] ;
+   "arbol.LlamadaFunction@3fd6e151id" [label="matrix"] ;
+   "arbol.LlamadaFunction@3fd6e151" -> "arbol.LlamadaFunction@3fd6e151id"
+"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" [label="lista_valores"] ;
+"arbol.LlamadaFunction@3fd6e151" -> "[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]"
+"arbol.LlamadaFunction@6bb8a10b" [label="valor"] ;
+"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" -> "arbol.LlamadaFunction@6bb8a10b"
+   "arbol.LlamadaFunction@6bb8a10b" [label="llamada_funcion"] ;
+   "arbol.LlamadaFunction@6bb8a10bid" [label="c"] ;
+   "arbol.LlamadaFunction@6bb8a10b" -> "arbol.LlamadaFunction@6bb8a10bid"
+"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" [label="lista_valores"] ;
+"arbol.LlamadaFunction@6bb8a10b" -> "[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]"
+"arbol.Operacion@2c78dd8b" [label="valor"] ;
+"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@2c78dd8b"
+"arbol.Operacion@2c78dd8b" [label="ENTERO"] ;
+"arbol.Operacion@2e681f6" [label="valor"] ;
+"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@2e681f6"
+"arbol.Operacion@2e681f6" [label="CADENA"] ;
+"arbol.Operacion@12201dce" [label="valor"] ;
+"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@12201dce"
+"arbol.Operacion@12201dce" [label="ENTERO"] ;
+"arbol.Operacion@552a9e60" [label="valor"] ;
+"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@552a9e60"
+"arbol.Operacion@552a9e60" [label="ENTERO"] ;
+"arbol.Operacion@2d87aa3e" [label="valor"] ;
+"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" -> "arbol.Operacion@2d87aa3e"
+"arbol.Operacion@2d87aa3e" [label="ENTERO"] ;
+"arbol.Operacion@242c6c36" [label="valor"] ;
+"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" -> "arbol.Operacion@242c6c36"
+"arbol.Operacion@242c6c36" [label="ENTERO"] ;
+   "arbol.Declaracion@5410155d" -> "arbol.LlamadaFunction@3fd6e151"
+"arbol.Print@62c487ad" [label="instruccion"] ;
+"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" -> "arbol.Print@62c487ad"
+   "arbol.Print@62c487ad" [label="print"] ;
+   "arbol.Print@62c487ad" -> "arbol.Operacion@3fd495cb"
+"arbol.Operacion@3fd495cb" [label="IDENTIFICADOR"] ;
+"arbol.ModificacionMatriz@6ceca9d9" [label="instruccion"] ;
+"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" -> "arbol.ModificacionMatriz@6ceca9d9"
+   "arbol.ModificacionMatriz@6ceca9d9" [label="acceso"] ;
+   "arbol.ModificacionMatriz@6ceca9d9et" [label="A"] ;
+   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.ModificacionMatriz@6ceca9d9et"
+"arbol.Operacion@98b5af6" [label="ENTERO"] ;
+   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.Operacion@98b5af6"
+   "arbol.ModificacionMatriz@6ceca9d9coma" [label=","] ;
+   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.ModificacionMatriz@6ceca9d9coma"
+"arbol.Operacion@1bd7f864" [label="ENTERO"] ;
+   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.Operacion@1bd7f864"
+   "arbol.ModificacionMatriz@6ceca9d9igual" [label="="] ;
+   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.ModificacionMatriz@6ceca9d9igual"
+"arbol.Operacion@1a8face0" [label="ENTERO"] ;
+   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.Operacion@1a8face0"
+
+}

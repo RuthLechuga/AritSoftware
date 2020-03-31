@@ -13,7 +13,10 @@ public class Null implements Instruccion{
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"null\"] ;\n"
+        ;
+        return temporal;
     }
     
     @Override

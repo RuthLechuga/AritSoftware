@@ -814,7 +814,9 @@ public class Operacion implements Instruccion {
                     || a instanceof Integer && b instanceof Double || a instanceof Double && b instanceof Integer)
                 return (Objects.equals(new Double(a.toString()), new Double(b.toString())));
             
-            if(a instanceof String && b instanceof String)
+            if(a instanceof String && b instanceof String || a instanceof String && b instanceof Integer
+                    || a instanceof Integer && b instanceof String || a instanceof Double && b instanceof String
+                    || a instanceof String && b instanceof Double)
                 return (a.toString().compareTo(b.toString())==0);
             
             if(a instanceof Boolean && b instanceof Boolean)
@@ -3029,31 +3031,67 @@ public class Operacion implements Instruccion {
     
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal="";
+        String a = (operador_izquierdo == null) ? null : operador_izquierdo.getArbol(ts);
+        String b = (operador_derecho == null) ? null : operador_derecho.getArbol(ts);
+        
+        if(this.tipo == tipo_operacion.SUMA || this.tipo == tipo_operacion.MULTIPLICACION || this.tipo == tipo_operacion.RESTA
+                || this.tipo == tipo_operacion.DIVISION || this.tipo == tipo_operacion.POTENCIA || this.tipo == tipo_operacion.MODULO
+                || this.tipo == tipo_operacion.IGUAL_QUE || this.tipo == tipo_operacion.DISTINTO_QUE || this.tipo == tipo_operacion.MAYOR_QUE
+                || this.tipo == tipo_operacion.MENOR_QUE || this.tipo == tipo_operacion.MAYOR_IGUAL_QUE || this.tipo == tipo_operacion.MENOR_IGUAL_QUE
+                || this.tipo == tipo_operacion.AND || this.tipo == tipo_operacion.OR){    
+            temporal = "\""+this.toString()+"\" [label=\"expresion\"] ;\n";
+            temporal+=a;
+            temporal+= "\""+this.toString()+"\" -> \""+operador_izquierdo.toString()+"\"\n";
+            temporal+= "\""+this.toString()+"sig\""+" [label=\""+this.tipo.name()+"\"] ;\n";
+            temporal+= "\""+this.toString()+"\" -> \""+this.toString()+"sig\"\n";
+            temporal+= b;
+            temporal+= "\""+this.toString()+"\" -> \""+operador_derecho.toString()+"\"\n";
+        }
+        
+        else if(this.tipo == tipo_operacion.MENOS_UNARIO || this.tipo == tipo_operacion.NOT){
+            temporal = "\""+this.toString()+"\" [label=\"expresion\"] ;\n";
+            temporal+= "\""+this.toString()+"sig\""+" [label=\""+this.tipo.name()+"\"] ;\n";
+            temporal+= "\""+this.toString()+"\" -> \""+this.toString()+"sig\"\n";
+            temporal+=a;
+            temporal+= "\""+this.toString()+"\" -> \""+operador_izquierdo.toString()+"\"\n";
+        }
+        
+        else if(this.tipo == tipo_operacion.ACCESO_ARREGLO){
+            temporal+=a;
+            temporal+= "\""+this.toString()+"\" -> \""+operador_izquierdo.toString()+"\"\n";
+        }
+        
+        else{
+            temporal+= "\""+this.toString()+"\" [label=\""+this.tipo.name()+"\"] ;\n";
+        }
+        
+        
+        return temporal;
     }
     
     public enum tipo_operacion{
-        ENTERO,         //si
-        DECIMAL,        //si
-        CADENA,         //si
-        BOOLEAN,        //si
-        SUMA,           //si
-        RESTA,          //si
-        MULTIPLICACION, //si
-        DIVISION,       //si
-        POTENCIA,       //si
-        MODULO,         //si
-        MENOS_UNARIO,   //si
-        IGUAL_QUE,      //si
-        DISTINTO_QUE,   //si
-        MAYOR_QUE,      //si
-        MENOR_QUE,      //si
-        MAYOR_IGUAL_QUE,//si
-        MENOR_IGUAL_QUE,//si
-        AND,            //si
-        OR,             //si
-        NOT,            //si
-        IDENTIFICADOR,  //si
+        ENTERO,         //si,si
+        DECIMAL,        //si,si
+        CADENA,         //si,si
+        BOOLEAN,        //si,si
+        SUMA,           //si,si
+        RESTA,          //si,si
+        MULTIPLICACION, //si,si
+        DIVISION,       //si,si
+        POTENCIA,       //si,si
+        MODULO,         //si,si
+        MENOS_UNARIO,   //si,si
+        IGUAL_QUE,      //si,si
+        DISTINTO_QUE,   //si,si
+        MAYOR_QUE,      //si,si
+        MENOR_QUE,      //si,si
+        MAYOR_IGUAL_QUE,//si,si
+        MENOR_IGUAL_QUE,//si,si
+        AND,            //si,si
+        OR,             //si,si
+        NOT,            //si,si
+        IDENTIFICADOR,  //si,si
         TERNARIO,       //si
         ACCESO_ARREGLO  
     }

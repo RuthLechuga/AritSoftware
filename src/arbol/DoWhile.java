@@ -37,11 +37,30 @@ public class DoWhile implements Instruccion {
         return null;
     }
 
-    @Override
+@Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"ins_do_while\"] ;\n" +
+                "   \""+this.toString()+"do"+"\" [label=\"do\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"do"+"\"\n";
+        
+        temporal += "\""+bloque_sentencias.toString()+"\" [label=\"instrucciones\"] ;\n";
+        temporal+= "\""+this.toString()+"\" -> \""+bloque_sentencias.toString()+"\"\n";
+            
+        for(Instruccion ins:bloque_sentencias){
+            temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+            temporal+= "\""+bloque_sentencias.toString()+"\" -> \""+ins.toString()+"\"\n";
+        
+            temporal += ins.getArbol(ts);
+        }
+        
+        temporal+="   \""+this.toString()+"et"+"\" [label=\"while\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";     
+        temporal+= condicion.getArbol(ts);
+        temporal+= "   \""+this.toString()+"\" -> \""+condicion.toString()+"\"\n";
+                
+        return temporal;
+    }    
     public Instruccion getCondicion() {
         return condicion;
     }

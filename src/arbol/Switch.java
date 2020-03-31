@@ -41,7 +41,24 @@ public class Switch implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"ins_switch\"] ;\n"+
+                "   \""+this.toString()+"et"+"\" [label=\"switch\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+        
+        temporal+= expresion.getArbol(ts);
+        temporal+= "   \""+this.toString()+"\" -> \""+expresion.toString()+"\"\n";
+        
+        temporal += "\""+cases.toString()+"\" [label=\"cases\"] ;\n";
+        temporal+= "\""+this.toString()+"\" -> \""+cases.toString()+"\"\n";
+          
+        for(Case ins: cases){
+            temporal+= "\""+cases.toString()+"\" -> \""+ins.toString()+"\"\n";
+            temporal += ins.getArbol(ts);
+        }
+                
+        
+        return temporal;
     }
 
     public Instruccion getExpresion() {

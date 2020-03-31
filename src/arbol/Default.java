@@ -21,7 +21,10 @@ public class Default implements Instruccion{
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"default\"] ;\n"
+        ;
+        return temporal;
     }
     
 }

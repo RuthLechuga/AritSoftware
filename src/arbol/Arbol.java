@@ -45,12 +45,23 @@ public class Arbol{
 
     }
     
-    public void reporteAST(){
-        String temporal = "";
+    public String reporteAST(){
+        String temporal = "digraph G {\n";
         
+        temporal += "\""+this.toString()+"\" [label=\"AST\"] ;\n";
+        temporal += "\""+instrucciones.toString()+"\" [label=\"instrucciones\"] ;\n";
+        temporal+= "\""+this.toString()+"\" -> \""+instrucciones.toString()+"\"\n";
+            
         for(Instruccion ins:instrucciones){
+            temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+            temporal+= "\""+instrucciones.toString()+"\" -> \""+ins.toString()+"\"\n";
+        
             temporal += ins.getArbol(getTsglobal());
         }
+        
+        temporal += "\n}";
+        
+        return temporal;
     }
 
     public TablaDeSimbolos getTsglobal() {

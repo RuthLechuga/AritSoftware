@@ -79,7 +79,33 @@ public class AccesoMatriz implements Instruccion{
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"acceso\"] ;\n" +
+                "   \""+this.toString()+"et"+"\" [label=\""+identificador+"\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+        
+        if(x!=null){
+            temporal+= x.getArbol(ts);
+            temporal+= "   \""+this.toString()+"\" -> \""+x.toString()+"\"\n";
+        }
+        else{
+            temporal+= "   \""+this.toString()+"x"+"\" [label=\"null\"] ;\n";
+            temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"x"+"\"\n";
+        }
+        
+        temporal+= "   \""+this.toString()+"coma"+"\" [label=\",\"] ;\n";
+        temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"coma"+"\"\n";
+        
+        if(y!=null){
+            temporal+= y.getArbol(ts);
+            temporal+= "   \""+this.toString()+"\" -> \""+y.toString()+"\"\n";
+        }
+        else{
+            temporal+= "   \""+this.toString()+"y"+"\" [label=\"null\"] ;\n";
+            temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"y"+"\"\n";
+        }
+        
+        return temporal;
     }
 
     public String getIdentificador() {

@@ -251,6 +251,11 @@ public class principal extends javax.swing.JFrame {
         ejReporteAST.setBackground(new java.awt.Color(0, 0, 0));
         ejReporteAST.setForeground(new java.awt.Color(255, 255, 255));
         ejReporteAST.setText("AST");
+        ejReporteAST.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ejReporteASTActionPerformed(evt);
+            }
+        });
         jMenu4.add(ejReporteAST);
         ejReporteAST.getAccessibleContext().setAccessibleName("bttAST");
 
@@ -542,7 +547,7 @@ public class principal extends javax.swing.JFrame {
             "\n" +
             "</html>";
 
-            String ruta = "C:\\Users\\mini_\\Desktop\\reporteTS.html";
+            String ruta = "reporteTS.html";
             File archivo = new File(ruta);
             BufferedWriter bw;
             try {
@@ -585,6 +590,36 @@ public class principal extends javax.swing.JFrame {
             Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_ejDescendenteActionPerformed
+
+    private void ejReporteASTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejReporteASTActionPerformed
+        String arbol = AST_arbolSintaxisAbstracta.reporteAST();
+        System.out.println(arbol);
+        
+        String ruta = "ast";
+        File archivo = new File(ruta+".dot");
+        BufferedWriter bw;
+        try {
+            bw = new BufferedWriter(new FileWriter(archivo));
+            PrintWriter wr = new PrintWriter(bw);
+            wr.write(arbol);
+            wr.close();
+            bw.close();
+            File objetofile = new File(ruta+".dot");
+        } catch (IOException ex) {
+            System.out.println("Error al escribir el archivo");
+        }
+        
+        try
+        {       
+                ProcessBuilder pbuilder;
+                pbuilder = new ProcessBuilder( "dot", "-Tpng", "-o", ruta+".png", ruta+".dot" );
+                pbuilder.redirectErrorStream( true );
+                pbuilder.start();
+                JOptionPane.showMessageDialog(null, "Reporte producido de forma exitosa.");
+
+        } catch (Exception e) { e.printStackTrace(); }
+
+    }//GEN-LAST:event_ejReporteASTActionPerformed
     
     public void interpretar(String entrada){
         errores = new LinkedList<>();

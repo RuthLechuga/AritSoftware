@@ -77,7 +77,47 @@ public class Elseif implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = "";
+        
+        if(!isElse){
+            
+            temporal += 
+                "   \""+this.toString()+"\" [label=\"ins_if\"] ;\n" +
+                "   \""+this.toString()+"et"+"\" [label=\"if\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+            temporal += 
+                "   \""+condicion.toString()+"\" [label=\"expresion\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+condicion.toString()+"\"\n"; 
+            
+            temporal += "\""+bloque_instrucciones.toString()+"\" [label=\"instrucciones\"] ;\n";
+            temporal+= "\""+this.toString()+"\" -> \""+bloque_instrucciones.toString()+"\"\n";
+
+            for(Instruccion ins:bloque_instrucciones){
+                temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+                temporal+= "\""+bloque_instrucciones.toString()+"\" -> \""+ins.toString()+"\"\n";
+
+                temporal += ins.getArbol(ts);
+            }
+        }
+        else{
+            temporal += 
+                "   \""+this.toString()+"\" [label=\"ins_else\"] ;\n" +
+                "   \""+this.toString()+"et"+"\" [label=\"else\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+            
+            temporal += "\""+bloque_instrucciones.toString()+"\" [label=\"instrucciones\"] ;\n";
+            temporal+= "\""+this.toString()+"\" -> \""+bloque_instrucciones.toString()+"\"\n";
+
+            for(Instruccion ins:bloque_instrucciones){
+                temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+                temporal+= "\""+bloque_instrucciones.toString()+"\" -> \""+ins.toString()+"\"\n";
+
+                temporal += ins.getArbol(ts);
+            }
+        }
+        
+        return temporal;
+    
     }
     
     public Boolean getValor_condicion() {

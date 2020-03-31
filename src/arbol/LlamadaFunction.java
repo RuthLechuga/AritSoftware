@@ -64,7 +64,22 @@ public class LlamadaFunction implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String temporal = 
+                "   \""+this.toString()+"\" [label=\"llamada_funcion\"] ;\n" +
+                "   \""+this.toString()+"id"+"\" [label=\""+identificador+"\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"id"+"\"\n";
+        
+        temporal += "\""+lista_valores.toString()+"\" [label=\"lista_valores\"] ;\n";
+        temporal+= "\""+this.toString()+"\" -> \""+lista_valores.toString()+"\"\n";
+            
+        for(Instruccion ins:lista_valores){
+            temporal += "\""+ins.toString()+"\" [label=\"valor\"] ;\n";
+            temporal+= "\""+lista_valores.toString()+"\" -> \""+ins.toString()+"\"\n";
+        
+            temporal += ins.getArbol(ts);
+        }
+        
+        return temporal;
     }
  
     public String getIdentificador() {

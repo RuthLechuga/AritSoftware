@@ -111,7 +111,23 @@ public class Acceso implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"expresion\"] ;\n" +
+                "   \""+this.toString()+"et"+"\" [label=\""+nombre_estructura+"\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+        
+        
+        temporal += "\""+accesos.toString()+"\" [label=\"accesos\"] ;\n";
+        temporal+= "\""+this.toString()+"\" -> \""+accesos.toString()+"\"\n";
+            
+        for(Instruccion ins:accesos){
+            temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+            temporal+= "\""+accesos.toString()+"\" -> \""+ins.toString()+"\"\n";
+        
+            temporal += ins.getArbol(ts);
+        }
+        
+        return temporal;
     }
 
     public String getNombre_estructura() {

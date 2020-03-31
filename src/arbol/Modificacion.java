@@ -101,7 +101,28 @@ public class Modificacion implements Instruccion{
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = 
+                "   \""+this.toString()+"\" [label=\"modificacion\"] ;\n" +
+                "   \""+this.toString()+"et"+"\" [label=\""+identificador+"\"] ;\n" +
+                "   \""+this.toString()+"\" -> \""+this.toString()+"et"+"\"\n";
+        
+        
+        temporal += "\""+accesos.toString()+"\" [label=\"accesos\"] ;\n";
+        temporal+= "\""+this.toString()+"\" -> \""+accesos.toString()+"\"\n";
+            
+        for(Instruccion ins:accesos){
+            temporal += "\""+ins.toString()+"\" [label=\"instruccion\"] ;\n";
+            temporal+= "\""+accesos.toString()+"\" -> \""+ins.toString()+"\"\n";
+        
+            temporal += ins.getArbol(ts);
+        }
+        temporal+= "   \""+this.toString()+"igual"+"\" [label=\"=\"] ;\n";
+        temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"igual"+"\"\n";
+        
+        temporal+= expresion.getArbol(ts);
+        temporal+= "   \""+this.toString()+"\" -> \""+expresion.toString()+"\"\n";        
+
+        return temporal;
     }
     
     public String getIdentificador() {

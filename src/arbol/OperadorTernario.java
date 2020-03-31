@@ -56,7 +56,24 @@ public class OperadorTernario implements Instruccion {
 
     @Override
     public String getArbol(TablaDeSimbolos ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String temporal = "   \""+this.toString()+"\" [label=\"operador_ternario\"] ;\n";
+        
+        temporal+= expresion.getArbol(ts);
+        temporal+= "   \""+this.toString()+"\" -> \""+expresion.toString()+"\"\n";
+        
+        temporal+="   \""+this.toString()+"q\" [label=\"?\"] ;\n";
+        temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"q\"\n";
+        
+        temporal+= resultado_true.getArbol(ts);
+        temporal+= "   \""+this.toString()+"\" -> \""+resultado_true.toString()+"\"\n";
+        
+        temporal+="   \""+this.toString()+"dp\" [label=\":\"] ;\n";
+        temporal+= "   \""+this.toString()+"\" -> \""+this.toString()+"dp\"\n";
+        
+        temporal+= resultado_false.getArbol(ts);
+        temporal+= "   \""+this.toString()+"\" -> \""+resultado_false.toString()+"\"\n";
+        
+        return temporal;
     }
 
     public Instruccion getExpresion() {
