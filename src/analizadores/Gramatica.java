@@ -11,6 +11,7 @@ import arbol.Break;
 import arbol.Case;
 import arbol.Continue;
 import arbol.Declaracion;
+import arbol.Default;
 import arbol.DoWhile;
 import arbol.Elseif;
 import arbol.For;
@@ -22,7 +23,6 @@ import arbol.Modificacion;
 import arbol.ModificacionMatriz;
 import Utilidades.Mensaje;
 import Utilidades.Mensaje.tipo_mensaje;
-import arbol.Default;
 import arbol.Null;
 import arbol.Operacion;
 import arbol.Operacion.tipo_operacion;
@@ -1003,7 +1003,21 @@ public class Gramatica implements GramaticaConstants {
     LinkedList<Instruccion> accesos = new LinkedList<Instruccion>();
     Instruccion x;
     Instruccion y;
-    if (jj_2_16(2147483647)) {
+    if (jj_2_16(5)) {
+      identificador = jj_consume_token(IDENTIFICADOR).image;
+      jj_consume_token(CIZQ);
+      x = Expresion();
+      jj_consume_token(COMA);
+      jj_consume_token(CDER);
+        {if (true) return new AccesoMatriz(identificador,x,null,token.beginLine,token.beginColumn);}
+    } else if (jj_2_17(5)) {
+      identificador = jj_consume_token(IDENTIFICADOR).image;
+      jj_consume_token(CIZQ);
+      jj_consume_token(COMA);
+      y = Expresion();
+      jj_consume_token(CDER);
+        {if (true) return new AccesoMatriz(identificador,null,y,token.beginLine,token.beginColumn);}
+    } else if (jj_2_18(5)) {
       identificador = jj_consume_token(IDENTIFICADOR).image;
       jj_consume_token(CIZQ);
       x = Expresion();
@@ -1011,20 +1025,6 @@ public class Gramatica implements GramaticaConstants {
       y = Expresion();
       jj_consume_token(CDER);
         {if (true) return new AccesoMatriz(identificador,x,y,token.beginLine,token.beginColumn);}
-    } else if (jj_2_17(2147483647)) {
-      identificador = jj_consume_token(IDENTIFICADOR).image;
-      jj_consume_token(CIZQ);
-      x = Expresion();
-      jj_consume_token(COMA);
-      jj_consume_token(CDER);
-        {if (true) return new AccesoMatriz(identificador,x,null,token.beginLine,token.beginColumn);}
-    } else if (jj_2_18(2147483647)) {
-      identificador = jj_consume_token(IDENTIFICADOR).image;
-      jj_consume_token(CIZQ);
-      jj_consume_token(COMA);
-      y = Expresion();
-      jj_consume_token(CDER);
-        {if (true) return new AccesoMatriz(identificador,null,y,token.beginLine,token.beginColumn);}
     } else if (jj_2_19(5)) {
       identificador = jj_consume_token(IDENTIFICADOR).image;
       jj_consume_token(PIZQ);
@@ -1374,7 +1374,7 @@ public class Gramatica implements GramaticaConstants {
     return false;
   }
 
-  private boolean jj_3R_75() {
+  private boolean jj_3R_72() {
     if (jj_scan_token(IDENTIFICADOR)) return true;
     return false;
   }
@@ -1488,11 +1488,6 @@ public class Gramatica implements GramaticaConstants {
     return false;
   }
 
-  private boolean jj_3_18() {
-    if (jj_scan_token(CDER)) return true;
-    return false;
-  }
-
   private boolean jj_3_19() {
     if (jj_scan_token(IDENTIFICADOR)) return true;
     if (jj_scan_token(PIZQ)) return true;
@@ -1511,15 +1506,12 @@ public class Gramatica implements GramaticaConstants {
     return false;
   }
 
-  private boolean jj_3_17() {
-    if (jj_scan_token(CDER)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_74() {
+  private boolean jj_3_18() {
     if (jj_scan_token(IDENTIFICADOR)) return true;
     if (jj_scan_token(CIZQ)) return true;
+    if (jj_3R_17()) return true;
     if (jj_scan_token(COMA)) return true;
+    if (jj_3R_17()) return true;
     return false;
   }
 
@@ -1531,15 +1523,12 @@ public class Gramatica implements GramaticaConstants {
     return false;
   }
 
-  private boolean jj_3_16() {
-    if (jj_scan_token(CDER)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_73() {
+  private boolean jj_3_17() {
     if (jj_scan_token(IDENTIFICADOR)) return true;
     if (jj_scan_token(CIZQ)) return true;
+    if (jj_scan_token(COMA)) return true;
     if (jj_3R_17()) return true;
+    if (jj_scan_token(CDER)) return true;
     return false;
   }
 
@@ -1551,27 +1540,20 @@ public class Gramatica implements GramaticaConstants {
     return false;
   }
 
-  private boolean jj_3R_72() {
-    if (jj_scan_token(IDENTIFICADOR)) return true;
-    if (jj_scan_token(CIZQ)) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
   private boolean jj_3R_71() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_72()) {
+    if (jj_3_16()) {
     jj_scanpos = xsp;
-    if (jj_3R_73()) {
+    if (jj_3_17()) {
     jj_scanpos = xsp;
-    if (jj_3R_74()) {
+    if (jj_3_18()) {
     jj_scanpos = xsp;
     if (jj_3_19()) {
     jj_scanpos = xsp;
     if (jj_3_20()) {
     jj_scanpos = xsp;
-    if (jj_3R_75()) return true;
+    if (jj_3R_72()) return true;
     }
     }
     }
@@ -1603,6 +1585,15 @@ public class Gramatica implements GramaticaConstants {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(45)) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3_16() {
+    if (jj_scan_token(IDENTIFICADOR)) return true;
+    if (jj_scan_token(CIZQ)) return true;
+    if (jj_3R_17()) return true;
+    if (jj_scan_token(COMA)) return true;
+    if (jj_scan_token(CDER)) return true;
     return false;
   }
 

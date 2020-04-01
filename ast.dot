@@ -1,64 +1,241 @@
 digraph G {
-"arbol.Arbol@1448e439" [label="AST"] ;
-"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" [label="instrucciones"] ;
-"arbol.Arbol@1448e439" -> "[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]"
-"arbol.Declaracion@5410155d" [label="instruccion"] ;
-"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" -> "arbol.Declaracion@5410155d"
-   "arbol.Declaracion@5410155d" [label="ins_declaracion"] ;
-   "arbol.Declaracion@5410155dA" [label="IDENTIFICADOR"] ;
-   "arbol.Declaracion@5410155d" -> "arbol.Declaracion@5410155dA"
-   "arbol.Declaracion@5410155digual" [label="="] ;
-   "arbol.Declaracion@5410155d" -> "arbol.Declaracion@5410155digual"
-   "arbol.LlamadaFunction@3fd6e151" [label="llamada_funcion"] ;
-   "arbol.LlamadaFunction@3fd6e151id" [label="matrix"] ;
-   "arbol.LlamadaFunction@3fd6e151" -> "arbol.LlamadaFunction@3fd6e151id"
-"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" [label="lista_valores"] ;
-"arbol.LlamadaFunction@3fd6e151" -> "[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]"
-"arbol.LlamadaFunction@6bb8a10b" [label="valor"] ;
-"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" -> "arbol.LlamadaFunction@6bb8a10b"
-   "arbol.LlamadaFunction@6bb8a10b" [label="llamada_funcion"] ;
-   "arbol.LlamadaFunction@6bb8a10bid" [label="c"] ;
-   "arbol.LlamadaFunction@6bb8a10b" -> "arbol.LlamadaFunction@6bb8a10bid"
-"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" [label="lista_valores"] ;
-"arbol.LlamadaFunction@6bb8a10b" -> "[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]"
-"arbol.Operacion@2c78dd8b" [label="valor"] ;
-"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@2c78dd8b"
-"arbol.Operacion@2c78dd8b" [label="ENTERO"] ;
-"arbol.Operacion@2e681f6" [label="valor"] ;
-"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@2e681f6"
-"arbol.Operacion@2e681f6" [label="CADENA"] ;
-"arbol.Operacion@12201dce" [label="valor"] ;
-"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@12201dce"
-"arbol.Operacion@12201dce" [label="ENTERO"] ;
-"arbol.Operacion@552a9e60" [label="valor"] ;
-"[arbol.Operacion@2c78dd8b, arbol.Operacion@2e681f6, arbol.Operacion@12201dce, arbol.Operacion@552a9e60]" -> "arbol.Operacion@552a9e60"
-"arbol.Operacion@552a9e60" [label="ENTERO"] ;
-"arbol.Operacion@2d87aa3e" [label="valor"] ;
-"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" -> "arbol.Operacion@2d87aa3e"
-"arbol.Operacion@2d87aa3e" [label="ENTERO"] ;
-"arbol.Operacion@242c6c36" [label="valor"] ;
-"[arbol.LlamadaFunction@6bb8a10b, arbol.Operacion@2d87aa3e, arbol.Operacion@242c6c36]" -> "arbol.Operacion@242c6c36"
-"arbol.Operacion@242c6c36" [label="ENTERO"] ;
-   "arbol.Declaracion@5410155d" -> "arbol.LlamadaFunction@3fd6e151"
-"arbol.Print@62c487ad" [label="instruccion"] ;
-"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" -> "arbol.Print@62c487ad"
-   "arbol.Print@62c487ad" [label="print"] ;
-   "arbol.Print@62c487ad" -> "arbol.Operacion@3fd495cb"
-"arbol.Operacion@3fd495cb" [label="IDENTIFICADOR"] ;
-"arbol.ModificacionMatriz@6ceca9d9" [label="instruccion"] ;
-"[arbol.Declaracion@5410155d, arbol.Print@62c487ad, arbol.ModificacionMatriz@6ceca9d9]" -> "arbol.ModificacionMatriz@6ceca9d9"
-   "arbol.ModificacionMatriz@6ceca9d9" [label="acceso"] ;
-   "arbol.ModificacionMatriz@6ceca9d9et" [label="A"] ;
-   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.ModificacionMatriz@6ceca9d9et"
-"arbol.Operacion@98b5af6" [label="ENTERO"] ;
-   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.Operacion@98b5af6"
-   "arbol.ModificacionMatriz@6ceca9d9coma" [label=","] ;
-   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.ModificacionMatriz@6ceca9d9coma"
-"arbol.Operacion@1bd7f864" [label="ENTERO"] ;
-   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.Operacion@1bd7f864"
-   "arbol.ModificacionMatriz@6ceca9d9igual" [label="="] ;
-   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.ModificacionMatriz@6ceca9d9igual"
-"arbol.Operacion@1a8face0" [label="ENTERO"] ;
-   "arbol.ModificacionMatriz@6ceca9d9" -> "arbol.Operacion@1a8face0"
+"arbol.Arbol@20849809" [label="AST"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" [label="instrucciones"] ;
+"arbol.Arbol@20849809" -> "[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]"
+"arbol.Declaracion@4c1f56d6" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Declaracion@4c1f56d6"
+   "arbol.Declaracion@4c1f56d6" [label="ins_declaracion"] ;
+   "arbol.Declaracion@4c1f56d6mattrizPRueba" [label="IDENTIFICADOR"] ;
+   "arbol.Declaracion@4c1f56d6" -> "arbol.Declaracion@4c1f56d6mattrizPRueba"
+   "arbol.Declaracion@4c1f56d6igual" [label="="] ;
+   "arbol.Declaracion@4c1f56d6" -> "arbol.Declaracion@4c1f56d6igual"
+   "arbol.LlamadaFunction@7a594a0b" [label="llamada_funcion"] ;
+   "arbol.LlamadaFunction@7a594a0bid" [label="matrix"] ;
+   "arbol.LlamadaFunction@7a594a0b" -> "arbol.LlamadaFunction@7a594a0bid"
+"[arbol.LlamadaFunction@51c5f3f3, arbol.Operacion@15f86869, arbol.Operacion@5da2f6d4]" [label="lista_valores"] ;
+"arbol.LlamadaFunction@7a594a0b" -> "[arbol.LlamadaFunction@51c5f3f3, arbol.Operacion@15f86869, arbol.Operacion@5da2f6d4]"
+"arbol.LlamadaFunction@51c5f3f3" [label="valor"] ;
+"[arbol.LlamadaFunction@51c5f3f3, arbol.Operacion@15f86869, arbol.Operacion@5da2f6d4]" -> "arbol.LlamadaFunction@51c5f3f3"
+   "arbol.LlamadaFunction@51c5f3f3" [label="llamada_funcion"] ;
+   "arbol.LlamadaFunction@51c5f3f3id" [label="c"] ;
+   "arbol.LlamadaFunction@51c5f3f3" -> "arbol.LlamadaFunction@51c5f3f3id"
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" [label="lista_valores"] ;
+"arbol.LlamadaFunction@51c5f3f3" -> "[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]"
+"arbol.Operacion@6d1be679" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@6d1be679"
+"arbol.Operacion@6d1be679" [label="ENTERO"] ;
+"arbol.Operacion@13bfca42" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@13bfca42"
+"arbol.Operacion@13bfca42" [label="ENTERO"] ;
+"arbol.Operacion@45d2537c" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@45d2537c"
+"arbol.Operacion@45d2537c" [label="ENTERO"] ;
+"arbol.Operacion@f8c0944" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@f8c0944"
+"arbol.Operacion@f8c0944" [label="ENTERO"] ;
+"arbol.Operacion@3d961ee2" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@3d961ee2"
+"arbol.Operacion@3d961ee2" [label="ENTERO"] ;
+"arbol.Operacion@50963ec8" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@50963ec8"
+"arbol.Operacion@50963ec8" [label="ENTERO"] ;
+"arbol.Operacion@788ce15" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@788ce15"
+"arbol.Operacion@788ce15" [label="ENTERO"] ;
+"arbol.Operacion@68a12189" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@68a12189"
+"arbol.Operacion@68a12189" [label="ENTERO"] ;
+"arbol.Operacion@65cd5371" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@65cd5371"
+"arbol.Operacion@65cd5371" [label="ENTERO"] ;
+"arbol.Operacion@44c517e" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@44c517e"
+"arbol.Operacion@44c517e" [label="ENTERO"] ;
+"arbol.Operacion@45f5cf84" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@45f5cf84"
+"arbol.Operacion@45f5cf84" [label="ENTERO"] ;
+"arbol.Operacion@24b903da" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@24b903da"
+"arbol.Operacion@24b903da" [label="ENTERO"] ;
+"arbol.Operacion@2b609ae7" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@2b609ae7"
+"arbol.Operacion@2b609ae7" [label="ENTERO"] ;
+"arbol.Operacion@4dc1f954" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@4dc1f954"
+"arbol.Operacion@4dc1f954" [label="ENTERO"] ;
+"arbol.Operacion@26a39687" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@26a39687"
+"arbol.Operacion@26a39687" [label="ENTERO"] ;
+"arbol.Operacion@4a68f65a" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@4a68f65a"
+"arbol.Operacion@4a68f65a" [label="ENTERO"] ;
+"arbol.Operacion@65f0fa52" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@65f0fa52"
+"arbol.Operacion@65f0fa52" [label="ENTERO"] ;
+"arbol.Operacion@27b9b4e1" [label="valor"] ;
+"[arbol.Operacion@6d1be679, arbol.Operacion@13bfca42, arbol.Operacion@45d2537c, arbol.Operacion@f8c0944, arbol.Operacion@3d961ee2, arbol.Operacion@50963ec8, arbol.Operacion@788ce15, arbol.Operacion@68a12189, arbol.Operacion@65cd5371, arbol.Operacion@44c517e, arbol.Operacion@45f5cf84, arbol.Operacion@24b903da, arbol.Operacion@2b609ae7, arbol.Operacion@4dc1f954, arbol.Operacion@26a39687, arbol.Operacion@4a68f65a, arbol.Operacion@65f0fa52, arbol.Operacion@27b9b4e1]" -> "arbol.Operacion@27b9b4e1"
+"arbol.Operacion@27b9b4e1" [label="ENTERO"] ;
+"arbol.Operacion@15f86869" [label="valor"] ;
+"[arbol.LlamadaFunction@51c5f3f3, arbol.Operacion@15f86869, arbol.Operacion@5da2f6d4]" -> "arbol.Operacion@15f86869"
+"arbol.Operacion@15f86869" [label="ENTERO"] ;
+"arbol.Operacion@5da2f6d4" [label="valor"] ;
+"[arbol.LlamadaFunction@51c5f3f3, arbol.Operacion@15f86869, arbol.Operacion@5da2f6d4]" -> "arbol.Operacion@5da2f6d4"
+"arbol.Operacion@5da2f6d4" [label="ENTERO"] ;
+   "arbol.Declaracion@4c1f56d6" -> "arbol.LlamadaFunction@7a594a0b"
+"arbol.Declaracion@6c396b04" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Declaracion@6c396b04"
+   "arbol.Declaracion@6c396b04" [label="ins_declaracion"] ;
+   "arbol.Declaracion@6c396b04mattrizPRueba" [label="IDENTIFICADOR"] ;
+   "arbol.Declaracion@6c396b04" -> "arbol.Declaracion@6c396b04mattrizPRueba"
+   "arbol.Declaracion@6c396b04igual" [label="="] ;
+   "arbol.Declaracion@6c396b04" -> "arbol.Declaracion@6c396b04igual"
+"arbol.Operacion@4143fd15" [label="expresion"] ;
+"arbol.Operacion@7944c07c" [label="expresion"] ;
+"arbol.Operacion@25172f1c" [label="expresion"] ;
+"arbol.Operacion@1d14193f" [label="IDENTIFICADOR"] ;
+"arbol.Operacion@25172f1c" -> "arbol.Operacion@1d14193f"
+"arbol.Operacion@25172f1csig" [label="POTENCIA"] ;
+"arbol.Operacion@25172f1c" -> "arbol.Operacion@25172f1csig"
+"arbol.Operacion@187700cc" [label="expresion"] ;
+"arbol.Operacion@1043e6e1" [label="IDENTIFICADOR"] ;
+"arbol.Operacion@187700cc" -> "arbol.Operacion@1043e6e1"
+"arbol.Operacion@187700ccsig" [label="DIVISION"] ;
+"arbol.Operacion@187700cc" -> "arbol.Operacion@187700ccsig"
+"arbol.Operacion@7203bcd1" [label="ENTERO"] ;
+"arbol.Operacion@187700cc" -> "arbol.Operacion@7203bcd1"
+"arbol.Operacion@25172f1c" -> "arbol.Operacion@187700cc"
+"arbol.Operacion@7944c07c" -> "arbol.Operacion@25172f1c"
+"arbol.Operacion@7944c07csig" [label="MULTIPLICACION"] ;
+"arbol.Operacion@7944c07c" -> "arbol.Operacion@7944c07csig"
+"arbol.Operacion@65b76c19" [label="expresion"] ;
+"arbol.Operacion@2aecb1b1" [label="IDENTIFICADOR"] ;
+"arbol.Operacion@65b76c19" -> "arbol.Operacion@2aecb1b1"
+"arbol.Operacion@65b76c19sig" [label="POTENCIA"] ;
+"arbol.Operacion@65b76c19" -> "arbol.Operacion@65b76c19sig"
+"arbol.Operacion@45e67509" [label="IDENTIFICADOR"] ;
+"arbol.Operacion@65b76c19" -> "arbol.Operacion@45e67509"
+"arbol.Operacion@7944c07c" -> "arbol.Operacion@65b76c19"
+"arbol.Operacion@4143fd15" -> "arbol.Operacion@7944c07c"
+"arbol.Operacion@4143fd15sig" [label="SUMA"] ;
+"arbol.Operacion@4143fd15" -> "arbol.Operacion@4143fd15sig"
+"arbol.Operacion@1edb8992" [label="expresion"] ;
+"arbol.Operacion@36ea87dc" [label="ENTERO"] ;
+"arbol.Operacion@1edb8992" -> "arbol.Operacion@36ea87dc"
+"arbol.Operacion@1edb8992sig" [label="MULTIPLICACION"] ;
+"arbol.Operacion@1edb8992" -> "arbol.Operacion@1edb8992sig"
+"arbol.Operacion@40d2f235" [label="IDENTIFICADOR"] ;
+"arbol.Operacion@1edb8992" -> "arbol.Operacion@40d2f235"
+"arbol.Operacion@4143fd15" -> "arbol.Operacion@1edb8992"
+   "arbol.Declaracion@6c396b04" -> "arbol.Operacion@4143fd15"
+"arbol.For@3a705165" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.For@3a705165"
+   "arbol.For@3a705165" [label="ins_for"] ;
+   "arbol.For@3a705165for" [label="for"] ;
+   "arbol.For@3a705165" -> "arbol.For@3a705165for"
+   "arbol.For@3a705165id" [label="IDENTIFICADOR"] ;
+   "arbol.For@3a705165" -> "arbol.For@3a705165id"
+   "arbol.For@3a705165in" [label="IN"] ;
+   "arbol.For@3a705165" -> "arbol.For@3a705165in"
+"arbol.Operacion@23f54686" [label="IDENTIFICADOR"] ;
+   "arbol.For@3a705165" -> "arbol.Operacion@23f54686"
+"[arbol.Print@74615b97]" [label="instrucciones"] ;
+"arbol.For@3a705165" -> "[arbol.Print@74615b97]"
+"arbol.Print@74615b97" [label="instruccion"] ;
+"[arbol.Print@74615b97]" -> "arbol.Print@74615b97"
+   "arbol.Print@74615b97" [label="print"] ;
+   "arbol.Print@74615b97" -> "arbol.Operacion@36b4cb90"
+"arbol.Operacion@36b4cb90" [label="IDENTIFICADOR"] ;
+"arbol.Print@3eb0d2f2" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Print@3eb0d2f2"
+   "arbol.Print@3eb0d2f2" [label="print"] ;
+   "arbol.Print@3eb0d2f2" -> "arbol.AccesoMatriz@68412306"
+   "arbol.AccesoMatriz@68412306" [label="acceso"] ;
+   "arbol.AccesoMatriz@68412306et" [label="mattrizPRueba"] ;
+   "arbol.AccesoMatriz@68412306" -> "arbol.AccesoMatriz@68412306et"
+"arbol.Operacion@610989fe" [label="ENTERO"] ;
+   "arbol.AccesoMatriz@68412306" -> "arbol.Operacion@610989fe"
+   "arbol.AccesoMatriz@68412306coma" [label=","] ;
+   "arbol.AccesoMatriz@68412306" -> "arbol.AccesoMatriz@68412306coma"
+   "arbol.AccesoMatriz@68412306y" [label="null"] ;
+   "arbol.AccesoMatriz@68412306" -> "arbol.AccesoMatriz@68412306y"
+"arbol.Print@8af9a14" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Print@8af9a14"
+   "arbol.Print@8af9a14" [label="print"] ;
+   "arbol.Print@8af9a14" -> "arbol.AccesoMatriz@1f4adbab"
+   "arbol.AccesoMatriz@1f4adbab" [label="acceso"] ;
+   "arbol.AccesoMatriz@1f4adbabet" [label="mattrizPRueba"] ;
+   "arbol.AccesoMatriz@1f4adbab" -> "arbol.AccesoMatriz@1f4adbabet"
+   "arbol.AccesoMatriz@1f4adbabx" [label="null"] ;
+   "arbol.AccesoMatriz@1f4adbab" -> "arbol.AccesoMatriz@1f4adbabx"
+   "arbol.AccesoMatriz@1f4adbabcoma" [label=","] ;
+   "arbol.AccesoMatriz@1f4adbab" -> "arbol.AccesoMatriz@1f4adbabcoma"
+"arbol.Operacion@fb26b99" [label="ENTERO"] ;
+   "arbol.AccesoMatriz@1f4adbab" -> "arbol.Operacion@fb26b99"
+"arbol.Print@2f69a14e" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Print@2f69a14e"
+   "arbol.Print@2f69a14e" [label="print"] ;
+   "arbol.Print@2f69a14e" -> "arbol.Acceso@6e0a307a"
+   "arbol.Acceso@6e0a307a" [label="expresion"] ;
+   "arbol.Acceso@6e0a307aet" [label="mattrizPRueba"] ;
+   "arbol.Acceso@6e0a307a" -> "arbol.Acceso@6e0a307aet"
+"[arbol.Operacion@4361023c]" [label="accesos"] ;
+"arbol.Acceso@6e0a307a" -> "[arbol.Operacion@4361023c]"
+"arbol.Operacion@4361023c" [label="instruccion"] ;
+"[arbol.Operacion@4361023c]" -> "arbol.Operacion@4361023c"
+"arbol.Operacion@a3f1e78" [label="ENTERO"] ;
+"arbol.Operacion@4361023c" -> "arbol.Operacion@a3f1e78"
+"arbol.Print@17aa26bf" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Print@17aa26bf"
+   "arbol.Print@17aa26bf" [label="print"] ;
+   "arbol.Print@17aa26bf" -> "arbol.AccesoMatriz@16cd4205"
+   "arbol.AccesoMatriz@16cd4205" [label="acceso"] ;
+   "arbol.AccesoMatriz@16cd4205et" [label="mattrizPRueba"] ;
+   "arbol.AccesoMatriz@16cd4205" -> "arbol.AccesoMatriz@16cd4205et"
+"arbol.Operacion@297b3946" [label="ENTERO"] ;
+   "arbol.AccesoMatriz@16cd4205" -> "arbol.Operacion@297b3946"
+   "arbol.AccesoMatriz@16cd4205coma" [label=","] ;
+   "arbol.AccesoMatriz@16cd4205" -> "arbol.AccesoMatriz@16cd4205coma"
+"arbol.Operacion@6240beb7" [label="ENTERO"] ;
+   "arbol.AccesoMatriz@16cd4205" -> "arbol.Operacion@6240beb7"
+"arbol.Declaracion@2f3541fa" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Declaracion@2f3541fa"
+   "arbol.Declaracion@2f3541fa" [label="ins_declaracion"] ;
+   "arbol.Declaracion@2f3541famattrizPRueba" [label="IDENTIFICADOR"] ;
+   "arbol.Declaracion@2f3541fa" -> "arbol.Declaracion@2f3541famattrizPRueba"
+   "arbol.Declaracion@2f3541faigual" [label="="] ;
+   "arbol.Declaracion@2f3541fa" -> "arbol.Declaracion@2f3541faigual"
+"arbol.Operacion@1c1ea0fd" [label="expresion"] ;
+"arbol.Operacion@10feb059" [label="IDENTIFICADOR"] ;
+"arbol.Operacion@1c1ea0fd" -> "arbol.Operacion@10feb059"
+"arbol.Operacion@1c1ea0fdsig" [label="SUMA"] ;
+"arbol.Operacion@1c1ea0fd" -> "arbol.Operacion@1c1ea0fdsig"
+"arbol.Operacion@6cdf1529" [label="DECIMAL"] ;
+"arbol.Operacion@1c1ea0fd" -> "arbol.Operacion@6cdf1529"
+   "arbol.Declaracion@2f3541fa" -> "arbol.Operacion@1c1ea0fd"
+"arbol.Print@5bbe1132" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Print@5bbe1132"
+   "arbol.Print@5bbe1132" [label="print"] ;
+   "arbol.Print@5bbe1132" -> "arbol.Operacion@7b4c10cf"
+"arbol.Operacion@7b4c10cf" [label="IDENTIFICADOR"] ;
+"arbol.Declaracion@39bfa8da" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Declaracion@39bfa8da"
+   "arbol.Declaracion@39bfa8da" [label="ins_declaracion"] ;
+   "arbol.Declaracion@39bfa8damattrizPRueba" [label="IDENTIFICADOR"] ;
+   "arbol.Declaracion@39bfa8da" -> "arbol.Declaracion@39bfa8damattrizPRueba"
+   "arbol.Declaracion@39bfa8daigual" [label="="] ;
+   "arbol.Declaracion@39bfa8da" -> "arbol.Declaracion@39bfa8daigual"
+"arbol.Operacion@634763da" [label="expresion"] ;
+"arbol.Operacion@1e550b87" [label="IDENTIFICADOR"] ;
+"arbol.Operacion@634763da" -> "arbol.Operacion@1e550b87"
+"arbol.Operacion@634763dasig" [label="SUMA"] ;
+"arbol.Operacion@634763da" -> "arbol.Operacion@634763dasig"
+"arbol.Operacion@ab73339" [label="CADENA"] ;
+"arbol.Operacion@634763da" -> "arbol.Operacion@ab73339"
+   "arbol.Declaracion@39bfa8da" -> "arbol.Operacion@634763da"
+"arbol.Print@7f66ee8c" [label="instruccion"] ;
+"[arbol.Declaracion@4c1f56d6, arbol.Declaracion@6c396b04, arbol.For@3a705165, arbol.Print@3eb0d2f2, arbol.Print@8af9a14, arbol.Print@2f69a14e, arbol.Print@17aa26bf, arbol.Declaracion@2f3541fa, arbol.Print@5bbe1132, arbol.Declaracion@39bfa8da, arbol.Print@7f66ee8c]" -> "arbol.Print@7f66ee8c"
+   "arbol.Print@7f66ee8c" [label="print"] ;
+   "arbol.Print@7f66ee8c" -> "arbol.Operacion@7816dd15"
+"arbol.Operacion@7816dd15" [label="IDENTIFICADOR"] ;
 
 }

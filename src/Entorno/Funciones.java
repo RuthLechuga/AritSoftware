@@ -688,9 +688,16 @@ public class Funciones {
             Object exp = expresion.ejecutar(ts, mensajes);
             Vector dimensiones = ((Vector)(vector.ejecutar(ts, mensajes)));
             LinkedList<Object> valores = new LinkedList<Object>();
+            Boolean isList = false;
             
             if(exp instanceof Vector)
                 valores = ((Vector)exp).getVector();
+            
+            else if(exp instanceof Lista){
+                valores = ((Lista)exp).getLista();
+                isList = true;
+            }
+                
             else
                 valores.add(exp);
             
@@ -709,7 +716,7 @@ public class Funciones {
                     pos_exp = 0;
             }
             
-            return new Arreglo(arreglo,dimensiones.getVector());
+            return new Arreglo(arreglo,dimensiones.getVector(),isList);
             
         }
         catch(Exception e){

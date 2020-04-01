@@ -153,16 +153,24 @@ public class Matriz {
     @Override
     public String toString(){
         String temporal = "";
-        
+        temporal+="<table><tr>";
+        temporal+= "<th></th>";
+        for(int columna=1;columna<=dimension_x;columna++){
+            temporal+= "<th>Columna "+columna+"</th>";
+            
+        }
+        temporal+="</tr>";
         
         for(int fila=1;fila<=dimension_y;fila++){
+            temporal+="<tr>";
+            temporal+="<td>Fila "+fila+"</td>";
+            
             for(int columna=1;columna<=dimension_x;columna++){
-                temporal += matriz.get(((columna-1)*dimension_y+fila)-1)+ "  ";
-                
+                temporal += "<td>"+matriz.get(((columna-1)*dimension_y+fila)-1)+ "</td>";
             }
-            temporal += "\n";
+            temporal+="</tr>";
         }
-        
+        temporal+="</table>";
         
         return temporal;
     }

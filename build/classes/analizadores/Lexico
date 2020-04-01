@@ -29,8 +29,8 @@ CADENA = [\"]([^\"\n]|(\\\"))*[\"]
 ENTERO = [0-9]+
 DECIMAL = [0-9]+("."[  |0-9]+)?
 IDENTIFICADOR = ("."|[A-Za-z])[".""_"0-9A-Za-z]*
-COMENTARIO_SIMPLE = ("#".*\r\n)|("#".*\n)|("#".*\r)
-COMENTARIO_MULTIPLE = "#*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*#"
+COMENTARIO_SIMPLE = "#".*
+COMENTARIO_MULTIPLE = [#][*][^*]*[*]+([^*#][^*]*[*]+)*[#]
 %%
 
 {COMENTARIO_SIMPLE}             {} 

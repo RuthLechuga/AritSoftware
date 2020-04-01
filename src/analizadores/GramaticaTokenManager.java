@@ -9,6 +9,7 @@ import arbol.Break;
 import arbol.Case;
 import arbol.Continue;
 import arbol.Declaracion;
+import arbol.Default;
 import arbol.DoWhile;
 import arbol.Elseif;
 import arbol.For;

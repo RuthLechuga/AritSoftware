@@ -19,6 +19,13 @@ public class LlamadaFunction implements Instruccion {
         this.linea = linea;
         this.columna = columna;
     }
+    
+    public LlamadaFunction(String identificador, int linea, int columna){
+        this.identificador = identificador;
+        this.lista_valores = new LinkedList<Instruccion>();
+        this.linea = linea;
+        this.columna = columna;
+    }
 
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {

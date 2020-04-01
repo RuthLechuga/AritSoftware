@@ -4,7 +4,6 @@ import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
 import Entorno.Tipo.tipo_primitivo;
 import Estructuras.Vector;
-import Utilidades.Graficas;
 import Utilidades.Mensaje;
 import Utilidades.Mensaje.tipo_mensaje;
 import analizadores.Gramatica;
@@ -17,7 +16,6 @@ import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -71,6 +69,9 @@ public class principal extends javax.swing.JFrame {
         ejNuevaPestana.doClick();
         tablaErrores.getColumnModel().getColumn(3).setPreferredWidth(400);
         tablaErrores.setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN);
+        consola.setAutoscrolls(rootPaneCheckingEnabled);
+        consola.setContentType("text/html");
+
     }
    
     @SuppressWarnings("unchecked")
@@ -83,12 +84,12 @@ public class principal extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         lblFila = new javax.swing.JLabel();
         lblColumna = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        consola = new javax.swing.JTextPane();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaErrores = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        consola = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         ejNuevaPestana = new javax.swing.JMenuItem();
@@ -113,7 +114,6 @@ public class principal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arit Software");
-        setPreferredSize(new java.awt.Dimension(1300, 720));
         setResizable(false);
 
         jTabbedPane1.setBackground(new java.awt.Color(0, 153, 255));
@@ -123,12 +123,6 @@ public class principal extends javax.swing.JFrame {
 
         lblColumna.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lblColumna.setText("Columna: 1");
-
-        consola.setBackground(new java.awt.Color(0, 0, 0));
-        consola.setForeground(new java.awt.Color(255, 255, 255));
-        consola.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        consola.setEnabled(false);
-        jScrollPane1.setViewportView(consola);
 
         jLabel1.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 18)); // NOI18N
         jLabel1.setText("Consola");
@@ -154,6 +148,8 @@ public class principal extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 18)); // NOI18N
         jLabel2.setText("Errores");
+
+        jScrollPane1.setViewportView(consola);
 
         jMenuBar1.setBackground(new java.awt.Color(0, 0, 0));
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -296,8 +292,8 @@ public class principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(84, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(37, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,8 +315,8 @@ public class principal extends javax.swing.JFrame {
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -687,13 +683,38 @@ public class principal extends javax.swing.JFrame {
     
     public void imprimirConsola(){
         String temporal = "";
+        
+        temporal+= "<style>\n" +
+                    "table {\n" +
+                    "  width:100%;\n" +
+                    "}\n" +
+                    "table, th, td {\n" +
+                    "  border: 1px solid black;\n" +
+                    "  border-collapse: collapse;\n" +
+                    "}\n" +
+                    "th, td {\n" +
+                    "  padding: 15px;\n" +
+                    "  text-align: left;\n" +
+                    "}\n" +
+                    "table#t01 tr:nth-child(even) {\n" +
+                    "  background-color: #eee;\n" +
+                    "}\n" +
+                    "table#t01 tr:nth-child(odd) {\n" +
+                    " background-color: #fff;\n" +
+                    "}\n" +
+                    "table#t01 th {\n" +
+                    "  background-color: black;\n" +
+                    "  color: white;\n" +
+                    "}\n" +
+                    "</style>";
+
         if(AST_arbolSintaxisAbstracta != null){
             for(Mensaje mensaje: AST_arbolSintaxisAbstracta.getMensajes()){
                 if(mensaje.getTipo()==tipo_mensaje.MENSAJE)
                     temporal += mensaje.getDescripcion()+"\n" ;
             }
         }
-        
+        temporal+="</font>";
         consola.setText(temporal);
     }
     

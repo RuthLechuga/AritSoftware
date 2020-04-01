@@ -661,16 +661,7 @@ Instruccion ExpresionIdentificadores() :
     Instruccion y;
 }
 {
-    LOOKAHEAD(<CDER>)
-    identificador=<IDENTIFICADOR>.image 
-    <CIZQ>
-    x=Expresion() <COMA> y=Expresion()
-    <CDER>
-    {
-        return new AccesoMatriz(identificador,x,y,token.beginLine,token.beginColumn);
-    }
-    |
-    LOOKAHEAD(<CDER>)
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ>
     x=Expresion() <COMA>
@@ -679,13 +670,22 @@ Instruccion ExpresionIdentificadores() :
         return new AccesoMatriz(identificador,x,null,token.beginLine,token.beginColumn);
     }
     |
-    LOOKAHEAD(<CDER>)
+    LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ> <COMA> 
     y=Expresion() 
     <CDER>
     {
         return new AccesoMatriz(identificador,null,y,token.beginLine,token.beginColumn);
+    }
+    |
+    LOOKAHEAD(5)
+    identificador=<IDENTIFICADOR>.image 
+    <CIZQ>
+    x=Expresion() <COMA> y=Expresion()
+    <CDER>
+    {
+        return new AccesoMatriz(identificador,x,y,token.beginLine,token.beginColumn);
     }
     |
     LOOKAHEAD(5)

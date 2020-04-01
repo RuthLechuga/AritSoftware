@@ -22,18 +22,17 @@ public class Print implements Instruccion {
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         Object resultado = mensaje.ejecutar(ts, mensajes);
         
-        if(resultado.toString().compareTo("debuguear")==0)
+        /*if(resultado.toString().compareTo("debuguear")==0)
         { 
             if(true) System.out.println(":D");
         }
-        
+        */
         if(resultado instanceof Error || resultado == null)
             mensajes.add(new Mensaje(linea,columna,SEMANTICO,"Ha sucedido un error procesando el mensaje en el print."));
         else{
-            mensajes.add(new Mensaje(linea,columna,MENSAJE,resultado.toString()));
+            mensajes.add(new Mensaje(linea,columna,MENSAJE,"<p>"+resultado.toString()+"</p>"));
             System.out.println(resultado.toString());
         }
-        
         
         return null;
     }

@@ -22,6 +22,14 @@ public class Function implements Instruccion {
         this.columna = columna;
     }
 
+    public Function(String nombre, LinkedList<Instruccion> bloque_instrucciones, int linea, int columna){
+        this.nombre = nombre;
+        this.parametros = new LinkedList<Declaracion>();
+        this.bloque_Instrucciones = bloque_instrucciones;
+        this.linea = linea;
+        this.columna = columna;
+    }
+
     @Override
     public Object ejecutar(TablaDeSimbolos ts, LinkedList<Mensaje> mensajes) {
         Funciones instancia = Funciones.getSingletonInstance();

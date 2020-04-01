@@ -2,6 +2,7 @@ package arbol;
 
 import Entorno.Simbolo;
 import Entorno.TablaDeSimbolos;
+import Estructuras.Arreglo;
 import Estructuras.Lista;
 import Estructuras.Matriz;
 import Estructuras.Vector;
@@ -33,6 +34,16 @@ public class Modificacion implements Instruccion{
         
         Object temporal = null;
         
+        if(s.getValor() instanceof Arreglo){
+            try{                
+                ((Arreglo)s.getValor()).setValor(ts, accesos, expresion.ejecutar(ts, mensajes));
+            }
+            catch(Exception e){
+                mensajes.add(new Mensaje(linea,columna,SEMANTICO,"No se pudo modificar el arreglo."));
+            }
+            return null;
+        }
+        
         if(s.getValor() instanceof Lista)
             temporal = ((Lista)s.getValor()).getLista();
         else if(s.getValor() instanceof Vector)
@@ -52,8 +63,6 @@ public class Modificacion implements Instruccion{
             
             if(posicion == -1)
                 return null;
-            
-            //hacer procedimiento para listas/arreglos/matrices que tienen dentro otra estructura
         }
         
         posicion = obtenerPosicion(accesos.get(accesos.size()-1),ts,mensajes);

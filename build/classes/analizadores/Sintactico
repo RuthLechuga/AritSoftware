@@ -232,6 +232,10 @@ ntfunction ::= IDENTIFICADOR:id ASIG RFUNCTION PIZQ lista_parametrosi:lp PDER LL
                                                                                 {:
                                                                                     RESULT = new Function(id,lp,ins,idleft,idright);
                                                                                 :}
+            | IDENTIFICADOR:id ASIG RFUNCTION PIZQ PDER LLIZQ instrucciones_locales:ins LLDER 
+                                                                                {:
+                                                                                    RESULT = new Function(id,ins,idleft,idright);
+                                                                                :}                                                                 
             | IDENTIFICADOR:id ASIG PIZQ lista_parametros:lp PDER ASGFUNCTION LLIZQ instrucciones_locales:ins LLDER
                                                                                 {:
                                                                                     RESULT = new Function(id,lp,ins,idleft,idright);
@@ -244,7 +248,11 @@ ntfunction ::= IDENTIFICADOR:id ASIG RFUNCTION PIZQ lista_parametrosi:lp PDER LL
                                                                                     lp.add(t);
 
                                                                                     RESULT = new Function(id,lp,ins,idleft,idright);
-                                                                                :}                                                                    
+                                                                                :} 
+            | IDENTIFICADOR:id ASIG PIZQ PDER ASGFUNCTION LLIZQ instrucciones_locales:ins LLDER
+                                                                                {:
+                                                                                    RESULT = new Function(id,ins,idleft,idright);
+                                                                                :}
 ;
 
 lista_parametrosi ::= lista_parametrosi:lp COMA parametroi:p                    {: RESULT = lp; RESULT.add(p); :}
@@ -271,6 +279,9 @@ ntreturn ::= RRETURN:r PUNTOCOMA                                                
 
 llfunction ::= IDENTIFICADOR:id PIZQ lista_valores:lv PDER PUNTOCOMA            {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
             | IDENTIFICADOR:id PIZQ lista_valores:lv PDER                       {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
+            | IDENTIFICADOR:id PIZQ PDER                                        {: RESULT = new LlamadaFunction(id,idleft,idright); :}
+            | IDENTIFICADOR:id PIZQ PDER PUNTOCOMA                              {: RESULT = new LlamadaFunction(id,idleft,idright); :}
+            
 ;
 
 lista_valores ::= lista_valores:lv COMA valor:exp                               {: RESULT = lv; RESULT.add(exp); :}
@@ -337,6 +348,7 @@ expresion ::=
             | IDENTIFICADOR:exp                                                 {: RESULT = new Operacion(tipo_operacion.IDENTIFICADOR,exp, expleft, expright); :}
             | PIZQ expresion:exp PDER                                           {: RESULT = exp; :}
             | IDENTIFICADOR:id PIZQ lista_valores:lv PDER                       {: RESULT = new LlamadaFunction(id,lv,idleft,idright); :}
+            | IDENTIFICADOR:id PIZQ PDER                                        {: RESULT = new LlamadaFunction(id,idleft,idright); :}
             | expresion:cond TERNARIO expresion:exp_true DOSPUNTOS expresion:exp_false
                                                                                 {: RESULT = new OperadorTernario(cond,exp_true,exp_false,condleft,condright); :}
             | IDENTIFICADOR:id lista_acceso:lacc                                {: RESULT = new Acceso(id,lacc,idleft,idright); :}
