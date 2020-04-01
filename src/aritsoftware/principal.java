@@ -530,7 +530,17 @@ public class principal extends javax.swing.JFrame {
                 "          <td>"+s.getIdentificador()+"</td>\n";
 
                 if(s.getTipo().getTipo_primitivo()==tipo_primitivo.VECTOR)
-                temporal+="          <td>VECTOR: "+((Vector)s.getValor()).getTipo_dato().getTipo_primitivo().name()+"</td>\n";
+                temporal+="          <td>VECTOR</td>\n";
+                
+                else if(s.getTipo().getTipo_primitivo()==tipo_primitivo.LISTA)
+                temporal+="          <td>LISTA</td>\n";
+                
+                else if(s.getTipo().getTipo_primitivo()==tipo_primitivo.MATRIZ)
+                temporal+="          <td>MATRIZ</td>\n";
+                
+                else if(s.getTipo().getTipo_primitivo()==tipo_primitivo.ARREGLO)
+                temporal+="          <td>ARREGLO</td>\n";
+                
                 else
                 temporal+="          <td>"+s.getTipo().getTipo_primitivo().name()+"</td>\n";
 

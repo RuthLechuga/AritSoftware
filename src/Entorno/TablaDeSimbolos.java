@@ -76,7 +76,21 @@ public class TablaDeSimbolos{
         
         this.local.add(nuevo);
     }
-
+    
+    public Simbolo removeSymbol(String identificador){
+        TablaDeSimbolos temporal = this;
+        
+        while(temporal != null){
+            for(Simbolo s: temporal.local){
+                if(s.getIdentificador().toLowerCase().compareTo(identificador.toLowerCase()) == 0)
+                    temporal.local.remove(s);
+            }
+            
+            temporal = temporal.padre;
+        }
+        
+        return null;
+    }
     
     public LinkedList<Simbolo> getLocal() {
         return local;

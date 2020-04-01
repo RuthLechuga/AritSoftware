@@ -12,8 +12,6 @@ public class Simbolo {
     private Object valor;
     private int dimensionX;
     private int dimensionY;
-    private int linea;
-    private int columna;
     
     public Simbolo(Tipo tipo, String identificador){
         this.tipo = tipo;
@@ -81,11 +79,17 @@ public class Simbolo {
             this.dimensionY = ((Arreglo)this.valor).getDimensionY();
         }
         
+        else
+            this.tipo = new Tipo(ENTERO);
+        
     }
     
     public Simbolo(String identificador){
         this.identificador = identificador;
         this.valor = 0;
+        this.tipo = new Tipo(ENTERO);
+        this.dimensionX = 1;
+        this.dimensionY = 1;
     }
     
     public Tipo getTipo() {
@@ -115,18 +119,6 @@ public class Simbolo {
     public void setDimensionY(int dimensionY) {
         this.dimensionY = dimensionY;
     }
-    public int getLinea() {
-        return linea;
-    }
-    public void setLinea(int linea) {
-        this.linea = linea;
-    }
-    public int getColumna() {
-        return columna;
-    }
-    public void setColumna(int columna) {
-        this.columna = columna;
-    }   
     public Object getValor() {
         return valor;
     }
