@@ -5,7 +5,6 @@ import Entorno.TablaDeSimbolos;
 import Entorno.Tipo.tipo_primitivo;
 import Estructuras.Vector;
 import Utilidades.Mensaje;
-import Utilidades.Mensaje.tipo_mensaje;
 import analizadores.Gramatica;
 import analizadores.ParseException;
 import analizadores.TokenMgrError;
@@ -41,6 +40,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Utilities;
+import Utilidades.Mensaje.tipo_mensaje;
 
 public class principal extends javax.swing.JFrame {
 
@@ -301,9 +301,9 @@ public class principal extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblFila)
-                        .addGap(71, 71, 71)
+                        .addGap(62, 62, 62)
                         .addComponent(lblColumna)
-                        .addGap(529, 529, 529))
+                        .addGap(714, 714, 714))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2)
                         .addContainerGap())))
@@ -567,11 +567,19 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_ejReporteGraficasActionPerformed
 
     private void ejDescendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejDescendenteActionPerformed
+        errores = new LinkedList<>();
+        String entrada="";
         try {
-            errores = new LinkedList<>();
-            String entrada = tpPanel[tabSeleccionada].getDocument().getText(0, tpPanel[tabSeleccionada].getDocument().getLength());
-            Gramatica parser = new Gramatica(new BufferedReader(new StringReader(entrada)));
+            entrada = tpPanel[tabSeleccionada].getDocument().getText(0, tpPanel[tabSeleccionada].getDocument().getLength());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        Gramatica parser = new Gramatica(new BufferedReader(new StringReader(entrada)));
+            
+        try {
             parser.start();
+            errores.addAll(parser.errores);
             
             AST_arbolSintaxisAbstracta = new Arbol(parser.instrucciones);
             AST_arbolSintaxisAbstracta.ejecutar();
@@ -579,11 +587,11 @@ public class principal extends javax.swing.JFrame {
             imprimirConsola();
             
         } catch(TokenMgrError e){
-            System.err.println(e.getMessage());
-        } catch (BadLocationException ex) {
-            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+            errores.add(new Mensaje(1,1,tipo_mensaje.LEXICO,e.getMessage()));
+            imprimirErrores();
         } catch (ParseException ex) {
-            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+            errores.add(new Mensaje(1,1,tipo_mensaje.SINTACTICO,ex.getMessage()));
+            imprimirErrores();
         }
     }//GEN-LAST:event_ejDescendenteActionPerformed
 

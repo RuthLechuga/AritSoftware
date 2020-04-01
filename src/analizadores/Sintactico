@@ -130,6 +130,7 @@ instruccion ::= print:ins                                                       
             | llfunction:ins                                                    {: RESULT = ins; :}
             | modificacion:ins                                                  {: RESULT = ins; :}
             | modificacionMatriz:ins                                            {: RESULT = ins; :}
+            | error PUNTOCOMA
 ;
 
 //---------------------------Instrucciones que solo pueden ir en una instruccion de control---------------------------------//
@@ -150,6 +151,7 @@ instruccion_local ::= print:ins                                                 
             | llfunction:ins                                                    {: RESULT = ins; :}
             | modificacion: ins                                                 {: RESULT = ins; :}
             | modificacionMatriz:ins                                            {: RESULT = ins; :}
+            | error PUNTOCOMA
 ;
 
 //---------------------------------------------------Instrucciones-----------------------------------------------------------//

@@ -112,6 +112,8 @@ public interface GramaticaConstants {
   int ASIG = 58;
   /** RegularExpression Id. */
   int IDENTIFICADOR = 59;
+  /** RegularExpression Id. */
+  int NOVAL = 60;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -184,6 +186,7 @@ public interface GramaticaConstants {
     "\":\"",
     "\"=\"",
     "<IDENTIFICADOR>",
+    "<NOVAL>",
   };
 
 }

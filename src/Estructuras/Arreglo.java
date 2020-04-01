@@ -128,7 +128,9 @@ public class Arreglo implements Instruccion {
                 for(int j=0;j<cuarta_dimension;j++){
                     for(int k=0;k<tercera_dimension;k++){
                         temporal+= "<p>, , "+(k+1)+", "+(j+1)+", "+(i+1)+"</p>";
-                        temporal+= this.toString(i*j*k*dimension_x*dimension_y,dimension_x,dimension_y); 
+                        temporal+= this.toString(i*cuarta_dimension*tercera_dimension*dimension_x*dimension_y
+                                +j*tercera_dimension*dimension_x*dimension_y+
+                                k*dimension_x*dimension_y,dimension_x,dimension_y); 
                     }
                 }
             }
@@ -149,7 +151,11 @@ public class Arreglo implements Instruccion {
                     for(int k=0;k<cuarta_dimension;k++){
                         for(int l=0;l<tercera_dimension;l++){
                             temporal+= "<p>, , "+(l+1)+", "+(k+1)+", "+(j+1)+", "+(i+1)+"</p>";
-                            temporal+= this.toString(i*j*k*l*dimension_x*dimension_y,dimension_x,dimension_y);
+                            temporal+= this.toString(i*quinta_dimension*cuarta_dimension*tercera_dimension*dimension_x*dimension_y
+                                    +j*cuarta_dimension*tercera_dimension*dimension_x*dimension_y
+                                    +k*tercera_dimension*dimension_x*dimension_y
+                                    +l*dimension_x*dimension_y
+                                    ,dimension_x,dimension_y);
                         } 
                     }
                 }

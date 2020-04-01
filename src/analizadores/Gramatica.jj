@@ -41,7 +41,26 @@ import arbol.While;
 public class Gramatica {
 
     public LinkedList<Instruccion> instrucciones = new LinkedList<Instruccion>();
+    public LinkedList<Mensaje> errores = new LinkedList<Mensaje>();
+
+    void error_skipto(int kind) {
+        ParseException e = generateParseException(); // se genera el objeto excepción
+        System.out.println(e.toString()); // se imprime el mensaje de error
+        Token t;
+        do {
+        t = getNextToken();
+        } while (t.kind != kind);
+    }
+    
+    public LinkedList getErroresLexicos(){
+        return token_source.errores;
+    }
+
+    //------>GramaticaTokenManager
+    //public LinkedList<Mensaje> errores = new LinkedList<Mensaje>();
+    //comentar el throws ParseException en Gramatica.jj
 }
+
 PARSER_END(Gramatica)
 
 /** Lexico */
@@ -136,6 +155,7 @@ TOKEN : {
       | <DOSPUNTOS: ":">
       | <ASIG: "=">
       | <IDENTIFICADOR: ["a"-"z","A"-"Z","."] ( ["a"-"z","A"-"Z", "_","."] | ["0"-"9"] )*> 
+      | <NOVAL:~["@","'","_","%","&","$","~","!"]>{errores.add(new Mensaje(matchedToken.beginLine,matchedToken.beginColumn,tipo_mensaje.LEXICO,matchedToken.image));}
 }
 /** Fin Lexico */
 
@@ -154,19 +174,68 @@ Instruccion instruccion() :
 }
 {
     (
-        instr = imprimir()
+        try{
+            instr = imprimir()
+        }
+        catch(Exception e){
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion imprimir"));
+            error_skipto(PUNTOCOMA);
+            return null;
+        }
         |
-        instr = ntif()
+        try{
+            instr = ntif()
+        }
+        catch(Exception e){
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion IF"));
+            error_skipto(PUNTOCOMA);
+            return null;
+        }
         |
-        instr = ntswitch()
+        try{
+            instr = ntswitch()
+        }
+        catch(Exception e){
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion SWITCH"));
+            error_skipto(PUNTOCOMA);
+            return null;
+        }
         |
-        instr = ntwhile()
+        try{
+            instr = ntwhile()
+        }
+        catch(Exception e){
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion WHILE"));
+            error_skipto(PUNTOCOMA);
+            return null;
+        }
         |
-        instr = ntdowhile()
+        try{
+            instr = ntdowhile()
+        }
+        catch(Exception e){
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion DO WHILE"));
+            error_skipto(PUNTOCOMA);
+            return null;
+        }
         |
-        instr = ntfor()
+        try{
+            instr = ntfor()
+        }
+        catch(Exception e){
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion FOR"));
+            error_skipto(PUNTOCOMA);
+            return null;
+        }
         |
-        instr = inst_id()
+        try{        
+            instr = inst_id()
+        }
+        catch(Exception e){
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion imprimir"));
+            error_skipto(PUNTOCOMA);
+            return null;
+        }
     )
     {
         return instr;
@@ -657,36 +726,19 @@ Instruccion ExpresionIdentificadores() :
     Instruccion exp=null;
     LinkedList<Instruccion> valores = new LinkedList<Instruccion>();
     LinkedList<Instruccion> accesos = new LinkedList<Instruccion>();
-    Instruccion x;
-    Instruccion y;
+    Instruccion x=null;
+    Instruccion y=null;
 }
 {
-    LOOKAHEAD(5)
+    LOOKAHEAD(10)
     identificador=<IDENTIFICADOR>.image 
     <CIZQ>
-    x=Expresion() <COMA>
+    (x=Expresion())? <COMA> (y=Expresion())?
     <CDER>
     {
         return new AccesoMatriz(identificador,x,null,token.beginLine,token.beginColumn);
     }
-    |
-    LOOKAHEAD(5)
-    identificador=<IDENTIFICADOR>.image 
-    <CIZQ> <COMA> 
-    y=Expresion() 
-    <CDER>
-    {
-        return new AccesoMatriz(identificador,null,y,token.beginLine,token.beginColumn);
-    }
-    |
-    LOOKAHEAD(5)
-    identificador=<IDENTIFICADOR>.image 
-    <CIZQ>
-    x=Expresion() <COMA> y=Expresion()
-    <CDER>
-    {
-        return new AccesoMatriz(identificador,x,y,token.beginLine,token.beginColumn);
-    }
+    
     |
     LOOKAHEAD(5)
     identificador=<IDENTIFICADOR>.image <PIZQ> 

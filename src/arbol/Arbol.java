@@ -33,7 +33,7 @@ public class Arbol{
             if(ins instanceof Function){
                 ins.ejecutar(getTsglobal(), getMensajes()); 
             }
-            else{
+            else if(ins!=null){
                 new_instrucciones.add(ins);
             }
         }
