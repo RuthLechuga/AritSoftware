@@ -43,13 +43,14 @@ public class Gramatica {
     public LinkedList<Instruccion> instrucciones = new LinkedList<Instruccion>();
     public LinkedList<Mensaje> errores = new LinkedList<Mensaje>();
 
-    void error_skipto(int kind) {
+    void error_skipto(int kind, int kind2) {
         ParseException e = generateParseException(); // se genera el objeto excepción
+        errores.add(new Mensaje(1,1,tipo_mensaje.SINTACTICO,e.toString()));
         System.out.println(e.toString()); // se imprime el mensaje de error
         Token t;
         do {
         t = getNextToken();
-        } while (t.kind != kind);
+        } while (t.kind != kind && t.kind != kind2 && t.kind != EOF);
     }
     
     public LinkedList getErroresLexicos(){
@@ -170,7 +171,7 @@ void start() :
 
 Instruccion instruccion() :
 { 
-    Instruccion instr; 
+    Instruccion instr=null;
 }
 {
     (
@@ -179,7 +180,7 @@ Instruccion instruccion() :
         }
         catch(Exception e){
             errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion imprimir"));
-            error_skipto(PUNTOCOMA);
+            error_skipto(PUNTOCOMA,LLDER);
             return null;
         }
         |
@@ -188,7 +189,7 @@ Instruccion instruccion() :
         }
         catch(Exception e){
             errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion IF"));
-            error_skipto(PUNTOCOMA);
+            error_skipto(PUNTOCOMA,LLDER);
             return null;
         }
         |
@@ -197,7 +198,7 @@ Instruccion instruccion() :
         }
         catch(Exception e){
             errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion SWITCH"));
-            error_skipto(PUNTOCOMA);
+            error_skipto(PUNTOCOMA,LLDER);
             return null;
         }
         |
@@ -206,7 +207,7 @@ Instruccion instruccion() :
         }
         catch(Exception e){
             errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion WHILE"));
-            error_skipto(PUNTOCOMA);
+            error_skipto(PUNTOCOMA,LLDER);
             return null;
         }
         |
@@ -215,7 +216,7 @@ Instruccion instruccion() :
         }
         catch(Exception e){
             errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion DO WHILE"));
-            error_skipto(PUNTOCOMA);
+            error_skipto(PUNTOCOMA,LLDER);
             return null;
         }
         |
@@ -224,7 +225,7 @@ Instruccion instruccion() :
         }
         catch(Exception e){
             errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion FOR"));
-            error_skipto(PUNTOCOMA);
+            error_skipto(PUNTOCOMA,LLDER);
             return null;
         }
         |
@@ -232,8 +233,8 @@ Instruccion instruccion() :
             instr = inst_id()
         }
         catch(Exception e){
-            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion imprimir"));
-            error_skipto(PUNTOCOMA);
+            errores.add(new Mensaje(token.beginLine,token.beginColumn,tipo_mensaje.SINTACTICO,"Error en la instruccion function, declaracion o acceso"));
+            error_skipto(PUNTOCOMA,LLDER);
             return null;
         }
     )
@@ -552,17 +553,14 @@ Instruccion Expresion() :
     Instruccion exp_false=null;
 }
 {
-    cond = ExpresionOr()
-    (
-        <TERNARIO> exp_true=ExpresionOr()
-        <DOSPUNTOS> exp_false=ExpresionOr()
-    )?
-    {
-        if(exp_true == null && exp_false == null)
-            return cond;
-        else
-            return new OperadorTernario(cond,exp_true,exp_false,token.beginLine,token.beginColumn);
-    }
+    LOOKAHEAD(300)
+    cond = ExpresionOr() 
+    <TERNARIO> exp_true=Expresion()
+    <DOSPUNTOS> exp_false=Expresion() 
+    { return new OperadorTernario(cond,exp_true,exp_false,token.beginLine,token.beginColumn); }
+    |
+    
+    cond = ExpresionOr()    { return cond; }
 }
 
 Instruccion ExpresionOr() :

@@ -33,8 +33,8 @@ import arbol.While;
 /** Token Manager. */
 public class GramaticaTokenManager implements GramaticaConstants
 {
-    public LinkedList<Mensaje> errores = new LinkedList<Mensaje>();
-    
+public LinkedList<Mensaje> errores = new LinkedList<Mensaje>();
+    //
   /** Debug output. */
   public  java.io.PrintStream debugStream = System.out;
   /** Set debug output. */

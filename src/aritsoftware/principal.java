@@ -149,6 +149,7 @@ public class principal extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 18)); // NOI18N
         jLabel2.setText("Errores");
 
+        consola.setBackground(new java.awt.Color(0, 0, 0));
         jScrollPane1.setViewportView(consola);
 
         jMenuBar1.setBackground(new java.awt.Color(0, 0, 0));
@@ -590,6 +591,7 @@ public class principal extends javax.swing.JFrame {
             errores.add(new Mensaje(1,1,tipo_mensaje.LEXICO,e.getMessage()));
             imprimirErrores();
         } catch (ParseException ex) {
+            errores.addAll(parser.errores);
             errores.add(new Mensaje(1,1,tipo_mensaje.SINTACTICO,ex.getMessage()));
             imprimirErrores();
         }
@@ -697,32 +699,25 @@ public class principal extends javax.swing.JFrame {
                     "  width:100%;\n" +
                     "}\n" +
                     "table, th, td {\n" +
-                    "  border: 1px solid black;\n" +
+                    "  border: 1px solid white;\n" +
                     "  border-collapse: collapse;\n" +
+                    "  color:white;\n"+
                     "}\n" +
                     "th, td {\n" +
                     "  padding: 15px;\n" +
-                    "  text-align: left;\n" +
+                    "  text-align: left;\n"+ 
+                    "  color:white;\n"+
                     "}\n" +
-                    "table#t01 tr:nth-child(even) {\n" +
-                    "  background-color: #eee;\n" +
-                    "}\n" +
-                    "table#t01 tr:nth-child(odd) {\n" +
-                    " background-color: #fff;\n" +
-                    "}\n" +
-                    "table#t01 th {\n" +
-                    "  background-color: black;\n" +
-                    "  color: white;\n" +
-                    "}\n" +
+                    "p {\n"+
+                    "  color:white;\n"+
+                    "}\n"+
                     "</style>";
-
         if(AST_arbolSintaxisAbstracta != null){
             for(Mensaje mensaje: AST_arbolSintaxisAbstracta.getMensajes()){
                 if(mensaje.getTipo()==tipo_mensaje.MENSAJE)
                     temporal += mensaje.getDescripcion()+"\n" ;
             }
         }
-        temporal+="</font>";
         consola.setText(temporal);
     }
     
